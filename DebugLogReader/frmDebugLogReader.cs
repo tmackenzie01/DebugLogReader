@@ -89,8 +89,8 @@ namespace DebugLogReader
             }
 
             //return cameraNumbers;
-
-            return new List<int> { 1 }; // tgm
+			// Returning only one camera id here for testing
+            return new List<int> { 1 };
         }
 
         private void ReadLogs_DoWork(object sender, DoWorkEventArgs e)
