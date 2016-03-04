@@ -12,9 +12,8 @@ namespace DebugLogReaderTests
         public void CameraNumberTests()
         {
             // Get the compiled Regex
-            frmDebugLogReader frm = new frmDebugLogReader();
-            Regex pushedRegex = frm.GetPushedLogRegex();
-            Regex poppedRegex = frm.GetPoppedLogRegex();
+            Regex pushedRegex = frmDebugLogReader.m_pushedRegex;
+            Regex poppedRegex = frmDebugLogReader.m_poppedRegex;
 
             DebugLogRow standardPushRow1 = new DebugLogRow(1, "Pushed - 02/03/2016 17:00:11.072 ---  (0.040 seconds) Q:0 F:470, 7730, 0", pushedRegex);
             Assert.AreEqual(1, standardPushRow1.CameraNumber);
@@ -37,9 +36,8 @@ namespace DebugLogReaderTests
         public void QueueCountTests()
         {
             // Get the compiled Regex
-            frmDebugLogReader frm = new frmDebugLogReader();
-            Regex pushedRegex = frm.GetPushedLogRegex();
-            Regex poppedRegex = frm.GetPoppedLogRegex();
+            Regex pushedRegex = frmDebugLogReader.m_pushedRegex;
+            Regex poppedRegex = frmDebugLogReader.m_poppedRegex;
 
             DebugLogRow standardPushRow1 = new DebugLogRow(1, "Pushed - 02/03/2016 17:00:11.072 ---  (0.040 seconds) Q:0 F:470, 7730, 0", pushedRegex);
             Assert.AreEqual(0, standardPushRow1.QueueCount);
@@ -64,8 +62,7 @@ namespace DebugLogReaderTests
         public void PushTests()
         {
             // Get the compiled Regex
-            frmDebugLogReader frm = new frmDebugLogReader();
-            Regex pushedRegex = frm.GetPushedLogRegex();
+            Regex pushedRegex = frmDebugLogReader.m_pushedRegex;
 
             DebugLogRow pushRow = new DebugLogRow(1, "Pushed - 02/03/2016 17:00:11.072 ---  (0.040 seconds) Q:0 F:470, 7730, 0", pushedRegex);
             Assert.AreEqual(new DateTime(2016, 3, 2, 17, 0, 11).AddMilliseconds(72), pushRow.Timestamp);
@@ -87,8 +84,7 @@ namespace DebugLogReaderTests
         public void PoppedTests()
         {
             // Get the compiled Regex
-            frmDebugLogReader frm = new frmDebugLogReader();
-            Regex poppedRegex = frm.GetPoppedLogRegex();
+            Regex poppedRegex = frmDebugLogReader.m_poppedRegex;
 
             DebugLogRow popRow = new DebugLogRow(1, "Popped - 02/03/2016 17:01:48.412 --- (0.000 seconds) Q:1 F:745, 5234, 0", poppedRegex);
             Assert.AreEqual(1, popRow.CameraNumber);

@@ -17,8 +17,9 @@ namespace DebugLogReader
             m_rows = new List<DebugLogRow>();
         }
 
-        public DebugLog(int cameraNumber, String[] debugLogText, Regex r, List<DebugLogRowFilter> filters)
+        public DebugLog(int cameraNumber, String[] debugLogText, List<DebugLogRowFilter> filters)
         {
+            InitialiseRegex();
             m_cameraNumber = cameraNumber;
             m_rows = new List<DebugLogRow>();
             DebugLogRow newRow = null;
@@ -27,7 +28,7 @@ namespace DebugLogReader
 
             foreach (String line in debugLogText)
             {
-                newRow = new DebugLogRow(cameraNumber, line, r, previousTimestamp);
+                newRow = new DebugLogRow(cameraNumber, line, m_rowRegex, previousTimestamp);
                 AddRow(newRow, filters);
 
                 if (newRow != null)
@@ -41,6 +42,10 @@ namespace DebugLogReader
             {
                 throw new Exception("Ooops!");
             }
+        }
+        
+        protected virtual void InitialiseRegex()
+        {
         }
 
         private void AddRow(DebugLogRow newRow, List<DebugLogRowFilter> filters)
@@ -112,5 +117,7 @@ namespace DebugLogReader
 
         int m_cameraNumber;
         List<DebugLogRow> m_rows;
+
+        protected Regex m_rowRegex;
     }
 }

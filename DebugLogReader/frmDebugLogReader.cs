@@ -19,22 +19,6 @@ namespace DebugLogReader
             InitializeComponent();
 
             txtLogDirectory.Text = @"C:\Users\tmackenzie01\Documents\Recorder testing\20160302\DebugLogs1";
-
-            // Move the Regex out
-            m_pushedRegex = new Regex("Pushed...(?<timestamp>[0-9]+.[0-9]+.[0-9]+.[0-9]+.[0-9]+.[0-9]+.[0-9]+).(\\-\\-\\-...[0-9]+.[0-9]+.seconds..)*Q.(?<queueCount>[0-9]+).F..?[0-9]+,.[0-9]+,.[0-9]+$",
-                RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.Multiline);
-            m_poppedRegex = new Regex("Popped...(?<timestamp>[0-9]+.[0-9]+.[0-9]+.[0-9]+.[0-9]+.[0-9]+.[0-9]+).(\\-\\-\\-..[0-9]+.[0-9]+.seconds..)*Q.(?<queueCount>[0-9]+).F..?[0-9]+,.[0-9]+,.[0-9]+$",
-                RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.Multiline);
-        }
-
-        public Regex GetPushedLogRegex()
-        {
-            return m_pushedRegex;
-        }
-
-        public Regex GetPoppedLogRegex()
-        {
-            return m_poppedRegex;
         }
 
         private void btnReadLogs_Click(object sender, EventArgs e)
@@ -155,11 +139,11 @@ namespace DebugLogReader
             {
                 if (!String.IsNullOrEmpty(pushFile))
                 {
-                    pushLog = new DebugLog(args.CameraNumber, File.ReadAllLines(pushFile), m_pushedRegex, args.Filters);
+                    pushLog = new PushDebugLog(args.CameraNumber, File.ReadAllLines(pushFile), args.Filters);
                 }
                 if (!String.IsNullOrEmpty(popFile))
                 {
-                    popLog = new DebugLog(args.CameraNumber, File.ReadAllLines(popFile), m_poppedRegex, args.Filters);
+                    popLog = new PopDebugLog(args.CameraNumber, File.ReadAllLines(popFile), args.Filters);
                 }
 
                 e.Result = new DebugLogReadResult(args.CameraNumber, pushLog, popLog);
@@ -264,11 +248,15 @@ namespace DebugLogReader
             AddMessage($"File created {giantLogFilename}");
         }
 
-        Regex m_pushedRegex;
-        Regex m_poppedRegex;
-
         int m_readLogsInProgress;
         List<DebugLog> m_logs;
         String m_filterDescription;
+
+        // Declare and intialise these Regex here as it's costly to keep creating them
+        public static Regex m_pushedRegex = new Regex("Pushed...(?<timestamp>[0-9]+.[0-9]+.[0-9]+.[0-9]+.[0-9]+.[0-9]+.[0-9]+).(\\-\\-\\-...[0-9]+.[0-9]+.seconds..)*Q.(?<queueCount>[0-9]+).F..?[0-9]+,.[0-9]+,.[0-9]+$",
+        RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.Multiline);
+
+        public static Regex m_poppedRegex = new Regex("Popped...(?<timestamp>[0-9]+.[0-9]+.[0-9]+.[0-9]+.[0-9]+.[0-9]+.[0-9]+).(\\-\\-\\-..[0-9]+.[0-9]+.seconds..)*Q.(?<queueCount>[0-9]+).F..?[0-9]+,.[0-9]+,.[0-9]+$",
+            RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.Multiline);
     }
 }

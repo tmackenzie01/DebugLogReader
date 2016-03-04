@@ -57,8 +57,10 @@
     <Compile Include="frmDebugLogReader.Designer.cs">
       <DependentUpon>frmDebugLogReader.cs</DependentUpon>
     </Compile>
+    <Compile Include="PopDebugLog.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PushDebugLog.cs" />
     <EmbeddedResource Include="frmDebugLogReader.resx">
       <DependentUpon>frmDebugLogReader.cs</DependentUpon>
     </EmbeddedResource>
