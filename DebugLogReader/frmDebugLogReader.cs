@@ -18,7 +18,7 @@ namespace DebugLogReader
         {
             InitializeComponent();
 
-            txtLogDirectory.Text = @"C:\Users\tmackenzie01\Documents\Recorder testing\20160302\DebugLogs2";
+            txtLogDirectory.Text = @"C:\Users\tmackenzie01\Documents\Recorder testing\20160302\DebugLogs1";
 
             // Move the Regex out
             m_pushedRegex = new Regex("Pushed...(?<timestamp>[0-9]+.[0-9]+.[0-9]+.[0-9]+.[0-9]+.[0-9]+.[0-9]+).(\\-\\-\\-...[0-9]+.[0-9]+.seconds..)*Q.[0-9]+.F..?[0-9]+,.[0-9]+,.[0-9]+$",
@@ -190,23 +190,31 @@ namespace DebugLogReader
             BackgroundWorker worker = sender as BackgroundWorker;
             List<DebugLog> logs = (List<DebugLog>)e.Argument;
             DebugLog giantLog = new DebugLog();
-            int logProgress = 0;
+            int progressCount = 0;
+            int progressFinish = logs.Count + 1;
 
             foreach (DebugLog log in logs)
             {
                 giantLog.AddLog(log);
-                logProgress++;
+                progressCount++;
 
-                worker.ReportProgress((logProgress * 100) / logs.Count, log.CameraNumber);
+                worker.ReportProgress((progressCount * 100) / progressFinish, log.CameraNumber);
             }
+            
+            giantLog.Sort();
+            progressCount++;
 
+            worker.ReportProgress((progressCount * 100) / progressFinish, -1);
             e.Result = giantLog;
         }
 
         private void CombineLogs_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             int cameraNumber = (int)e.UserState;
-            AddMessage($"Camera {cameraNumber} logs combined");
+            if (cameraNumber >= 0)
+            {
+                AddMessage($"Camera {cameraNumber} logs combined");
+            }
             prgFiles.Value = e.ProgressPercentage;
         }
 

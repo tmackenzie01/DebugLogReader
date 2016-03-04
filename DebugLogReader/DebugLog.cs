@@ -46,7 +46,10 @@ namespace DebugLogReader
         public void AddLog(DebugLog newLog)
         {
             m_rows.AddRange(newLog.m_rows);
+        }
 
+        public void Sort()
+        {
             m_rows.Sort(delegate (DebugLogRow log1, DebugLogRow log2) { return log1.Timestamp.CompareTo(log2.Timestamp); });
         }
 
@@ -68,13 +71,13 @@ namespace DebugLogReader
 
         public void Save(String filename)
         {
-            StringBuilder text = new StringBuilder();
+            StreamWriter sw = new StreamWriter(filename);
             foreach(DebugLogRow row in m_rows)
             {
-                text.AppendLine(row.ToString());
+                sw.WriteLine(row.ToString());
             }
 
-            File.WriteAllText(filename, text.ToString());
+            sw.Close();
         }
 
         int m_cameraNumber;
