@@ -99,11 +99,28 @@ namespace DebugLogReader
 
         public DateTime GetStartTime()
         {
-            foreach(DebugLogRow row in m_rows)
+            foreach (DebugLogRow row in m_rows)
             {
                 if (row.Timestamp > DateTime.MinValue)
                 {
                     return row.Timestamp;
+                }
+            }
+
+            return DateTime.MinValue;
+        }
+
+        public DateTime GetEndime()
+        {
+            if (m_rows.Count > 0)
+            {
+                int i = m_rows.Count - 1;
+                while (i > 0)
+                {
+                    if (m_rows[i].Timestamp > DateTime.MinValue)
+                    {
+                        return m_rows[i].Timestamp;
+                    }
                 }
             }
 
@@ -147,6 +164,14 @@ namespace DebugLogReader
             }
 
             sw.Close();
+        }
+
+        public String SummaryText()
+        {
+            DateTime startTime = GetStartTime();
+            TimeSpan duration = GetEndime() - startTime;
+
+            return $"{m_rows?.Count} lines, {duration.TotalSeconds.ToString("f3")} secs";
         }
 
         int m_cameraNumber;
