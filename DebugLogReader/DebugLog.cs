@@ -13,11 +13,13 @@ namespace DebugLogReader
     {
         public DebugLog()
         {
+            m_cameraNumber = -1;
             m_rows = new List<DebugLogRow>();
         }
 
         public DebugLog(int cameraNumber, String[] debugLogText, Regex r)
         {
+            m_cameraNumber = cameraNumber;
             m_rows = new List<DebugLogRow>();
             DebugLogRow newRow = null;
             DateTime previousTimestamp = DateTime.MinValue;
@@ -56,6 +58,14 @@ namespace DebugLogReader
             }
         }
 
+        public int CameraNumber
+        {
+            get
+            {
+                return m_cameraNumber;
+            }
+        }
+
         public void Save(String filename)
         {
             StringBuilder text = new StringBuilder();
@@ -67,6 +77,7 @@ namespace DebugLogReader
             File.WriteAllText(filename, text.ToString());
         }
 
+        int m_cameraNumber;
         List<DebugLogRow> m_rows;
     }
 }

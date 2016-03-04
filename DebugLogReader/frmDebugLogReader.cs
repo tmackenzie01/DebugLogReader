@@ -93,9 +93,7 @@ namespace DebugLogReader
                 }
             }
 
-            //return cameraNumbers;
-            // Returning only one camera id here for testing
-            return new List<int> { 1 };
+            return cameraNumbers;
         }
 
         private void ReadLogs_DoWork(object sender, DoWorkEventArgs e)
@@ -144,14 +142,19 @@ namespace DebugLogReader
             }
         }
 
+        private void AddMessage(String text)
+        {
+            ListViewItem newItem = new ListViewItem(text);
+            lstProgress.Items.Add(newItem);
+            lstProgress.Items[lstProgress.Items.Count - 1].EnsureVisible();
+        }
+
         private void ReadLogs_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             DebugLogReadResult result = (DebugLogReadResult)e.Result;
             bool combineLogs = false;
 
-            ListViewItem newItem = new ListViewItem(result.ToString());
-
-            lstProgress.Items.Add(newItem);
+            AddMessage(result.ToString());
             prgFiles.Value++;
 
             lock (m_logs)
@@ -194,7 +197,7 @@ namespace DebugLogReader
                 giantLog.AddLog(log);
                 logProgress++;
 
-                worker.ReportProgress((logProgress * 100) / logs.Count);
+                worker.ReportProgress((logProgress * 100) / logs.Count, log.CameraNumber);
             }
 
             e.Result = giantLog;
@@ -202,12 +205,14 @@ namespace DebugLogReader
 
         private void CombineLogs_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
+            int cameraNumber = (int)e.UserState;
+            AddMessage($"Camera {cameraNumber} logs combined");
             prgFiles.Value = e.ProgressPercentage;
         }
 
         private void CombineLogs_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            lstProgress.Items.Add(new ListViewItem("Logs combined"));
+            AddMessage("Logs combined");
             DebugLog giantLog = (DebugLog)e.Result;
 
             String giantLogFilename = Path.Combine(txtLogDirectory.Text, "giantLog.txt");
@@ -220,7 +225,7 @@ namespace DebugLogReader
             }
 
             giantLog.Save(giantLogFilename);
-            lstProgress.Items.Add(new ListViewItem($"File created {giantLogFilename}"));
+            AddMessage($"File created {giantLogFilename}");
         }
 
         Regex m_pushedRegex;
