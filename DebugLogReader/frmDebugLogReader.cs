@@ -57,6 +57,7 @@ namespace DebugLogReader
                 bgReadLog.ProgressChanged += ReadLogs_ProgressChanged;
                 bgReadLog.RunWorkerCompleted += ReadLogs_RunWorkerCompleted;
                 bgReadLog.RunWorkerAsync(new DebugLogReaderArgs(txtLogDirectory.Text, cameraNumber));
+                m_readLogsInProgress++;
             }
 
             prgFiles.Maximum = cameraNumbers.Count;
@@ -89,7 +90,7 @@ namespace DebugLogReader
             }
 
             //return cameraNumbers;
-			// Returning only one camera id here for testing
+            // Returning only one camera id here for testing
             return new List<int> { 1 };
         }
 
@@ -146,19 +147,32 @@ namespace DebugLogReader
         private void ReadLogs_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             DebugLogReadResult result = (DebugLogReadResult)e.Result;
+            bool combineLogs = false;
 
             ListViewItem newItem = new ListViewItem(result.ToString());
 
             lstProgress.Items.Add(newItem);
             prgFiles.Value++;
 
-            m_logs.Add(result.PushLog);
-            m_logs.Add(result.PopLog);
+            lock (m_logs)
+            {
+                m_logs.Add(result.PushLog);
+                m_logs.Add(result.PopLog);
+                m_readLogsInProgress--;
+
+                combineLogs = (m_readLogsInProgress == 0);
+            }
+
+            if (combineLogs)
+            {
+                // Start the log combining
+            }
         }
 
         Regex m_pushedRegex;
         Regex m_poppedRegex;
 
+        int m_readLogsInProgress;
         List<DebugLog> m_logs;
     }
 }
