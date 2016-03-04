@@ -102,8 +102,6 @@ namespace DebugLogReader
             String popFile = "";
             DebugLog pushLog = null;
             DebugLog popLog = null;
-            //String[] pushText = null;
-            //String[] popText = null;
             int fileFoundCount = 0;
 
             foreach (String logFile in logFiles)
@@ -125,20 +123,10 @@ namespace DebugLogReader
                 if (!String.IsNullOrEmpty(pushFile))
                 {
                     pushLog = new DebugLog(args.CameraNumber, File.ReadAllLines(pushFile), m_pushedRegex);
-                    //pushText = File.ReadAllLines(pushFile);
-                    //foreach (String pushLine in pushText)
-                    //{
-                    //    DebugLogRow testRow = new DebugLogRow(pushLine, m_pushedRegex);
-                    //}
                 }
                 if (!String.IsNullOrEmpty(popFile))
                 {
                     popLog = new DebugLog(args.CameraNumber, File.ReadAllLines(popFile), m_poppedRegex);
-                    //popText = File.ReadAllLines(popFile);
-                    //foreach (String popLine in popText)
-                    //{
-                    //    DebugLogRow testRow = new DebugLogRow(popLine, m_poppedRegex);
-                    //}
                 }
 
                 pushLog.AddLog(popLog);
