@@ -139,11 +139,13 @@ namespace DebugLogReader
             {
                 if (!String.IsNullOrEmpty(pushFile))
                 {
-                    pushLog = new PushDebugLog(args.CameraNumber, File.ReadAllLines(pushFile), args.Filters);
+                    pushLog = new PushDebugLog(args.CameraNumber, args.Filters);
+                    pushLog.Load(pushFile);
                 }
                 if (!String.IsNullOrEmpty(popFile))
                 {
-                    popLog = new PopDebugLog(args.CameraNumber, File.ReadAllLines(popFile), args.Filters);
+                    popLog = new PopDebugLog(args.CameraNumber, args.Filters);
+                    popLog.Load(popFile);
                 }
 
                 e.Result = new DebugLogReadResult(args.CameraNumber, pushLog, popLog);

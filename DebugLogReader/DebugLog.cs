@@ -15,21 +15,34 @@ namespace DebugLogReader
         {
             m_cameraNumber = -1;
             m_rows = new List<DebugLogRow>();
+            m_filters = null;
+            InitialiseRegex();
         }
 
-        public DebugLog(int cameraNumber, String[] debugLogText, List<DebugLogRowFilter> filters)
+        public DebugLog(int cameraNumber, List<DebugLogRowFilter> filters)
         {
-            InitialiseRegex();
             m_cameraNumber = cameraNumber;
             m_rows = new List<DebugLogRow>();
+            m_filters = filters;
+            InitialiseRegex();
+        }
+
+        protected virtual void InitialiseRegex()
+        {
+        }
+
+        public void Load(String filename)
+        {
             DebugLogRow newRow = null;
             DateTime previousTimestamp = DateTime.MinValue;
             int rowCount = 0;
 
+            String[] debugLogText = File.ReadAllLines(filename);
+
             foreach (String line in debugLogText)
             {
-                newRow = new DebugLogRow(cameraNumber, line, m_rowRegex, previousTimestamp);
-                AddRow(newRow, filters);
+                newRow = new DebugLogRow(m_cameraNumber, line, m_rowRegex, previousTimestamp);
+                AddRow(newRow);
 
                 if (newRow != null)
                 {
@@ -38,36 +51,32 @@ namespace DebugLogReader
                 rowCount++;
             }
 
-            if ((debugLogText.Length != m_rows.Count) && (filters == null))
+            if ((debugLogText.Length != m_rows.Count) && (m_filters == null))
             {
                 throw new Exception("Ooops!");
             }
         }
-        
-        protected virtual void InitialiseRegex()
-        {
-        }
 
-        private void AddRow(DebugLogRow newRow, List<DebugLogRowFilter> filters)
+        private void AddRow(DebugLogRow newRow)
         {
             bool conditionsMet = false;
 
-            if (filters == null)
+            if (m_filters == null)
             {
                 conditionsMet = true;
             }
             else
             {
-                conditionsMet = (filters.Count == 0);
+                conditionsMet = (m_filters.Count == 0);
 
-                if (filters.Count > 0)
+                if (m_filters.Count > 0)
                 {
                     // Check first condition
-                    conditionsMet = filters[0].MeetsConditions(newRow);
+                    conditionsMet = m_filters[0].MeetsConditions(newRow);
 
-                    for (int i = 1; i < filters.Count; i++)
+                    for (int i = 1; i < m_filters.Count; i++)
                     {
-                        conditionsMet = conditionsMet && filters[i].MeetsConditions(newRow);
+                        conditionsMet = conditionsMet && m_filters[i].MeetsConditions(newRow);
                     }
                 }
             }
@@ -116,6 +125,7 @@ namespace DebugLogReader
         }
 
         int m_cameraNumber;
+        List<DebugLogRowFilter> m_filters;
         List<DebugLogRow> m_rows;
 
         protected Regex m_rowRegex;
