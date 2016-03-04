@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -10,6 +11,11 @@ namespace DebugLogReader
 {
     public class DebugLog
     {
+        public DebugLog()
+        {
+            m_rows = new List<DebugLogRow>();
+        }
+
         public DebugLog(int cameraNumber, String[] debugLogText, Regex r)
         {
             m_rows = new List<DebugLogRow>();
@@ -40,11 +46,6 @@ namespace DebugLogReader
             m_rows.AddRange(newLog.m_rows);
 
             m_rows.Sort(delegate (DebugLogRow log1, DebugLogRow log2) { return log1.Timestamp.CompareTo(log2.Timestamp); });
-            
-            //foreach(DebugLogRow row in m_rows)
-            //{
-            //    Debug.WriteLine(row.ToString());
-            //}
         }
 
         public int Count
@@ -53,6 +54,17 @@ namespace DebugLogReader
             {
                 return m_rows.Count;
             }
+        }
+
+        public void Save(String filename)
+        {
+            StringBuilder text = new StringBuilder();
+            foreach(DebugLogRow row in m_rows)
+            {
+                text.AppendLine(row.ToString());
+            }
+
+            File.WriteAllText(filename, text.ToString());
         }
 
         List<DebugLogRow> m_rows;

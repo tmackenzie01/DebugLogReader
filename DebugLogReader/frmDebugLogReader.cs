@@ -58,7 +58,6 @@ namespace DebugLogReader
                 {
                     BackgroundWorker bgReadLog = new BackgroundWorker();
                     bgReadLog.DoWork += ReadLogs_DoWork;
-                    bgReadLog.ProgressChanged += ReadLogs_ProgressChanged;
                     bgReadLog.RunWorkerCompleted += ReadLogs_RunWorkerCompleted;
                     bgReadLog.RunWorkerAsync(new DebugLogReaderArgs(txtLogDirectory.Text, cameraNumber));
                     m_readLogsInProgress++;
@@ -145,10 +144,6 @@ namespace DebugLogReader
             }
         }
 
-        private void ReadLogs_ProgressChanged(object sender, ProgressChangedEventArgs e)
-        {
-        }
-
         private void ReadLogs_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             DebugLogReadResult result = (DebugLogReadResult)e.Result;
@@ -170,8 +165,62 @@ namespace DebugLogReader
 
             if (combineLogs)
             {
-                // Start the log combining
+                StartLogCombines();
             }
+        }
+        
+        private void StartLogCombines()
+        {
+            prgFiles.Maximum = 100;
+            prgFiles.Value = 0;
+
+            BackgroundWorker bgCombineLogs = new BackgroundWorker();
+            bgCombineLogs.WorkerReportsProgress = true;
+            bgCombineLogs.DoWork += CombineLogs_DoWork;
+            bgCombineLogs.ProgressChanged += CombineLogs_ProgressChanged;
+            bgCombineLogs.RunWorkerCompleted += CombineLogs_RunWorkerCompleted;
+            bgCombineLogs.RunWorkerAsync(m_logs);
+        }
+
+        private void CombineLogs_DoWork(object sender, DoWorkEventArgs e)
+        {
+            BackgroundWorker worker = sender as BackgroundWorker;
+            List<DebugLog> logs = (List<DebugLog>)e.Argument;
+            DebugLog giantLog = new DebugLog();
+            int logProgress = 0;
+
+            foreach (DebugLog log in logs)
+            {
+                giantLog.AddLog(log);
+                logProgress++;
+
+                worker.ReportProgress((logProgress * 100) / logs.Count);
+            }
+
+            e.Result = giantLog;
+        }
+
+        private void CombineLogs_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            prgFiles.Value = e.ProgressPercentage;
+        }
+
+        private void CombineLogs_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            lstProgress.Items.Add(new ListViewItem("Logs combined"));
+            DebugLog giantLog = (DebugLog)e.Result;
+
+            String giantLogFilename = Path.Combine(txtLogDirectory.Text, "giantLog.txt");
+            if (File.Exists(giantLogFilename))
+            {
+                if (MessageBox.Show($"{giantLogFilename} exists\r\nYou want to overwrite it?", "", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                {
+                    File.Delete(giantLogFilename);
+                }
+            }
+
+            giantLog.Save(giantLogFilename);
+            lstProgress.Items.Add(new ListViewItem($"File created {giantLogFilename}"));
         }
 
         Regex m_pushedRegex;

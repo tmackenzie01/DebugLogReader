@@ -17,6 +17,8 @@ namespace DebugLogReader
         {
             m_success = true;
             m_cameraNumber = cameraNumber;
+            m_pushLog = pushLog;
+            m_popLog = popLog;
             m_lines = pushLog.Count + popLog.Count;
         }
 
