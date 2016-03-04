@@ -132,8 +132,6 @@ namespace DebugLogReader
                     popLog = new DebugLog(args.CameraNumber, File.ReadAllLines(popFile), m_poppedRegex);
                 }
 
-                pushLog.AddLog(popLog);
-
                 e.Result = new DebugLogReadResult(args.CameraNumber, pushLog, popLog);
             }
             else
