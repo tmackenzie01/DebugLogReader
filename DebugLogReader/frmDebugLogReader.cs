@@ -18,7 +18,7 @@ namespace DebugLogReader
         {
             InitializeComponent();
 
-            txtLogDirectory.Text = @"C:\Users\tmackenzie01\Documents\Recorder testing\20160302\DebugLogs1";
+            txtLogDirectory.Text = @"D:\Users\thomas\Documents\Recorder testing\20160302\DebugLogs1";
         }
 
         private void btnReadLogs_Click(object sender, EventArgs e)
