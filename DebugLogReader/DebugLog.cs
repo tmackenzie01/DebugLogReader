@@ -42,7 +42,7 @@ namespace DebugLogReader
             foreach (String line in debugLogText)
             {
                 newRow = new DebugLogRow(m_cameraNumber, line, m_rowRegex, previousTimestamp);
-                AddRow(newRow);
+                AddRow(newRow, m_filters);
 
                 if (newRow != null)
                 {
@@ -57,26 +57,26 @@ namespace DebugLogReader
             }
         }
 
-        private void AddRow(DebugLogRow newRow)
+        private void AddRow(DebugLogRow newRow, List<DebugLogRowFilter> filters)
         {
             bool conditionsMet = false;
 
-            if (m_filters == null)
+            if (filters == null)
             {
                 conditionsMet = true;
             }
             else
             {
-                conditionsMet = (m_filters.Count == 0);
+                conditionsMet = (filters.Count == 0);
 
-                if (m_filters.Count > 0)
+                if (filters.Count > 0)
                 {
                     // Check first condition
-                    conditionsMet = m_filters[0].MeetsConditions(newRow);
+                    conditionsMet = filters[0].MeetsConditions(newRow);
 
-                    for (int i = 1; i < m_filters.Count; i++)
+                    for (int i = 1; i < filters.Count; i++)
                     {
-                        conditionsMet = conditionsMet && m_filters[i].MeetsConditions(newRow);
+                        conditionsMet = conditionsMet && filters[i].MeetsConditions(newRow);
                     }
                 }
             }
@@ -97,6 +97,19 @@ namespace DebugLogReader
             m_rows.Sort(delegate (DebugLogRow log1, DebugLogRow log2) { return log1.Timestamp.CompareTo(log2.Timestamp); });
         }
 
+        public DateTime GetStartTime()
+        {
+            foreach(DebugLogRow row in m_rows)
+            {
+                if (row.Timestamp > DateTime.MinValue)
+                {
+                    return row.Timestamp;
+                }
+            }
+
+            return DateTime.MinValue;
+        }
+
         public int Count
         {
             get
@@ -110,6 +123,18 @@ namespace DebugLogReader
             get
             {
                 return m_cameraNumber;
+            }
+        }
+
+        public void Filter(DebugLogRowFilter filter)
+        {
+            // Store old, create new log
+            List<DebugLogRow> oldRows = m_rows;
+            m_rows = new List<DebugLogRow>();
+            
+            foreach(DebugLogRow row in oldRows)
+            {
+                AddRow(row, new List<DebugLogRowFilter>() { filter });
             }
         }
 

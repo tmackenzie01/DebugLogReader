@@ -106,6 +106,13 @@ namespace DebugLogReader
                 }
             }
 
+            if (chkStartAtSameTime.Checked)
+            {
+                // We cannot create the filter as we need to have the times for all the logs first
+                // we do this just before the sort
+                filterDescription.Append("_StartAtSameTime");
+            }
+
             m_filterDescription = filterDescription.ToString();
             return filters;
         }
@@ -206,15 +213,24 @@ namespace DebugLogReader
             DebugLog giantLog = new DebugLog();
             int progressCount = 0;
             int progressFinish = logs.Count + 1;
+            DateTime latestStartTime = DateTime.MinValue;
 
             foreach (DebugLog log in logs)
             {
+                if (latestStartTime < log.GetStartTime())
+                {
+                    latestStartTime = log.GetStartTime();
+                }
                 giantLog.AddLog(log);
                 progressCount++;
 
                 worker.ReportProgress((progressCount * 100) / progressFinish, log.CameraNumber);
             }
 
+            if (chkStartAtSameTime.Checked)
+            {
+                giantLog.Filter(new DebugLogRowFilter(eFilterBy.StartTime, latestStartTime.ToString(@"dd/MM/yyyy HH:mm:ss.fff")));
+            }
             giantLog.Sort();
             progressCount++;
 

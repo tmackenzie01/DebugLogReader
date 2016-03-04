@@ -36,6 +36,7 @@
             this.chkQueueFilter = new System.Windows.Forms.CheckBox();
             this.grpFilters = new System.Windows.Forms.GroupBox();
             this.txtQueueAbove = new System.Windows.Forms.TextBox();
+            this.chkStartAtSameTime = new System.Windows.Forms.CheckBox();
             this.grpFilters.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -99,6 +100,7 @@
             // 
             // grpFilters
             // 
+            this.grpFilters.Controls.Add(this.chkStartAtSameTime);
             this.grpFilters.Controls.Add(this.txtQueueAbove);
             this.grpFilters.Controls.Add(this.chkQueueFilter);
             this.grpFilters.Location = new System.Drawing.Point(3, 33);
@@ -114,6 +116,16 @@
             this.txtQueueAbove.Name = "txtQueueAbove";
             this.txtQueueAbove.Size = new System.Drawing.Size(100, 20);
             this.txtQueueAbove.TabIndex = 5;
+            // 
+            // chkStartAtSameTime
+            // 
+            this.chkStartAtSameTime.AutoSize = true;
+            this.chkStartAtSameTime.Location = new System.Drawing.Point(9, 42);
+            this.chkStartAtSameTime.Name = "chkStartAtSameTime";
+            this.chkStartAtSameTime.Size = new System.Drawing.Size(110, 17);
+            this.chkStartAtSameTime.TabIndex = 6;
+            this.chkStartAtSameTime.Text = "Start at same time";
+            this.chkStartAtSameTime.UseVisualStyleBackColor = true;
             // 
             // frmDebugLogReader
             // 
@@ -144,6 +156,7 @@
         private System.Windows.Forms.CheckBox chkQueueFilter;
         private System.Windows.Forms.GroupBox grpFilters;
         private System.Windows.Forms.TextBox txtQueueAbove;
+        private System.Windows.Forms.CheckBox chkStartAtSameTime;
     }
 }
 
