@@ -60,14 +60,19 @@ namespace DebugLogReader
 
             cameraNumbers.Sort();
 
-            foreach (int cameraNumber in cameraNumbers)
+            if (cameraNumbers.Count > 0)
             {
-                BackgroundWorker bgReadLog = new BackgroundWorker();
-                bgReadLog.DoWork += ReadLogs_DoWork;
-                bgReadLog.ProgressChanged += ReadLogs_ProgressChanged;
-                bgReadLog.RunWorkerCompleted += ReadLogs_RunWorkerCompleted;
-                bgReadLog.RunWorkerAsync(new DebugLogReaderArgs(txtLogDirectory.Text, cameraNumber));
-                m_readLogsInProgress++;
+                m_logs = new List<DebugLog>();
+
+                foreach (int cameraNumber in cameraNumbers)
+                {
+                    BackgroundWorker bgReadLog = new BackgroundWorker();
+                    bgReadLog.DoWork += ReadLogs_DoWork;
+                    bgReadLog.ProgressChanged += ReadLogs_ProgressChanged;
+                    bgReadLog.RunWorkerCompleted += ReadLogs_RunWorkerCompleted;
+                    bgReadLog.RunWorkerAsync(new DebugLogReaderArgs(txtLogDirectory.Text, cameraNumber));
+                    m_readLogsInProgress++;
+                }
             }
 
             prgFiles.Maximum = cameraNumbers.Count;
