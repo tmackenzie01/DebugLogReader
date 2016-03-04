@@ -70,6 +70,14 @@ namespace DebugLogReader
             }
         }
 
+        public int CameraNumber
+        {
+            get
+            {
+                return m_cameraNumber;
+            }
+        }
+
         String m_text;
         int m_cameraNumber;
 
