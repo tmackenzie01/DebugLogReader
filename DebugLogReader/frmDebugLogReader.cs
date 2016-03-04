@@ -124,8 +124,10 @@ namespace DebugLogReader
             String[] logFiles = Directory.GetFiles(args.LogDirectory());
             String pushFile = "";
             String popFile = "";
+            String csFile = "";
             DebugLog pushLog = null;
             DebugLog popLog = null;
+            DebugLog csLog = null;
             int fileFoundCount = 0;
 
             foreach (String logFile in logFiles)
@@ -140,6 +142,18 @@ namespace DebugLogReader
                     popFile = logFile;
                     fileFoundCount++;
                 }
+                if (logFile.EndsWith("_CSWrite.txt"))
+                {
+                    csFile = logFile;
+                    fileFoundCount++;
+                }
+            }
+            
+            // Try to parse the CSWrite file
+            if (!String.IsNullOrEmpty(csFile))
+            {
+                csLog = new CSDebugLog(args.CameraNumber, args.Filters);
+                csLog.Load(csFile);
             }
 
             if (fileFoundCount == 2)
@@ -275,6 +289,9 @@ namespace DebugLogReader
         RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.Multiline);
 
         public static Regex m_poppedRegex = new Regex("Popped...(?<timestamp>[0-9]+.[0-9]+.[0-9]+.[0-9]+.[0-9]+.[0-9]+.[0-9]+).(\\-\\-\\-..[0-9]+.[0-9]+.seconds..)*Q.(?<queueCount>[0-9]+).F..?[0-9]+,.[0-9]+,.[0-9]+$",
+            RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.Multiline);
+
+        public static Regex m_csRegex = new Regex("(?<timestamp>[0-9]+.[0-9]+.[0-9]+.[0-9]+.[0-9]+.[0-9]+.[0-9]+).*Q.(?<queueCount>[0-9]+).F..?[0-9]+,.[0-9]+,.[0-9]+$",
             RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.Multiline);
     }
 }

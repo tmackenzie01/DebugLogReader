@@ -46,6 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CSDebugLog.cs" />
     <Compile Include="DebugLog.cs" />
     <Compile Include="DebugLogReaderArgs.cs" />
     <Compile Include="DebugLogReadResult.cs" />
