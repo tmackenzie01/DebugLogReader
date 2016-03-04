@@ -34,6 +34,33 @@ namespace DebugLogReaderTests
         }
 
         [TestMethod]
+        public void QueueCountTests()
+        {
+            // Get the compiled Regex
+            frmDebugLogReader frm = new frmDebugLogReader();
+            Regex pushedRegex = frm.GetPushedLogRegex();
+            Regex poppedRegex = frm.GetPoppedLogRegex();
+
+            DebugLogRow standardPushRow1 = new DebugLogRow(1, "Pushed - 02/03/2016 17:00:11.072 ---  (0.040 seconds) Q:0 F:470, 7730, 0", pushedRegex);
+            Assert.AreEqual(0, standardPushRow1.QueueCount);
+
+            DebugLogRow standardPopRow1 = new DebugLogRow(1, "Popped - 02/03/2016 17:01:48.412 --- (0.000 seconds) Q:1 F:745, 5234, 0", poppedRegex);
+            Assert.AreEqual(1, standardPopRow1.QueueCount);
+
+            DebugLogRow pushRow = new DebugLogRow(1, "Pushed - 02/03/2016 17:00:11.072 ---  (0.040 seconds) Q:747 F:470, 7730, 0", pushedRegex);
+            Assert.AreEqual(747, pushRow.QueueCount);
+
+            DebugLogRow pushRowNegativeFrame = new DebugLogRow(1, "Pushed - 02/03/2016 17:08:47.343 ---  (5.010 seconds) Q:0 F:-1, 0, 4", pushedRegex);
+            Assert.AreEqual(0, pushRowNegativeFrame.QueueCount);
+
+            DebugLogRow pushRowNullFrame = new DebugLogRow(1, "Pushed - 02/03/2016 17:08:47.343 ---  (0.000 seconds) Q:0 F:Null", pushedRegex);
+            Assert.AreEqual(0, pushRowNullFrame.QueueCount);
+
+            DebugLogRow pushRowZeroes = new DebugLogRow(1, "Pushed - 02/03/2016 17:09:37.973 Q:0 F: 0, 0, 0", pushedRegex);
+            Assert.AreEqual(0, pushRowZeroes.QueueCount);
+        }
+
+        [TestMethod]
         public void PushTests()
         {
             // Get the compiled Regex

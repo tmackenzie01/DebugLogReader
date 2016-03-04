@@ -42,8 +42,13 @@ namespace DebugLogReader
                 if (match.Success)
                 {
                     String timestamp = match.Groups["timestamp"].Value;
+                    if (!Int32.TryParse(match.Groups["queueCount"].Value, out m_queueCount))
+                    {
+                        m_queueCount = -1;
+                    }
                     m_timestamp = DateTime.ParseExact(timestamp, @"dd/MM/yyyy HH:mm:ss.fff", CultureInfo.InvariantCulture);
                     m_text = $"{m_cameraNumber.ToString()} {text}";
+
                 }
                 else
                 {
@@ -78,11 +83,19 @@ namespace DebugLogReader
             }
         }
 
+        public int QueueCount
+        {
+            get
+            {
+                return m_queueCount;
+            }
+        }
+
         String m_text;
         int m_cameraNumber;
 
         // Not storing any of these at the moment
-        int m_queue;
+        int m_queueCount;
         int m_frameNumber;
         int m_frameSize;
         int m_flags;

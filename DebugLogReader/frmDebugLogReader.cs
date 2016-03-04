@@ -21,9 +21,9 @@ namespace DebugLogReader
             txtLogDirectory.Text = @"C:\Users\tmackenzie01\Documents\Recorder testing\20160302\DebugLogs1";
 
             // Move the Regex out
-            m_pushedRegex = new Regex("Pushed...(?<timestamp>[0-9]+.[0-9]+.[0-9]+.[0-9]+.[0-9]+.[0-9]+.[0-9]+).(\\-\\-\\-...[0-9]+.[0-9]+.seconds..)*Q.[0-9]+.F..?[0-9]+,.[0-9]+,.[0-9]+$",
+            m_pushedRegex = new Regex("Pushed...(?<timestamp>[0-9]+.[0-9]+.[0-9]+.[0-9]+.[0-9]+.[0-9]+.[0-9]+).(\\-\\-\\-...[0-9]+.[0-9]+.seconds..)*Q.(?<queueCount>[0-9]+).F..?[0-9]+,.[0-9]+,.[0-9]+$",
                 RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.Multiline);
-            m_poppedRegex = new Regex("Popped...(?<timestamp>[0-9]+.[0-9]+.[0-9]+.[0-9]+.[0-9]+.[0-9]+.[0-9]+).(\\-\\-\\-..[0-9]+.[0-9]+.seconds..)*Q.[0-9]+.F..?[0-9]+,.[0-9]+,.[0-9]+$",
+            m_poppedRegex = new Regex("Popped...(?<timestamp>[0-9]+.[0-9]+.[0-9]+.[0-9]+.[0-9]+.[0-9]+.[0-9]+).(\\-\\-\\-..[0-9]+.[0-9]+.seconds..)*Q.(?<queueCount>[0-9]+).F..?[0-9]+,.[0-9]+,.[0-9]+$",
                 RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.Multiline);
         }
 
