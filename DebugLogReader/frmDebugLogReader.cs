@@ -27,6 +27,16 @@ namespace DebugLogReader
                 RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.Multiline);
         }
 
+        private Regex GetPushedLogRegex()
+        {
+            return m_pushedRegex;
+        }
+
+        private Regex GetPoppedLogRegex()
+        {
+            return m_poppedRegex;
+        }
+
         private void btnReadLogs_Click(object sender, EventArgs e)
         {
             StartLogReads();
@@ -37,15 +47,15 @@ namespace DebugLogReader
             lstProgress.Items.Clear();
             btnReadLogs.Enabled = false;
 
-            DebugLogRow pushRow1 = new DebugLogRow(1, "Pushed - 02/03/2016 17:00:11.072 ---  (0.040 seconds) Q:0 F:470, 7730, 0", m_pushedRegex);
-            DebugLogRow pushRow2 = new DebugLogRow(1, "Pushed - 02/03/2016 17:00:11.072 ---  (0.040 seconds) Q:0 F:470, 7730, 0", m_pushedRegex);
-            DebugLogRow pushRow3 = new DebugLogRow(1, "Pushed - 02/03/2016 17:36:15.325 ---  (76.810 seconds) Q:0 F:1242, 5806, 0", m_pushedRegex);
-            DebugLogRow pushRow4 = new DebugLogRow(1, "Pushed - 02/03/2016 17:08:47.343 ---  (5.010 seconds) Q:0 F:-1, 0, 4", m_pushedRegex);
-            DebugLogRow pushRow5 = new DebugLogRow(1, "Pushed - 02/03/2016 17:08:47.343 ---  (0.000 seconds) Q:0 F:Null", m_pushedRegex);
-            DebugLogRow pushRow6 = new DebugLogRow(1, "Pushed - 02/03/2016 17:09:37.973 Q:0 F: 0, 0, 0", m_pushedRegex);
-            DebugLogRow popRow1 = new DebugLogRow(1, "Popped - 02/03/2016 17:01:48.412 --- (0.000 seconds) Q:1 F:745, 5234, 0", m_poppedRegex);
-            DebugLogRow popRow2 = new DebugLogRow(1, "Wrote data", m_poppedRegex);
-            DebugLogRow popRow3 = new DebugLogRow(1, "Popped - 02/03/2016 17:09:37.973 Q:1 F:0, 0, 0", m_poppedRegex);
+            DebugLogRow pushRow1 = new DebugLogRow(1, "Pushed - 02/03/2016 17:00:11.072 ---  (0.040 seconds) Q:0 F:470, 7730, 0", GetPushedLogRegex());
+            DebugLogRow pushRow2 = new DebugLogRow(1, "Pushed - 02/03/2016 17:00:11.072 ---  (0.040 seconds) Q:0 F:470, 7730, 0", GetPushedLogRegex());
+            DebugLogRow pushRow3 = new DebugLogRow(1, "Pushed - 02/03/2016 17:36:15.325 ---  (76.810 seconds) Q:0 F:1242, 5806, 0", GetPushedLogRegex());
+            DebugLogRow pushRow4 = new DebugLogRow(1, "Pushed - 02/03/2016 17:08:47.343 ---  (5.010 seconds) Q:0 F:-1, 0, 4", GetPushedLogRegex());
+            DebugLogRow pushRow5 = new DebugLogRow(1, "Pushed - 02/03/2016 17:08:47.343 ---  (0.000 seconds) Q:0 F:Null", GetPushedLogRegex());
+            DebugLogRow pushRow6 = new DebugLogRow(1, "Pushed - 02/03/2016 17:09:37.973 Q:0 F: 0, 0, 0", GetPushedLogRegex());
+            DebugLogRow popRow1 = new DebugLogRow(1, "Popped - 02/03/2016 17:01:48.412 --- (0.000 seconds) Q:1 F:745, 5234, 0", GetPoppedLogRegex());
+            DebugLogRow popRow2 = new DebugLogRow(1, "Wrote data", GetPoppedLogRegex());
+            DebugLogRow popRow3 = new DebugLogRow(1, "Popped - 02/03/2016 17:09:37.973 Q:1 F:0, 0, 0", GetPoppedLogRegex());
             List<int> cameraNumbers = GetCameraNumbers();
 
             cameraNumbers.Sort();
