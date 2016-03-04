@@ -47,6 +47,7 @@ namespace DebugLogReader
             lstProgress.Items.Clear();
             btnReadLogs.Enabled = false;
             List<int> cameraNumbers = GetCameraNumbers();
+            List<DebugLogRowFilter> filters = GetFilters();
 
             cameraNumbers.Sort();
 
@@ -56,10 +57,12 @@ namespace DebugLogReader
 
                 foreach (int cameraNumber in cameraNumbers)
                 {
+                    DebugLogReaderArgs args = new DebugLogReaderArgs(txtLogDirectory.Text, cameraNumber);
+                    args.AddFilters(filters);
                     BackgroundWorker bgReadLog = new BackgroundWorker();
                     bgReadLog.DoWork += ReadLogs_DoWork;
                     bgReadLog.RunWorkerCompleted += ReadLogs_RunWorkerCompleted;
-                    bgReadLog.RunWorkerAsync(new DebugLogReaderArgs(txtLogDirectory.Text, cameraNumber));
+                    bgReadLog.RunWorkerAsync(args);
                     m_readLogsInProgress++;
                 }
             }
@@ -96,6 +99,33 @@ namespace DebugLogReader
             return cameraNumbers;
         }
 
+        List<DebugLogRowFilter> GetFilters()
+        {
+            List<DebugLogRowFilter> filters = null;
+            StringBuilder filterDescription = new StringBuilder();
+
+            if (chkQueueFilter.Checked)
+            {
+                if (!String.IsNullOrEmpty(txtQueueAbove.Text))
+                {
+                    int queueAbove = 0;
+                    if (Int32.TryParse(txtQueueAbove.Text, out queueAbove))
+                    {
+                        DebugLogRowFilter filter = new DebugLogRowFilter(eFilterBy.QueueCount, queueAbove.ToString());
+                        filterDescription.Append(filter.ToString());
+                        if (filters == null)
+                        {
+                            filters = new List<DebugLogRowFilter>();
+                            filters.Add(filter);
+                        }
+                    }
+                }
+            }
+
+            m_filterDescription = filterDescription.ToString();
+            return filters;
+        }
+
         private void ReadLogs_DoWork(object sender, DoWorkEventArgs e)
         {
             DebugLogReaderArgs args = (DebugLogReaderArgs)e.Argument;
@@ -125,11 +155,11 @@ namespace DebugLogReader
             {
                 if (!String.IsNullOrEmpty(pushFile))
                 {
-                    pushLog = new DebugLog(args.CameraNumber, File.ReadAllLines(pushFile), m_pushedRegex);
+                    pushLog = new DebugLog(args.CameraNumber, File.ReadAllLines(pushFile), m_pushedRegex, args.Filters);
                 }
                 if (!String.IsNullOrEmpty(popFile))
                 {
-                    popLog = new DebugLog(args.CameraNumber, File.ReadAllLines(popFile), m_poppedRegex);
+                    popLog = new DebugLog(args.CameraNumber, File.ReadAllLines(popFile), m_poppedRegex, args.Filters);
                 }
 
                 e.Result = new DebugLogReadResult(args.CameraNumber, pushLog, popLog);
@@ -169,7 +199,7 @@ namespace DebugLogReader
                 StartLogCombines();
             }
         }
-        
+
         private void StartLogCombines()
         {
             prgFiles.Maximum = 100;
@@ -198,7 +228,7 @@ namespace DebugLogReader
 
                 worker.ReportProgress((progressCount * 100) / progressFinish, log.CameraNumber);
             }
-            
+
             giantLog.Sort();
             progressCount++;
 
@@ -221,7 +251,7 @@ namespace DebugLogReader
             AddMessage("Logs combined");
             DebugLog giantLog = (DebugLog)e.Result;
 
-            String giantLogFilename = Path.Combine(txtLogDirectory.Text, "giantLog.txt");
+            String giantLogFilename = Path.Combine(txtLogDirectory.Text, $"giantLog{m_filterDescription}.txt");
             if (File.Exists(giantLogFilename))
             {
                 if (MessageBox.Show($"{giantLogFilename} exists\r\nYou want to overwrite it?", "", MessageBoxButtons.YesNo) == DialogResult.Yes)
@@ -239,5 +269,6 @@ namespace DebugLogReader
 
         int m_readLogsInProgress;
         List<DebugLog> m_logs;
+        String m_filterDescription;
     }
 }

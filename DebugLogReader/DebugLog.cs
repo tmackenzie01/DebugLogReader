@@ -17,7 +17,7 @@ namespace DebugLogReader
             m_rows = new List<DebugLogRow>();
         }
 
-        public DebugLog(int cameraNumber, String[] debugLogText, Regex r)
+        public DebugLog(int cameraNumber, String[] debugLogText, Regex r, List<DebugLogRowFilter> filters)
         {
             m_cameraNumber = cameraNumber;
             m_rows = new List<DebugLogRow>();
@@ -28,7 +28,7 @@ namespace DebugLogReader
             foreach (String line in debugLogText)
             {
                 newRow = new DebugLogRow(cameraNumber, line, r, previousTimestamp);
-                m_rows.Add(newRow);
+                AddRow(newRow, filters);
 
                 if (newRow != null)
                 {
@@ -37,9 +37,39 @@ namespace DebugLogReader
                 rowCount++;
             }
 
-            if (debugLogText.Length != m_rows.Count)
+            if ((debugLogText.Length != m_rows.Count) && (filters == null))
             {
                 throw new Exception("Ooops!");
+            }
+        }
+
+        private void AddRow(DebugLogRow newRow, List<DebugLogRowFilter> filters)
+        {
+            bool conditionsMet = false;
+
+            if (filters == null)
+            {
+                conditionsMet = true;
+            }
+            else
+            {
+                conditionsMet = (filters.Count == 0);
+
+                if (filters.Count > 0)
+                {
+                    // Check first condition
+                    conditionsMet = filters[0].MeetsConditions(newRow);
+
+                    for (int i = 1; i < filters.Count; i++)
+                    {
+                        conditionsMet = conditionsMet && filters[i].MeetsConditions(newRow);
+                    }
+                }
+            }
+
+            if (conditionsMet)
+            {
+                m_rows.Add(newRow);
             }
         }
 
@@ -72,7 +102,7 @@ namespace DebugLogReader
         public void Save(String filename)
         {
             StreamWriter sw = new StreamWriter(filename);
-            foreach(DebugLogRow row in m_rows)
+            foreach (DebugLogRow row in m_rows)
             {
                 sw.WriteLine(row.ToString());
             }

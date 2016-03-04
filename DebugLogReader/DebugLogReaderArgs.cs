@@ -12,6 +12,20 @@ namespace DebugLogReader
         {
             m_directory = directory;
             m_cameraNumber = cameraNumber;
+            m_filters = null;
+        }
+
+        public void AddFilters(List<DebugLogRowFilter> filter)
+        {
+            if (m_filters == null)
+            {
+                m_filters = new List<DebugLogRowFilter>();
+            }
+
+            if (filter != null)
+            {
+                m_filters.AddRange(filter);
+            }
         }
 
         public String LogDirectory()
@@ -35,7 +49,16 @@ namespace DebugLogReader
             }
         }
 
+        public List<DebugLogRowFilter> Filters
+        {
+            get
+            {
+                return m_filters;
+            }
+        }
+
         int m_cameraNumber;
         String m_directory;
+        List<DebugLogRowFilter> m_filters;
     }
 }

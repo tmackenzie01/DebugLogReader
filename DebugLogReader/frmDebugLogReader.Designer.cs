@@ -33,6 +33,10 @@
             this.colMessage = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.txtLogDirectory = new System.Windows.Forms.TextBox();
             this.prgFiles = new System.Windows.Forms.ProgressBar();
+            this.chkQueueFilter = new System.Windows.Forms.CheckBox();
+            this.grpFilters = new System.Windows.Forms.GroupBox();
+            this.txtQueueAbove = new System.Windows.Forms.TextBox();
+            this.grpFilters.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnReadLogs
@@ -52,9 +56,9 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.lstProgress.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.colMessage});
-            this.lstProgress.Location = new System.Drawing.Point(3, 33);
+            this.lstProgress.Location = new System.Drawing.Point(3, 111);
             this.lstProgress.Name = "lstProgress";
-            this.lstProgress.Size = new System.Drawing.Size(551, 353);
+            this.lstProgress.Size = new System.Drawing.Size(551, 275);
             this.lstProgress.TabIndex = 1;
             this.lstProgress.UseCompatibleStateImageBehavior = false;
             this.lstProgress.View = System.Windows.Forms.View.Details;
@@ -83,17 +87,48 @@
             this.prgFiles.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
             this.prgFiles.TabIndex = 3;
             // 
+            // chkQueueFilter
+            // 
+            this.chkQueueFilter.AutoSize = true;
+            this.chkQueueFilter.Location = new System.Drawing.Point(9, 19);
+            this.chkQueueFilter.Name = "chkQueueFilter";
+            this.chkQueueFilter.Size = new System.Drawing.Size(91, 17);
+            this.chkQueueFilter.TabIndex = 4;
+            this.chkQueueFilter.Text = "Queue above";
+            this.chkQueueFilter.UseVisualStyleBackColor = true;
+            // 
+            // grpFilters
+            // 
+            this.grpFilters.Controls.Add(this.txtQueueAbove);
+            this.grpFilters.Controls.Add(this.chkQueueFilter);
+            this.grpFilters.Location = new System.Drawing.Point(3, 33);
+            this.grpFilters.Name = "grpFilters";
+            this.grpFilters.Size = new System.Drawing.Size(551, 72);
+            this.grpFilters.TabIndex = 5;
+            this.grpFilters.TabStop = false;
+            this.grpFilters.Text = "Filters";
+            // 
+            // txtQueueAbove
+            // 
+            this.txtQueueAbove.Location = new System.Drawing.Point(96, 17);
+            this.txtQueueAbove.Name = "txtQueueAbove";
+            this.txtQueueAbove.Size = new System.Drawing.Size(100, 20);
+            this.txtQueueAbove.TabIndex = 5;
+            // 
             // frmDebugLogReader
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(559, 418);
+            this.Controls.Add(this.grpFilters);
             this.Controls.Add(this.prgFiles);
             this.Controls.Add(this.txtLogDirectory);
             this.Controls.Add(this.lstProgress);
             this.Controls.Add(this.btnReadLogs);
             this.Name = "frmDebugLogReader";
             this.Text = "Debug Log Reader";
+            this.grpFilters.ResumeLayout(false);
+            this.grpFilters.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -106,6 +141,9 @@
         private System.Windows.Forms.TextBox txtLogDirectory;
         private System.Windows.Forms.ColumnHeader colMessage;
         private System.Windows.Forms.ProgressBar prgFiles;
+        private System.Windows.Forms.CheckBox chkQueueFilter;
+        private System.Windows.Forms.GroupBox grpFilters;
+        private System.Windows.Forms.TextBox txtQueueAbove;
     }
 }
 

@@ -50,6 +50,7 @@
     <Compile Include="DebugLogReaderArgs.cs" />
     <Compile Include="DebugLogReadResult.cs" />
     <Compile Include="DebugLogRow.cs" />
+    <Compile Include="DebugLogRowFilter.cs" />
     <Compile Include="frmDebugLogReader.cs">
       <SubType>Form</SubType>
     </Compile>
