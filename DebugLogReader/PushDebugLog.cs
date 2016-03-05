@@ -8,7 +8,7 @@ namespace DebugLogReader
 {
     public class PushDebugLog : DebugLog
     {
-        public PushDebugLog(int cameraNumber, List<DebugLogRowFilter> filters) : base(cameraNumber, filters)
+        public PushDebugLog(int cameraNumber, List<DebugLogFilter> filters) : base(cameraNumber, filters)
         {
         }
 

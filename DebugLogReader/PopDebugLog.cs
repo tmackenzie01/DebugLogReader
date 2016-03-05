@@ -8,7 +8,7 @@ namespace DebugLogReader
 {
     public class PopDebugLog : DebugLog
     {
-        public PopDebugLog(int cameraNumber, List<DebugLogRowFilter> filters) : base(cameraNumber, filters)
+        public PopDebugLog(int cameraNumber, List<DebugLogFilter> filters) : base(cameraNumber, filters)
         {
         }
 

@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace DebugLogReader
 {
-    public class DebugLogRowFilter
+    public class DebugLogFilter
     {
-        public DebugLogRowFilter(eFilterBy filterBy, String filterData)
+        public DebugLogFilter(eFilterBy filterBy, String filterData)
         {
             m_filterBy = filterBy;
             m_filterDataText = ""; // Not used so far
@@ -24,7 +24,7 @@ namespace DebugLogReader
                     break;
             }
         }
-        public DebugLogRowFilter(eFilterBy filterBy, List<int> filterData)
+        public DebugLogFilter(eFilterBy filterBy, List<int> filterData)
         {
             m_filterBy = filterBy;
             m_filterDataText = ""; // Not used so far

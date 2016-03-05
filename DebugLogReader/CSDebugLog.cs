@@ -8,7 +8,7 @@ namespace DebugLogReader
 {
     public class CSDebugLog : DebugLog
     {
-        public CSDebugLog(int cameraNumber, List<DebugLogRowFilter> filters) : base(cameraNumber, filters)
+        public CSDebugLog(int cameraNumber, List<DebugLogFilter> filters) : base(cameraNumber, filters)
         {
         }
 

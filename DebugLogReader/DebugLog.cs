@@ -19,7 +19,7 @@ namespace DebugLogReader
             InitialiseRegex();
         }
 
-        public DebugLog(int cameraNumber, List<DebugLogRowFilter> filters)
+        public DebugLog(int cameraNumber, List<DebugLogFilter> filters)
         {
             m_cameraNumber = cameraNumber;
             m_rows = new List<DebugLogRow>();
@@ -84,7 +84,7 @@ namespace DebugLogReader
             }
         }
 
-        private bool CheckDebugLogFilters(List<DebugLogRowFilter> filters)
+        private bool CheckDebugLogFilters(List<DebugLogFilter> filters)
         {
             bool conditionsMet = false;
 
@@ -111,7 +111,7 @@ namespace DebugLogReader
             return conditionsMet;
         }
 
-        private void AddRow(DebugLogRow newRow, List<DebugLogRowFilter> filters)
+        private void AddRow(DebugLogRow newRow, List<DebugLogFilter> filters)
         {
             bool conditionsMet = false;
 
@@ -207,7 +207,7 @@ namespace DebugLogReader
             }
         }
 
-        public void Filter(DebugLogRowFilter filter)
+        public void Filter(DebugLogFilter filter)
         {
             // Store old, create new log
             List<DebugLogRow> oldRows = m_rows;
@@ -215,7 +215,7 @@ namespace DebugLogReader
 
             foreach (DebugLogRow row in oldRows)
             {
-                AddRow(row, new List<DebugLogRowFilter>() { filter });
+                AddRow(row, new List<DebugLogFilter>() { filter });
             }
         }
 
@@ -246,7 +246,7 @@ namespace DebugLogReader
         }
 
         int m_cameraNumber;
-        List<DebugLogRowFilter> m_filters;
+        List<DebugLogFilter> m_filters;
         String m_filterMessage;
         List<DebugLogRow> m_rows;
 

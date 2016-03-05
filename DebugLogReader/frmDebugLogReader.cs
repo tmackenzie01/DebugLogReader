@@ -31,7 +31,7 @@ namespace DebugLogReader
             lstProgress.Items.Clear();
             btnReadLogs.Enabled = false;
             List<int> cameraNumbers = GetCameraNumbers(txtLogDirectory.Text);
-            List<DebugLogRowFilter> filters = GetFilters();
+            List<DebugLogFilter> filters = GetFilters();
 
             cameraNumbers.Sort();
 
@@ -85,9 +85,9 @@ namespace DebugLogReader
             return cameraNumbers;
         }
 
-        List<DebugLogRowFilter> GetFilters()
+        List<DebugLogFilter> GetFilters()
         {
-            List<DebugLogRowFilter> filters = new List<DebugLogRowFilter>();
+            List<DebugLogFilter> filters = new List<DebugLogFilter>();
             StringBuilder filterDescription = new StringBuilder();
 
             // Queue above
@@ -98,7 +98,7 @@ namespace DebugLogReader
                     int queueAbove = 0;
                     if (Int32.TryParse(txtQueueAbove.Text, out queueAbove))
                     {
-                        DebugLogRowFilter filter = new DebugLogRowFilter(eFilterBy.QueueCount, queueAbove.ToString());
+                        DebugLogFilter filter = new DebugLogFilter(eFilterBy.QueueCount, queueAbove.ToString());
                         filterDescription.Append(filter.ToString());
                         filters.Add(filter);
                     }
@@ -110,7 +110,7 @@ namespace DebugLogReader
             {
                 if (!String.IsNullOrEmpty(txtCameras.Text))
                 {
-                    DebugLogRowFilter filter = new DebugLogRowFilter(eFilterBy.CameraNumber, frmCameraSelection.CameraCSVToList(txtCameras.Text));
+                    DebugLogFilter filter = new DebugLogFilter(eFilterBy.CameraNumber, frmCameraSelection.CameraCSVToList(txtCameras.Text));
                     filterDescription.Append(filter.ToString());
                     filters.Add(filter);
                 }
@@ -260,7 +260,7 @@ namespace DebugLogReader
 
             if (chkStartAtSameTime.Checked)
             {
-                giantLog.Filter(new DebugLogRowFilter(eFilterBy.StartTime, latestStartTime.ToString(@"dd/MM/yyyy HH:mm:ss.fff")));
+                giantLog.Filter(new DebugLogFilter(eFilterBy.StartTime, latestStartTime.ToString(@"dd/MM/yyyy HH:mm:ss.fff")));
             }
             giantLog.Sort();
             progressCount++;
