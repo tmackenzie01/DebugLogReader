@@ -131,6 +131,18 @@ namespace DebugLogReader
             }
         }
 
+        public int RowCount
+        {
+            get
+            {
+                return m_rowCount;
+            }
+            set
+            {
+                m_rowCount = value;
+            }
+        }
+
         String m_text;
         int m_cameraNumber;
         bool m_bWroteData;
@@ -139,6 +151,7 @@ namespace DebugLogReader
         int m_dataPushedPopped;
         int m_queueCount;
         DateTime m_timestamp;
+        public int m_rowCount;
 
         // Not storing any of these at the moment
         //int m_frameNumber;

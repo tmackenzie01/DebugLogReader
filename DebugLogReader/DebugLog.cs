@@ -58,6 +58,7 @@ namespace DebugLogReader
             foreach (String line in debugLogText)
             {
                 newRow = new DebugLogRow(m_cameraNumber, line, m_rowRegex, previousTimestamp);
+                newRow.RowCount = rowCount;
                 dataWritten = dataWritten + newRow.DataPopped;
                 SetWroteDataInfo(newRow, ref dataWritten, ref lastWroteDataTimestamp);
                 AddRow(newRow, m_filters);
@@ -112,7 +113,17 @@ namespace DebugLogReader
 
         public void Sort()
         {
-            m_rows.Sort(delegate (DebugLogRow log1, DebugLogRow log2) { return log1.Timestamp.CompareTo(log2.Timestamp); });
+            m_rows.Sort(delegate (DebugLogRow log1, DebugLogRow log2) 
+            {
+                int timestampComp = log1.Timestamp.CompareTo(log2.Timestamp);
+
+                if (timestampComp == 0)
+                {
+                    return log1.RowCount.CompareTo(log2.RowCount);
+                }
+
+                return timestampComp;
+            });
         }
 
         public DateTime GetStartTime()
