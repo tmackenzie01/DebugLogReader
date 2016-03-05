@@ -186,11 +186,11 @@ namespace DebugLogReader
                     popLog.Load(popFile);
                 }
 
-                e.Result = new DebugLogReadResult(args.CameraNumber, pushLog, popLog);
+                e.Result = new DebugLogReaderResult(args.CameraNumber, pushLog, popLog);
             }
             else
             {
-                e.Result = new DebugLogReadResult(args.CameraNumber);
+                e.Result = new DebugLogReaderResult(args.CameraNumber);
             }
         }
 
@@ -203,7 +203,7 @@ namespace DebugLogReader
 
         private void ReadLogs_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            DebugLogReadResult result = (DebugLogReadResult)e.Result;
+            DebugLogReaderResult result = (DebugLogReaderResult)e.Result;
             bool combineLogs = false;
 
             AddMessage(result.ToString());

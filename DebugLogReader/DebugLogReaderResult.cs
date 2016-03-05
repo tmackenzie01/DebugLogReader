@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 
 namespace DebugLogReader
 {
-    public class DebugLogReadResult
+    public class DebugLogReaderResult
     {
-        public DebugLogReadResult(int cameraNumber)
+        public DebugLogReaderResult(int cameraNumber)
         {
             m_success = false;
         }
 
-        public DebugLogReadResult(int cameraNumber, DebugLog pushLog, DebugLog popLog)
+        public DebugLogReaderResult(int cameraNumber, DebugLog pushLog, DebugLog popLog)
         {
             m_success = true;
             m_cameraNumber = cameraNumber;

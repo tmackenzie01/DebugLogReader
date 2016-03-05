@@ -49,7 +49,7 @@
     <Compile Include="Logs\CSDebugLog.cs" />
     <Compile Include="Logs\DebugLog.cs" />
     <Compile Include="DebugLogReaderArgs.cs" />
-    <Compile Include="DebugLogReadResult.cs" />
+    <Compile Include="DebugLogReaderResult.cs" />
     <Compile Include="Logs\DebugLogRow.cs" />
     <Compile Include="Logs\DebugLogFilter.cs" />
     <Compile Include="Forms\frmCameraSelection.cs">
