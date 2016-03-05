@@ -27,6 +27,7 @@ namespace DebugLogReader
             // Try the Regex
             if (text.Equals("Wrote data"))
             {
+                m_bWroteData = true;
                 m_timestamp = previousTimestamp;
                 m_text = $"{m_cameraNumber.ToString()} Wrote data - {m_timestamp.ToString("dd/MM/yyyy HH:mm:ss.fff")}";
             }
@@ -42,6 +43,10 @@ namespace DebugLogReader
                 if (match.Success)
                 {
                     String timestamp = match.Groups["timestamp"].Value;
+                    if (!Int32.TryParse(match.Groups["pushedPopped"].Value, out m_dataPushedPopped))
+                    {
+                        m_dataPushedPopped = -1;
+                    }
                     if (!Int32.TryParse(match.Groups["queueCount"].Value, out m_queueCount))
                     {
                         m_queueCount = -1;
@@ -62,9 +67,28 @@ namespace DebugLogReader
             }
         }
 
+        public void SetWroteDataElapsed(TimeSpan lastWroteElapsed)
+        {
+            m_lastWroteElapsed = lastWroteElapsed;
+        }
+
+        public void SetWroteDataWritten(int dataWritten)
+        {
+            m_dataWritten = dataWritten;
+        }
+
         public override string ToString()
         {
-            return m_text;
+            if (!m_bWroteData)
+            {
+                return m_text;
+            }
+            else
+            {
+                double dataWritten = m_dataWritten;
+                dataWritten = dataWritten / 1024.0;
+                return $"{CameraNumber} {m_timestamp.ToString("dd/MM/yyyy HH:mm:ss.fff")} ({m_lastWroteElapsed.TotalSeconds.ToString("f3")} seconds since last wrote data - {dataWritten.ToString("f3")}Kb)";
+            }
         }
 
         public DateTime Timestamp
@@ -91,8 +115,28 @@ namespace DebugLogReader
             }
         }
 
+        public bool WroteData
+        {
+            get
+            {
+                return m_bWroteData;
+            }
+        }
+
+        public int DataPopped
+        {
+            get
+            {
+                return m_dataPushedPopped;
+            }
+        }
+
         String m_text;
         int m_cameraNumber;
+        bool m_bWroteData;
+        TimeSpan m_lastWroteElapsed;
+        int m_dataWritten;
+        int m_dataPushedPopped;
 
         // Not storing any of these at the moment
         int m_queueCount;

@@ -31,17 +31,35 @@ namespace DebugLogReader
         {
         }
 
+        private void SetWroteDataInfo(DebugLogRow row, ref int dataWritten, ref DateTime lastTime)
+        {
+            if (row.WroteData)
+            {
+                if (!lastTime.Equals(DateTime.MinValue))
+                {
+                    row.SetWroteDataElapsed(row.Timestamp - lastTime);
+                }
+                row.SetWroteDataWritten(dataWritten);
+                dataWritten = 0;
+                lastTime = row.Timestamp;
+            }
+        }
+
         public void Load(String filename)
         {
             DebugLogRow newRow = null;
             DateTime previousTimestamp = DateTime.MinValue;
             int rowCount = 0;
+            DateTime lastWroteDataTimestamp = DateTime.MinValue;
+            int dataWritten = 0;
 
             String[] debugLogText = File.ReadAllLines(filename);
 
             foreach (String line in debugLogText)
             {
                 newRow = new DebugLogRow(m_cameraNumber, line, m_rowRegex, previousTimestamp);
+                dataWritten = dataWritten + newRow.DataPopped;
+                SetWroteDataInfo(newRow, ref dataWritten, ref lastWroteDataTimestamp);
                 AddRow(newRow, m_filters);
 
                 if (newRow != null)
@@ -148,8 +166,8 @@ namespace DebugLogReader
             // Store old, create new log
             List<DebugLogRow> oldRows = m_rows;
             m_rows = new List<DebugLogRow>();
-            
-            foreach(DebugLogRow row in oldRows)
+
+            foreach (DebugLogRow row in oldRows)
             {
                 AddRow(row, new List<DebugLogRowFilter>() { filter });
             }
