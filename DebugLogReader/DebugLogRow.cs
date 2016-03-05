@@ -63,7 +63,7 @@ namespace DebugLogReader
 
             if (String.IsNullOrEmpty(m_text))
             {
-                int dfgd = 0;
+                throw new Exception("Ooops");
             }
         }
 
@@ -137,13 +137,13 @@ namespace DebugLogReader
         TimeSpan m_lastWroteElapsed;
         int m_dataWritten;
         int m_dataPushedPopped;
+        int m_queueCount;
+        DateTime m_timestamp;
 
         // Not storing any of these at the moment
-        int m_queueCount;
-        int m_frameNumber;
-        int m_frameSize;
-        int m_flags;
-        String m_elapsed;
-        DateTime m_timestamp;
+        //int m_frameNumber;
+        //int m_frameSize;
+        //int m_flags;
+        //String m_elapsed;
     }
 }
