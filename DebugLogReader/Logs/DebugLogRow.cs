@@ -70,6 +70,10 @@ namespace DebugLogReader
         public void SetWroteDataElapsed(TimeSpan lastWroteElapsed)
         {
             m_lastWroteElapsed = lastWroteElapsed;
+            if (lastWroteElapsed.TotalSeconds > 10)
+            {
+                System.Diagnostics.Debug.WriteLine(this.ToString());
+            }
         }
 
         public void SetWroteDataWritten(int dataWritten)
