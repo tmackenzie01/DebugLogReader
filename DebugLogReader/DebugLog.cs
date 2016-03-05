@@ -171,7 +171,7 @@ namespace DebugLogReader
             DateTime startTime = GetStartTime();
             TimeSpan duration = GetEndime() - startTime;
 
-            return $"{m_rows?.Count} lines, {duration.TotalSeconds.ToString("f3")} secs";
+            return $"{m_rows?.Count} lines, {startTime.ToString("HH:mm:ss")} ({duration.TotalSeconds} secs)";
         }
 
         int m_cameraNumber;
