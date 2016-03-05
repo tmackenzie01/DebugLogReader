@@ -30,7 +30,7 @@ namespace DebugLogReader
         {
             lstProgress.Items.Clear();
             btnReadLogs.Enabled = false;
-            List<int> cameraNumbers = GetCameraNumbers();
+            List<int> cameraNumbers = GetCameraNumbers(txtLogDirectory.Text);
             List<DebugLogRowFilter> filters = GetFilters();
 
             cameraNumbers.Sort();
@@ -54,9 +54,9 @@ namespace DebugLogReader
             prgFiles.Maximum = cameraNumbers.Count;
         }
 
-        private List<int> GetCameraNumbers()
+        public static List<int> GetCameraNumbers(String parentLogDirectory)
         {
-            String[] logDirectories = Directory.GetDirectories(txtLogDirectory.Text);
+            String[] logDirectories = Directory.GetDirectories(parentLogDirectory);
             List<int> cameraNumbers = new List<int>();
             int cameraNumber = -1;
 
@@ -80,14 +80,17 @@ namespace DebugLogReader
                 }
             }
 
+            cameraNumbers.Sort();
+
             return cameraNumbers;
         }
 
         List<DebugLogRowFilter> GetFilters()
         {
-            List<DebugLogRowFilter> filters = null;
+            List<DebugLogRowFilter> filters = new List<DebugLogRowFilter>();
             StringBuilder filterDescription = new StringBuilder();
 
+            // Queue above
             if (chkQueueFilter.Checked)
             {
                 if (!String.IsNullOrEmpty(txtQueueAbove.Text))
@@ -97,20 +100,34 @@ namespace DebugLogReader
                     {
                         DebugLogRowFilter filter = new DebugLogRowFilter(eFilterBy.QueueCount, queueAbove.ToString());
                         filterDescription.Append(filter.ToString());
-                        if (filters == null)
-                        {
-                            filters = new List<DebugLogRowFilter>();
-                            filters.Add(filter);
-                        }
+                        filters.Add(filter);
                     }
                 }
             }
 
+            // Cameras
+            if (chkCamerSelect.Checked)
+            {
+                if (!String.IsNullOrEmpty(txtCameras.Text))
+                {
+                    DebugLogRowFilter filter = new DebugLogRowFilter(eFilterBy.CameraNumber, frmCameraSelection.CameraCSVToList(txtCameras.Text));
+                    filterDescription.Append(filter.ToString());
+                    filters.Add(filter);
+                }
+            }
+
+            // Start at same time
             if (chkStartAtSameTime.Checked)
             {
                 // We cannot create the filter as we need to have the times for all the logs first
                 // we do this just before the sort
                 filterDescription.Append("_StartAtSameTime");
+            }
+
+            // If we have not created any filters then clear the list - we use this to determine there are no filters
+            if (filters.Count == 0)
+            {
+                filters = null;
             }
 
             m_filterDescription = filterDescription.ToString();
@@ -148,7 +165,7 @@ namespace DebugLogReader
                     fileFoundCount++;
                 }
             }
-            
+
             // Try to parse the CSWrite file
             if (!String.IsNullOrEmpty(csFile))
             {
@@ -278,6 +295,15 @@ namespace DebugLogReader
 
             giantLog.Save(giantLogFilename);
             AddMessage($"File created {giantLogFilename}");
+        }
+        private void txtCameras_MouseClick(object sender, MouseEventArgs e)
+        {
+            frmCameraSelection frmCam = new frmCameraSelection(txtLogDirectory.Text, txtCameras.Text);
+            if (frmCam.ShowDialog() == DialogResult.OK)
+            {
+                chkCamerSelect.Checked = !String.IsNullOrEmpty(frmCam.SelectedCameraCSV);
+                txtCameras.Text = frmCam.SelectedCameraCSV;
+            }
         }
 
         int m_readLogsInProgress;

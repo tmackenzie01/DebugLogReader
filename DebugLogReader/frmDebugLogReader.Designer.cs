@@ -35,8 +35,10 @@
             this.prgFiles = new System.Windows.Forms.ProgressBar();
             this.chkQueueFilter = new System.Windows.Forms.CheckBox();
             this.grpFilters = new System.Windows.Forms.GroupBox();
-            this.txtQueueAbove = new System.Windows.Forms.TextBox();
             this.chkStartAtSameTime = new System.Windows.Forms.CheckBox();
+            this.txtQueueAbove = new System.Windows.Forms.TextBox();
+            this.chkCamerSelect = new System.Windows.Forms.CheckBox();
+            this.txtCameras = new System.Windows.Forms.TextBox();
             this.grpFilters.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -101,7 +103,9 @@
             // grpFilters
             // 
             this.grpFilters.Controls.Add(this.chkStartAtSameTime);
+            this.grpFilters.Controls.Add(this.txtCameras);
             this.grpFilters.Controls.Add(this.txtQueueAbove);
+            this.grpFilters.Controls.Add(this.chkCamerSelect);
             this.grpFilters.Controls.Add(this.chkQueueFilter);
             this.grpFilters.Location = new System.Drawing.Point(3, 33);
             this.grpFilters.Name = "grpFilters";
@@ -109,13 +113,6 @@
             this.grpFilters.TabIndex = 5;
             this.grpFilters.TabStop = false;
             this.grpFilters.Text = "Filters";
-            // 
-            // txtQueueAbove
-            // 
-            this.txtQueueAbove.Location = new System.Drawing.Point(96, 17);
-            this.txtQueueAbove.Name = "txtQueueAbove";
-            this.txtQueueAbove.Size = new System.Drawing.Size(100, 20);
-            this.txtQueueAbove.TabIndex = 5;
             // 
             // chkStartAtSameTime
             // 
@@ -126,6 +123,31 @@
             this.chkStartAtSameTime.TabIndex = 6;
             this.chkStartAtSameTime.Text = "Start at same time";
             this.chkStartAtSameTime.UseVisualStyleBackColor = true;
+            // 
+            // txtQueueAbove
+            // 
+            this.txtQueueAbove.Location = new System.Drawing.Point(96, 17);
+            this.txtQueueAbove.Name = "txtQueueAbove";
+            this.txtQueueAbove.Size = new System.Drawing.Size(100, 20);
+            this.txtQueueAbove.TabIndex = 5;
+            // 
+            // chkCamerSelect
+            // 
+            this.chkCamerSelect.AutoSize = true;
+            this.chkCamerSelect.Location = new System.Drawing.Point(239, 19);
+            this.chkCamerSelect.Name = "chkCamerSelect";
+            this.chkCamerSelect.Size = new System.Drawing.Size(67, 17);
+            this.chkCamerSelect.TabIndex = 4;
+            this.chkCamerSelect.Text = "Cameras";
+            this.chkCamerSelect.UseVisualStyleBackColor = true;
+            // 
+            // txtCameras
+            // 
+            this.txtCameras.Location = new System.Drawing.Point(306, 16);
+            this.txtCameras.Name = "txtCameras";
+            this.txtCameras.Size = new System.Drawing.Size(100, 20);
+            this.txtCameras.TabIndex = 5;
+            this.txtCameras.MouseClick += new System.Windows.Forms.MouseEventHandler(this.txtCameras_MouseClick);
             // 
             // frmDebugLogReader
             // 
@@ -157,6 +179,8 @@
         private System.Windows.Forms.GroupBox grpFilters;
         private System.Windows.Forms.TextBox txtQueueAbove;
         private System.Windows.Forms.CheckBox chkStartAtSameTime;
+        private System.Windows.Forms.TextBox txtCameras;
+        private System.Windows.Forms.CheckBox chkCamerSelect;
     }
 }
 

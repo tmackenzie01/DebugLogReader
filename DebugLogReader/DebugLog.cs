@@ -53,27 +53,62 @@ namespace DebugLogReader
             DateTime lastWroteDataTimestamp = DateTime.MinValue;
             int dataWritten = 0;
 
-            String[] debugLogText = File.ReadAllLines(filename);
-
-            foreach (String line in debugLogText)
+            // Check filters for the debug log before we even read file
+            if (CheckDebugLogFilters(m_filters))
             {
-                newRow = new DebugLogRow(m_cameraNumber, line, m_rowRegex, previousTimestamp);
-                newRow.RowCount = rowCount;
-                dataWritten = dataWritten + newRow.DataPopped;
-                SetWroteDataInfo(newRow, ref dataWritten, ref lastWroteDataTimestamp);
-                AddRow(newRow, m_filters);
+                String[] debugLogText = File.ReadAllLines(filename);
 
-                if (newRow != null)
+                foreach (String line in debugLogText)
                 {
-                    previousTimestamp = newRow.Timestamp;
+                    newRow = new DebugLogRow(m_cameraNumber, line, m_rowRegex, previousTimestamp);
+                    newRow.RowCount = rowCount;
+                    dataWritten = dataWritten + newRow.DataPopped;
+                    SetWroteDataInfo(newRow, ref dataWritten, ref lastWroteDataTimestamp);
+                    AddRow(newRow, m_filters);
+
+                    if (newRow != null)
+                    {
+                        previousTimestamp = newRow.Timestamp;
+                    }
+                    rowCount++;
                 }
-                rowCount++;
+
+                if ((debugLogText.Length != m_rows.Count) && (m_filters == null))
+                {
+                    throw new Exception("Ooops!");
+                }
+            }
+            else
+            {
+                m_filterMessage = "filtered out";
+            }
+        }
+
+        private bool CheckDebugLogFilters(List<DebugLogRowFilter> filters)
+        {
+            bool conditionsMet = false;
+
+            if (filters == null)
+            {
+                conditionsMet = true;
+            }
+            else
+            {
+                conditionsMet = (filters.Count == 0);
+
+                if (filters.Count > 0)
+                {
+                    // Check first condition
+                    conditionsMet = filters[0].MeetsConditions(this);
+
+                    for (int i = 1; i < filters.Count; i++)
+                    {
+                        conditionsMet = conditionsMet && filters[i].MeetsConditions(this);
+                    }
+                }
             }
 
-            if ((debugLogText.Length != m_rows.Count) && (m_filters == null))
-            {
-                throw new Exception("Ooops!");
-            }
+            return conditionsMet;
         }
 
         private void AddRow(DebugLogRow newRow, List<DebugLogRowFilter> filters)
@@ -197,14 +232,22 @@ namespace DebugLogReader
 
         public String SummaryText()
         {
-            DateTime startTime = GetStartTime();
-            TimeSpan duration = GetEndime() - startTime;
+            if (String.IsNullOrEmpty(m_filterMessage))
+            {
+                DateTime startTime = GetStartTime();
+                TimeSpan duration = GetEndime() - startTime;
 
-            return $"{m_rows?.Count} lines, {startTime.ToString("HH:mm:ss")} ({duration.TotalSeconds} secs)";
+                return $"{m_rows?.Count} lines, {startTime.ToString("HH:mm:ss")} ({duration.TotalSeconds} secs)";
+            }
+            else
+            {
+                return m_filterMessage;
+            }
         }
 
         int m_cameraNumber;
         List<DebugLogRowFilter> m_filters;
+        String m_filterMessage;
         List<DebugLogRow> m_rows;
 
         protected Regex m_rowRegex;
