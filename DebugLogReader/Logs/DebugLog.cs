@@ -35,11 +35,11 @@ namespace DebugLogReader
         {
             if (row.WroteData)
             {
+                row.SetWroteDataWritten(dataWritten);
                 if (!lastTime.Equals(DateTime.MinValue))
                 {
                     row.SetWroteDataElapsed(row.Timestamp - lastTime);
                 }
-                row.SetWroteDataWritten(dataWritten);
                 dataWritten = 0;
                 lastTime = row.Timestamp;
             }
