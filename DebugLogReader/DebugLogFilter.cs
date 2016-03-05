@@ -9,28 +9,25 @@ namespace DebugLogReader
 {
     public class DebugLogFilter
     {
-        public DebugLogFilter(eFilterBy filterBy, String filterData)
+        public DebugLogFilter(eFilterBy filterBy, Object filterData)
         {
             m_filterBy = filterBy;
-            m_filterDataText = ""; // Not used so far
 
+            // Change each object into what it's supposed to be then stick in a object
             switch (filterBy)
             {
                 case eFilterBy.QueueCount:
-                    Int32.TryParse(filterData, out m_filterDataInt);
+                    String queueCountText = (String)filterData;
+                    int queueCount = 0;
+                    if (Int32.TryParse(queueCountText, out queueCount))
+                    {
+                        m_filterData = queueCount;
+                    }
                     break;
                 case eFilterBy.StartTime:
-                    m_filterDataDateTime = DateTime.ParseExact(filterData, @"dd/MM/yyyy HH:mm:ss.fff", CultureInfo.InvariantCulture);
+                    String startTimeText = (String)filterData;
+                    m_filterData = DateTime.ParseExact(startTimeText, @"dd/MM/yyyy HH:mm:ss.fff", CultureInfo.InvariantCulture);
                     break;
-            }
-        }
-        public DebugLogFilter(eFilterBy filterBy, List<int> filterData)
-        {
-            m_filterBy = filterBy;
-            m_filterDataText = ""; // Not used so far
-
-            switch (filterBy)
-            {
                 case eFilterBy.CameraNumber:
                     m_filterData = filterData;
                     break;
@@ -39,7 +36,8 @@ namespace DebugLogReader
 
         public bool MeetsConditions(DebugLog log)
         {
-            bool conditionsMet = false;
+            // Default is true as most conditions we can't check at the debug log stage only at the row stage
+            bool conditionsMet = true;
 
             switch (m_filterBy)
             {
@@ -63,10 +61,12 @@ namespace DebugLogReader
                     conditionsMet = cameras.Contains(row.CameraNumber);
                     break;
                 case eFilterBy.QueueCount:
-                    conditionsMet = (row.QueueCount > m_filterDataInt);
+                    int queueCount = (int)m_filterData;
+                    conditionsMet = (row.QueueCount > queueCount);
                     break;
                 case eFilterBy.StartTime:
-                    conditionsMet = (row.Timestamp > m_filterDataDateTime);
+                    DateTime startTime = (DateTime)m_filterData;
+                    conditionsMet = (row.Timestamp > startTime);
                     break;
             }
 
@@ -81,18 +81,17 @@ namespace DebugLogReader
                     List<int> cameras = (List<int>)m_filterData;
                     return $"_CamNumEqualTo{frmCameraSelection.CameraListToCSV(cameras)}";
                 case eFilterBy.QueueCount:
-                    return $"_QueueCountGreaterThan{m_filterDataInt}";
+                    int queueCount = (int)m_filterData;
+                    return $"_QueueCountGreaterThan{queueCount}";
                 case eFilterBy.StartTime:
-                    return $"_StartTimeGreaterThan{m_filterDataDateTime.ToString("HH:mm:ss")}";
+                    DateTime startTime = (DateTime)m_filterData;
+                    return $"_StartTimeGreaterThan{startTime.ToString("HH:mm:ss")}";
                 default:
                     return "";
             }
         }
-
-        String m_filterDataText;
+        
         Object m_filterData;
-        int m_filterDataInt;
-        DateTime m_filterDataDateTime;
         eFilterBy m_filterBy;
     }
     
