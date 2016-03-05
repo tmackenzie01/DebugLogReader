@@ -111,7 +111,7 @@ namespace DebugLogReader
             return conditionsMet;
         }
 
-        private void AddRow(DebugLogRow newRow, List<DebugLogFilter> filters)
+        private bool CheckDebugLogRowFilters(DebugLogRow row, List<DebugLogFilter> filters)
         {
             bool conditionsMet = false;
 
@@ -126,16 +126,21 @@ namespace DebugLogReader
                 if (filters.Count > 0)
                 {
                     // Check first condition
-                    conditionsMet = filters[0].MeetsConditions(newRow);
+                    conditionsMet = filters[0].MeetsConditions(row);
 
                     for (int i = 1; i < filters.Count; i++)
                     {
-                        conditionsMet = conditionsMet && filters[i].MeetsConditions(newRow);
+                        conditionsMet = conditionsMet && filters[i].MeetsConditions(row);
                     }
                 }
             }
 
-            if (conditionsMet)
+            return conditionsMet;
+        }
+
+        private void AddRow(DebugLogRow newRow, List<DebugLogFilter> filters)
+        {
+            if (CheckDebugLogRowFilters(newRow, filters))
             {
                 m_rows.Add(newRow);
             }
