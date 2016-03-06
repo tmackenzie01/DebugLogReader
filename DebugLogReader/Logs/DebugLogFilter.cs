@@ -9,9 +9,10 @@ namespace DebugLogReader
 {
     public class DebugLogFilter
     {
-        public DebugLogFilter(eFilterBy filterBy, Object filterData)
+        public DebugLogFilter(eFilterBy filterBy, eFilterComparision filterComparison, Object filterData)
         {
             m_filterBy = filterBy;
+            m_filterComparision = filterComparison;
 
             // Change each object into what it's supposed to be then stick in a object
             switch (filterBy)
@@ -22,17 +23,14 @@ namespace DebugLogReader
                     if (Int32.TryParse(queueCountText, out queueCount))
                     {
                         m_filterData = queueCount;
-                        m_filterComparision = eFilterComparision.GreaterThan;
                     }
                     break;
                 case eFilterBy.StartTime:
                     String startTimeText = (String)filterData;
                     m_filterData = DateTime.ParseExact(startTimeText, @"dd/MM/yyyy HH:mm:ss.fff", CultureInfo.InvariantCulture);
-                    m_filterComparision = eFilterComparision.GreaterThan;
                     break;
                 case eFilterBy.CameraNumber:
                     m_filterData = filterData;
-                    m_filterComparision = eFilterComparision.MemberOf;
                     break;
             }
         }

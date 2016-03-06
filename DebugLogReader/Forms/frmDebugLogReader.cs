@@ -98,7 +98,7 @@ namespace DebugLogReader
                     int queueAbove = 0;
                     if (Int32.TryParse(txtQueueAbove.Text, out queueAbove))
                     {
-                        DebugLogFilter filter = new DebugLogFilter(eFilterBy.QueueCount, queueAbove.ToString());
+                        DebugLogFilter filter = new DebugLogFilter(eFilterBy.QueueCount, eFilterComparision.GreaterThan, queueAbove.ToString());
                         filterDescription.Append(filter.ToString());
                         filters.Add(filter);
                     }
@@ -110,7 +110,7 @@ namespace DebugLogReader
             {
                 if (!String.IsNullOrEmpty(txtCameras.Text))
                 {
-                    DebugLogFilter filter = new DebugLogFilter(eFilterBy.CameraNumber, frmCameraSelection.CameraCSVToList(txtCameras.Text));
+                    DebugLogFilter filter = new DebugLogFilter(eFilterBy.CameraNumber, eFilterComparision.MemberOf, frmCameraSelection.CameraCSVToList(txtCameras.Text));
                     filterDescription.Append(filter.ToString());
                     filters.Add(filter);
                 }
@@ -260,7 +260,7 @@ namespace DebugLogReader
 
             if (chkStartAtSameTime.Checked)
             {
-                giantLog.Filter(new DebugLogFilter(eFilterBy.StartTime, latestStartTime.ToString(@"dd/MM/yyyy HH:mm:ss.fff")));
+                giantLog.Filter(new DebugLogFilter(eFilterBy.StartTime, eFilterComparision.GreaterThan, latestStartTime.ToString(@"dd/MM/yyyy HH:mm:ss.fff")));
             }
             giantLog.Sort();
             progressCount++;
