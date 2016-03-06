@@ -49,7 +49,6 @@ namespace DebugLogReader
         {
             DebugLogRow newRow = null;
             DateTime previousTimestamp = DateTime.MinValue;
-            int rowCount = 0;
             DateTime lastWroteDataTimestamp = DateTime.MinValue;
             int dataWritten = 0;
 
@@ -61,7 +60,6 @@ namespace DebugLogReader
                 foreach (String line in debugLogText)
                 {
                     newRow = new DebugLogRow(m_cameraNumber, line, m_rowRegex, previousTimestamp);
-                    newRow.RowCount = rowCount;
                     dataWritten = dataWritten + newRow.DataPopped;
                     SetWroteDataInfo(newRow, ref dataWritten, ref lastWroteDataTimestamp);
                     AddRow(newRow, m_filters);
@@ -70,7 +68,6 @@ namespace DebugLogReader
                     {
                         previousTimestamp = newRow.Timestamp;
                     }
-                    rowCount++;
                 }
 
                 if ((debugLogText.Length != m_rows.Count) && (m_filters == null))
@@ -159,7 +156,7 @@ namespace DebugLogReader
 
                 if (timestampComp == 0)
                 {
-                    return log1.RowCount.CompareTo(log2.RowCount);
+                    return log1.SortingText.CompareTo(log2.SortingText);
                 }
 
                 return timestampComp;

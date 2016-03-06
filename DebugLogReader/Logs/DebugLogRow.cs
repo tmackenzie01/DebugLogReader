@@ -29,10 +29,11 @@ namespace DebugLogReader
             {
                 m_bWroteData = true;
                 m_timestamp = previousTimestamp;
-                m_text = $"{m_cameraNumber.ToString()} Wrote data - {m_timestamp.ToString("dd/MM/yyyy HH:mm:ss.fff")}";
+                m_text = $"Wrote data - {m_timestamp.ToString("dd/MM/yyyy HH:mm:ss.fff")}";
             }
             else
             {
+                m_text = text;
                 // Can't figure out how else to do this
                 if (text.EndsWith("F:Null"))
                 {
@@ -52,8 +53,6 @@ namespace DebugLogReader
                         m_queueCount = -1;
                     }
                     m_timestamp = DateTime.ParseExact(timestamp, @"dd/MM/yyyy HH:mm:ss.fff", CultureInfo.InvariantCulture);
-                    m_text = $"{m_cameraNumber.ToString()} {text}";
-
                 }
                 else
                 {
@@ -81,11 +80,19 @@ namespace DebugLogReader
             m_dataWritten = dataWritten;
         }
 
+        public String SortingText
+        {
+            get
+            {
+                return m_text;
+            }
+        }
+
         public override string ToString()
         {
             if (!m_bWroteData)
             {
-                return m_text;
+                return $"{m_cameraNumber.ToString()} {m_text}";
             }
             else
             {
@@ -135,18 +142,6 @@ namespace DebugLogReader
             }
         }
 
-        public int RowCount
-        {
-            get
-            {
-                return m_rowCount;
-            }
-            set
-            {
-                m_rowCount = value;
-            }
-        }
-
         String m_text;
         int m_cameraNumber;
         bool m_bWroteData;
@@ -155,7 +150,6 @@ namespace DebugLogReader
         int m_dataPushedPopped;
         int m_queueCount;
         DateTime m_timestamp;
-        public int m_rowCount;
 
         // Not storing any of these at the moment
         //int m_frameNumber;
