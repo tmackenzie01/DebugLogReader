@@ -22,14 +22,17 @@ namespace DebugLogReader
                     if (Int32.TryParse(queueCountText, out queueCount))
                     {
                         m_filterData = queueCount;
+                        m_filterComparision = eFilterComparision.GreaterThan;
                     }
                     break;
                 case eFilterBy.StartTime:
                     String startTimeText = (String)filterData;
                     m_filterData = DateTime.ParseExact(startTimeText, @"dd/MM/yyyy HH:mm:ss.fff", CultureInfo.InvariantCulture);
+                    m_filterComparision = eFilterComparision.GreaterThan;
                     break;
                 case eFilterBy.CameraNumber:
                     m_filterData = filterData;
+                    m_filterComparision = eFilterComparision.MemberOf;
                     break;
             }
         }
@@ -43,7 +46,8 @@ namespace DebugLogReader
             {
                 case eFilterBy.CameraNumber:
                     List<int> cameras = (List<int>)m_filterData;
-                    conditionsMet = cameras.Contains(log.CameraNumber);
+                    conditionsMet = CompareObjects(m_filterBy, m_filterComparision, log.CameraNumber, cameras);
+                    //conditionsMet = cameras.Contains(log.CameraNumber);
                     break;
             }
 
@@ -58,16 +62,116 @@ namespace DebugLogReader
             {
                 case eFilterBy.CameraNumber:
                     List<int> cameras = (List<int>)m_filterData;
-                    conditionsMet = cameras.Contains(row.CameraNumber);
+                    conditionsMet = CompareObjects(m_filterBy, m_filterComparision, row.CameraNumber, cameras);
+                    //conditionsMet = cameras.Contains(row.CameraNumber);
                     break;
                 case eFilterBy.QueueCount:
                     int queueCount = (int)m_filterData;
-                    conditionsMet = (row.QueueCount > queueCount);
+                    conditionsMet = CompareObjects(m_filterBy, m_filterComparision, row.QueueCount, queueCount);
+                    //conditionsMet = (row.QueueCount > queueCount);
                     break;
                 case eFilterBy.StartTime:
                     DateTime startTime = (DateTime)m_filterData;
-                    conditionsMet = (row.Timestamp > startTime);
+                    conditionsMet = CompareObjects(m_filterBy, m_filterComparision, row.Timestamp, startTime);
+                    //conditionsMet = (row.Timestamp > startTime);
                     break;
+            }
+
+            return conditionsMet;
+        }
+
+        private bool CompareObjects(eFilterBy filterBy, eFilterComparision filterComparision, Object rowData, Object filterData)
+        {
+            bool conditionsMet = false;
+
+            switch (filterComparision)
+            {
+                case eFilterComparision.GreaterThan:
+                case eFilterComparision.LessThan:
+                case eFilterComparision.EqualTo:
+                    if ((rowData is DateTime) && (filterData is DateTime))
+                    {
+                        conditionsMet = PerformComparision2(filterComparision, (DateTime)rowData, (DateTime)filterData);
+                    }
+                    else if ((rowData is int) && (filterData is int))
+                    {
+                        conditionsMet = PerformComparision2(filterComparision, (int)rowData, (int)filterData);
+                    }
+                    else
+                    {
+                        throw new Exception($"Invalid comparision {filterComparision}");
+                    }
+                    break;
+                case eFilterComparision.MemberOf:
+                    if ((rowData is int) && (filterData is List<int>))
+                    {
+                        conditionsMet = PerformComparision2(filterComparision, (int)rowData, (List<int>)filterData);
+                    }
+                    else
+                    {
+                        throw new Exception($"Invalid comparision {filterComparision}");
+                    }
+                    break;
+            }
+
+            return conditionsMet;
+        }
+
+        private bool PerformComparision2(eFilterComparision filterComparision, DateTime rowDate, DateTime filterDate)
+        {
+            bool conditionsMet = false;
+
+            switch (filterComparision)
+            {
+                case eFilterComparision.LessThan:
+                    conditionsMet = (rowDate < filterDate);
+                    break;
+                case eFilterComparision.EqualTo:
+                    conditionsMet = (rowDate == filterDate);
+                    break;
+                case eFilterComparision.GreaterThan:
+                    conditionsMet = (rowDate > filterDate);
+                    break;
+                default:
+                    throw new Exception($"Invalid comparision {filterComparision} - DateTime");
+            }
+
+            return conditionsMet;
+        }
+
+        private bool PerformComparision2(eFilterComparision filterComparision, int rowInt, int filterInt)
+        {
+            bool conditionsMet = false;
+
+            switch (filterComparision)
+            {
+                case eFilterComparision.LessThan:
+                    conditionsMet = (rowInt < filterInt);
+                    break;
+                case eFilterComparision.EqualTo:
+                    conditionsMet = (rowInt == filterInt);
+                    break;
+                case eFilterComparision.GreaterThan:
+                    conditionsMet = (rowInt > filterInt);
+                    break;
+                default:
+                    throw new Exception($"Invalid comparision {filterComparision} - DateTime");
+            }
+
+            return conditionsMet;
+        }
+
+        private bool PerformComparision2(eFilterComparision filterComparision, int rowInt, List<int> filterInts)
+        {
+            bool conditionsMet = false;
+
+            switch (filterComparision)
+            {
+                case eFilterComparision.MemberOf:
+                    conditionsMet = filterInts.Contains(rowInt);
+                    break;
+                default:
+                    throw new Exception($"Invalid comparision {filterComparision} - DateTime");
             }
 
             return conditionsMet;
@@ -90,12 +194,15 @@ namespace DebugLogReader
                     return "";
             }
         }
-        
+
         Object m_filterData;
         eFilterBy m_filterBy;
+        eFilterComparision m_filterComparision;
     }
-    
+
     // Only filter by (equal to camera number / greater than queue count)
     // If we need less than/equal to then add another enum and change MeetsConditions
-    public enum eFilterBy { CameraNumber, QueueCount, StartTime}
+    public enum eFilterBy { CameraNumber, QueueCount, StartTime }
+
+    public enum eFilterComparision { LessThan, EqualTo, GreaterThan, MemberOf }
 }
