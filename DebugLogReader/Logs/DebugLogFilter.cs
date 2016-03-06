@@ -183,13 +183,13 @@ namespace DebugLogReader
             {
                 case eFilterBy.CameraNumber:
                     List<int> cameras = (List<int>)m_filterData;
-                    return $"_CamNumEqualTo{frmCameraSelection.CameraListToCSV(cameras)}";
+                    return $"_CamNum{m_filterComparision}{frmCameraSelection.CameraListToCSV(cameras)}";
                 case eFilterBy.QueueCount:
                     int queueCount = (int)m_filterData;
-                    return $"_QueueCountGreaterThan{queueCount}";
+                    return $"_QueueCount{m_filterComparision}{queueCount}";
                 case eFilterBy.StartTime:
                     DateTime startTime = (DateTime)m_filterData;
-                    return $"_StartTimeGreaterThan{startTime.ToString("HH:mm:ss")}";
+                    return $"_StartTime{m_filterComparision}{startTime.ToString("HH:mm:ss")}";
                 default:
                     return "";
             }
