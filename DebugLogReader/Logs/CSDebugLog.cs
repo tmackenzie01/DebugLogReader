@@ -11,6 +11,7 @@ namespace DebugLogReader
     {
         public CSDebugLog(int cameraNumber, List<DebugLogFilter> filters) : base(cameraNumber, filters)
         {
+            m_summaryHeader = "CS log";
         }
 
         protected override void InitialiseRegex()

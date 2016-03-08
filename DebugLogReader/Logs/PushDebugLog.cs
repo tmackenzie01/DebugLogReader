@@ -10,6 +10,7 @@ namespace DebugLogReader
     {
         public PushDebugLog(int cameraNumber, List<DebugLogFilter> filters) : base(cameraNumber, filters)
         {
+            m_summaryHeader = "push log";
         }
 
         protected override void InitialiseRegex()

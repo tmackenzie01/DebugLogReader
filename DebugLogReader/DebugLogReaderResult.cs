@@ -13,56 +13,47 @@ namespace DebugLogReader
             m_success = false;
         }
 
-        public DebugLogReaderResult(int cameraNumber, DebugLog pushLog, DebugLog popLog)
+        public DebugLogReaderResult(int cameraNumber, List<DebugLog> logs)
         {
             m_success = true;
             m_cameraNumber = cameraNumber;
-            m_pushLog = pushLog;
-            m_popLog = popLog;
+            m_logs = logs;
         }
 
         public override string ToString()
         {
             if (m_success)
             {
-                String pushLogSummary = "no push log";
-                if (m_pushLog != null)
+                StringBuilder logSummary = new StringBuilder();
+                if (m_logs.Count > 0)
                 {
-                    pushLogSummary = $"push log {m_pushLog.SummaryText()}";
+                    logSummary.Append(m_logs[0].SummaryText());
                 }
-                String popLogSummary = "no push log";
-                if (m_popLog != null)
+
+                for (int i = 1; i < m_logs.Count; i++)
                 {
-                    popLogSummary = $"pop log {m_popLog.SummaryText()}";
+                    logSummary.Append($", {m_logs[0].SummaryText()}");
                 }
-                return $"Camera {m_cameraNumber.ToString()} logs read, {pushLogSummary}, {popLogSummary}";
+                
+                return $"Camera {m_cameraNumber.ToString()} logs read, {logSummary}";
             }
             else
             {
                 return $"Camera {m_cameraNumber.ToString()} logs failed to read";
             }
-        }
-
-        public DebugLog PushLog
+        }    
+        
+        public List<DebugLog> Logs
         {
             get
             {
-                return m_pushLog;
-            }
-        }
-
-        public DebugLog PopLog
-        {
-            get
-            {
-                return m_popLog;
+                return m_logs;
             }
         }
 
         bool m_success;
         int m_cameraNumber;
-        DebugLog m_pushLog;
-        DebugLog m_popLog;
+        List<DebugLog> m_logs;
 
     }
 }

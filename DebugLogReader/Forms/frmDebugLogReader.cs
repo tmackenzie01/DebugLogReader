@@ -207,6 +207,7 @@ namespace DebugLogReader
             DebugLog pushLog = null;
             DebugLog popLog = null;
             DebugLog csLog = null;
+            List<DebugLog> logs = new List<DebugLog>();
             int fileFoundCount = 0;
 
             foreach (String logFile in logFiles)
@@ -233,20 +234,23 @@ namespace DebugLogReader
             {
                 csLog = new CSDebugLog(args.CameraNumber, args.Filters);
                 csLog.Load(csFile);
+                logs.Add(csLog);
             }
 
             if (!String.IsNullOrEmpty(pushFile))
             {
                 pushLog = new PushDebugLog(args.CameraNumber, args.Filters);
                 pushLog.Load(pushFile);
+                logs.Add(pushLog);
             }
             if (!String.IsNullOrEmpty(popFile))
             {
                 popLog = new PopDebugLog(args.CameraNumber, args.Filters);
                 popLog.Load(popFile);
+                logs.Add(popLog);
             }
 
-            e.Result = new DebugLogReaderResult(args.CameraNumber, pushLog, popLog);
+            e.Result = new DebugLogReaderResult(args.CameraNumber, logs);
         }
 
         private void AddMessage(String text)
@@ -266,14 +270,12 @@ namespace DebugLogReader
 
             lock (m_logs)
             {
-                if (result.PushLog != null)
+                if (result.Logs != null)
                 {
-                    m_logs.Add(result.PushLog);
-                }
-
-                if (result.PopLog != null)
-                {
-                    m_logs.Add(result.PopLog);
+                    if (result.Logs.Count > 0)
+                    {
+                        m_logs.AddRange(result.Logs);
+                    }
                 }
                 m_readLogsInProgress--;
 

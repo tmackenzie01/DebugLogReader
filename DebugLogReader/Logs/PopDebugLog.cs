@@ -10,6 +10,7 @@ namespace DebugLogReader
     {
         public PopDebugLog(int cameraNumber, List<DebugLogFilter> filters) : base(cameraNumber, filters)
         {
+            m_summaryHeader = "pop log";
         }
 
         protected override void InitialiseRegex()

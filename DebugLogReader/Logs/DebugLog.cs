@@ -251,14 +251,15 @@ namespace DebugLogReader
                 DateTime startTime = GetStartTime();
                 TimeSpan duration = GetEndime() - startTime;
 
-                return $"{m_rows?.Count} lines, {startTime.ToString("HH:mm:ss")} ({duration.TotalSeconds} secs)";
+                return $"{m_summaryHeader} {m_rows?.Count} lines, {startTime.ToString("HH:mm:ss")} ({duration.TotalSeconds} secs)";
             }
             else
             {
-                return m_filterMessage;
+                return $"{m_summaryHeader} {m_filterMessage}";
             }
         }
 
+        protected String m_summaryHeader;
         protected int m_cameraNumber;
         protected List<DebugLogFilter> m_filters;
         protected String m_filterMessage;
