@@ -128,5 +128,16 @@ namespace DebugLogReaderTests
             Assert.AreEqual(2, popRowWithTimingsACD.TimeElapsedD.TotalSeconds);
             Assert.AreEqual(0, popRowWithTimingsACD.TimeElapsedD.Milliseconds);
         }
+
+
+        [TestMethod]
+        public void CSTests()
+        {
+            // Get the compiled Regex
+            Regex csRegex = frmDebugLogReader.m_csRegex;
+
+            DebugLogRow csRow = new DebugLogRow(1, "12:23:01.374 2 157906 bytes:con-STC 0.005--ws-Above 0.565", csRegex, null, DateTime.MinValue);
+            Assert.AreEqual(true, csRow.WroteData);
+        }
     }
 }
