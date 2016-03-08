@@ -50,6 +50,7 @@
     <Compile Include="Logs\DebugLog.cs" />
     <Compile Include="DebugLogReaderArgs.cs" />
     <Compile Include="DebugLogReaderResult.cs" />
+    <Compile Include="Logs\DebugLogCSRow.cs" />
     <Compile Include="Logs\DebugLogRow.cs" />
     <Compile Include="Logs\DebugLogFilter.cs" />
     <Compile Include="Forms\frmCameraSelection.cs">

@@ -136,8 +136,12 @@ namespace DebugLogReaderTests
             // Get the compiled Regex
             Regex csRegex = frmDebugLogReader.m_csRegex;
 
-            DebugLogRow csRow = new DebugLogRow(1, "12:23:01.374 2 157906 bytes:con-STC 0.005--ws-Above 0.565", csRegex, null, DateTime.MinValue);
-            Assert.AreEqual(true, csRow.WroteData);
+            //csRegex = new Regex("(?<timestamp>[0-9]+.[0-9]+.[0-9]+.[0-9]+).*[0-9]+.[0-9]+.(.)*[0-9]+.[0-9]+$",
+            //RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.Multiline);
+
+            DebugLogRow csBasicRow = new DebugLogCSRow(1, "12:23:01.374 2 157906 bytes:con-STC 0.005--ws-Above 0.565", csRegex, null, DateTime.MinValue);
+            Assert.AreEqual(false, csBasicRow.WroteData);
+            Assert.AreEqual("12:23:01.374", csBasicRow.Timestamp.ToString("HH:mm:ss.fff"));
         }
     }
 }
