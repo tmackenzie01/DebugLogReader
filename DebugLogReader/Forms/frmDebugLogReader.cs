@@ -305,7 +305,7 @@ namespace DebugLogReader
             List<DebugLog> logs = (List<DebugLog>)e.Argument;
             DebugLog giantLog = new DebugLog();
             int progressCount = 0;
-            int progressFinish = logs.Count + 1;
+            int progressFinish = logs.Count + 2; // One for the sort and one for the saving (done in another background worker)
             DateTime latestStartTime = DateTime.MinValue;
 
             foreach (DebugLog log in logs)
@@ -353,12 +353,60 @@ namespace DebugLogReader
                 {
                     File.Delete(giantLogFilename);
                 }
+
+            }
+            Tuple<DebugLog, String> writeLogArgs = new Tuple<DebugLog, String>(giantLog, giantLogFilename);
+
+            BackgroundWorker bgWriteLog = new BackgroundWorker();
+            bgWriteLog.WorkerReportsProgress = true;
+            bgWriteLog.DoWork += WriteLogs_DoWork;
+            bgWriteLog.ProgressChanged += WriteLogs_ProgressChanged;
+            bgWriteLog.RunWorkerCompleted += WriteLogs_RunWorkerCompleted;
+            bgWriteLog.RunWorkerAsync(writeLogArgs);
+        }
+
+        private void WriteLogs_DoWork(object sender, DoWorkEventArgs e)
+        {
+            BackgroundWorker worker = sender as BackgroundWorker;
+
+            Tuple<DebugLog, String> args = (Tuple<DebugLog, String>)e.Argument;
+            DebugLog debugLog = args.Item1;
+            String logFilename = args.Item2;
+            bool fileWritten = false;
+            try
+            {
+                debugLog.Save(logFilename);
+                fileWritten = true;
+            }
+            catch
+            {
+            }
+            worker.ReportProgress(100);
+
+            e.Result = new Tuple<bool, String>(fileWritten, logFilename);
+        }
+
+        private void WriteLogs_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            prgFiles.Value = e.ProgressPercentage;
+        }
+
+        private void WriteLogs_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            Tuple<bool, String> args = (Tuple<bool, String>)e.Result;
+            bool fileWritten = args.Item1;
+            String logFilename = args.Item2;
+
+            if (fileWritten)
+            {
+                AddMessage($"File created {logFilename}");
+            }
+            else
+            {
+                AddMessage("Failed to create log");
             }
 
-            giantLog.Save(giantLogFilename);
-            AddMessage($"File created {giantLogFilename}");
-
-            txtCombinedLog.Text = giantLogFilename;
+            txtCombinedLog.Text = logFilename;
             btnReadLogs.Enabled = true;
             btnCombinedLog.Enabled = true;
 
