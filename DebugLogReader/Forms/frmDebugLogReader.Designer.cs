@@ -45,12 +45,13 @@
             this.chkStartTime = new System.Windows.Forms.CheckBox();
             this.chkCamerSelect = new System.Windows.Forms.CheckBox();
             this.chkLastWroteElapsedAbove = new System.Windows.Forms.CheckBox();
+            this.lblLogsDirectory = new System.Windows.Forms.Label();
             this.grpFilters.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnReadLogs
             // 
-            this.btnReadLogs.Location = new System.Drawing.Point(3, 4);
+            this.btnReadLogs.Location = new System.Drawing.Point(560, 101);
             this.btnReadLogs.Name = "btnReadLogs";
             this.btnReadLogs.Size = new System.Drawing.Size(75, 23);
             this.btnReadLogs.TabIndex = 0;
@@ -67,7 +68,7 @@
             this.colMessage});
             this.lstProgress.Location = new System.Drawing.Point(3, 130);
             this.lstProgress.Name = "lstProgress";
-            this.lstProgress.Size = new System.Drawing.Size(627, 327);
+            this.lstProgress.Size = new System.Drawing.Size(631, 327);
             this.lstProgress.TabIndex = 1;
             this.lstProgress.UseCompatibleStateImageBehavior = false;
             this.lstProgress.View = System.Windows.Forms.View.Details;
@@ -83,7 +84,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtLogDirectory.Location = new System.Drawing.Point(84, 7);
             this.txtLogDirectory.Name = "txtLogDirectory";
-            this.txtLogDirectory.Size = new System.Drawing.Size(546, 20);
+            this.txtLogDirectory.Size = new System.Drawing.Size(550, 20);
             this.txtLogDirectory.TabIndex = 2;
             // 
             // prgFiles
@@ -92,7 +93,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.prgFiles.Location = new System.Drawing.Point(3, 463);
             this.prgFiles.Name = "prgFiles";
-            this.prgFiles.Size = new System.Drawing.Size(627, 23);
+            this.prgFiles.Size = new System.Drawing.Size(631, 23);
             this.prgFiles.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
             this.prgFiles.TabIndex = 3;
             // 
@@ -214,11 +215,21 @@
             this.chkLastWroteElapsedAbove.Text = "Last wrote elapsed above";
             this.chkLastWroteElapsedAbove.UseVisualStyleBackColor = true;
             // 
+            // lblLogsDirectory
+            // 
+            this.lblLogsDirectory.AutoSize = true;
+            this.lblLogsDirectory.Location = new System.Drawing.Point(9, 10);
+            this.lblLogsDirectory.Name = "lblLogsDirectory";
+            this.lblLogsDirectory.Size = new System.Drawing.Size(73, 13);
+            this.lblLogsDirectory.TabIndex = 6;
+            this.lblLogsDirectory.Text = "Logs directory";
+            // 
             // frmDebugLogReader
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(635, 489);
+            this.ClientSize = new System.Drawing.Size(639, 489);
+            this.Controls.Add(this.lblLogsDirectory);
             this.Controls.Add(this.grpFilters);
             this.Controls.Add(this.prgFiles);
             this.Controls.Add(this.txtLogDirectory);
@@ -252,6 +263,7 @@
         private System.Windows.Forms.CheckBox chkStartTime;
         private System.Windows.Forms.TextBox txtLastWroteElapsedAbove;
         private System.Windows.Forms.CheckBox chkLastWroteElapsedAbove;
+        private System.Windows.Forms.Label lblLogsDirectory;
     }
 }
 
