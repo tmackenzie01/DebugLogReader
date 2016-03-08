@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -27,13 +28,27 @@ namespace DebugLogReader
 
         private void btnReadLogs_Click(object sender, EventArgs e)
         {
+            txtCombinedLog.Text = "";
+            btnCombinedLog.Enabled = false;
             StartLogReads();
+        }
+
+        private void btnCombinedLog_Click(object sernder, EventArgs e)
+        {
+            if (!String.IsNullOrEmpty(txtCombinedLog.Text))
+            {
+                String nppExe = @"C:\Program Files (x86)\Notepad++\notepad++.exe";
+                ProcessStartInfo nppInfo = new ProcessStartInfo(nppExe, txtCombinedLog.Text);
+                Process npp = Process.Start(nppInfo);
+            }
         }
 
         private void StartLogReads()
         {
             lstProgress.Items.Clear();
             btnReadLogs.Enabled = false;
+            prgFiles.Value = 0;
+
             List<int> cameraNumbers = GetCameraNumbers(txtLogDirectory.Text);
             List<DebugLogFilter> filters = GetFilters();
 
@@ -342,6 +357,11 @@ namespace DebugLogReader
 
             giantLog.Save(giantLogFilename);
             AddMessage($"File created {giantLogFilename}");
+
+            txtCombinedLog.Text = giantLogFilename;
+            btnReadLogs.Enabled = true;
+            btnCombinedLog.Enabled = true;
+
         }
         private void txtCameras_MouseClick(object sender, MouseEventArgs e)
         {

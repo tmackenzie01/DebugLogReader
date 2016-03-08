@@ -46,12 +46,15 @@
             this.chkCamerSelect = new System.Windows.Forms.CheckBox();
             this.chkLastWroteElapsedAbove = new System.Windows.Forms.CheckBox();
             this.lblLogsDirectory = new System.Windows.Forms.Label();
+            this.btnCombinedLog = new System.Windows.Forms.Button();
+            this.lblCombinedLog = new System.Windows.Forms.Label();
+            this.txtCombinedLog = new System.Windows.Forms.TextBox();
             this.grpFilters.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnReadLogs
             // 
-            this.btnReadLogs.Location = new System.Drawing.Point(560, 101);
+            this.btnReadLogs.Location = new System.Drawing.Point(560, 39);
             this.btnReadLogs.Name = "btnReadLogs";
             this.btnReadLogs.Size = new System.Drawing.Size(75, 23);
             this.btnReadLogs.TabIndex = 0;
@@ -66,9 +69,9 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.lstProgress.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.colMessage});
-            this.lstProgress.Location = new System.Drawing.Point(3, 130);
+            this.lstProgress.Location = new System.Drawing.Point(3, 159);
             this.lstProgress.Name = "lstProgress";
-            this.lstProgress.Size = new System.Drawing.Size(631, 327);
+            this.lstProgress.Size = new System.Drawing.Size(638, 298);
             this.lstProgress.TabIndex = 1;
             this.lstProgress.UseCompatibleStateImageBehavior = false;
             this.lstProgress.View = System.Windows.Forms.View.Details;
@@ -84,7 +87,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtLogDirectory.Location = new System.Drawing.Point(84, 7);
             this.txtLogDirectory.Name = "txtLogDirectory";
-            this.txtLogDirectory.Size = new System.Drawing.Size(550, 20);
+            this.txtLogDirectory.Size = new System.Drawing.Size(557, 20);
             this.txtLogDirectory.TabIndex = 2;
             // 
             // prgFiles
@@ -93,7 +96,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.prgFiles.Location = new System.Drawing.Point(3, 463);
             this.prgFiles.Name = "prgFiles";
-            this.prgFiles.Size = new System.Drawing.Size(631, 23);
+            this.prgFiles.Size = new System.Drawing.Size(638, 23);
             this.prgFiles.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
             this.prgFiles.TabIndex = 3;
             // 
@@ -224,16 +227,49 @@
             this.lblLogsDirectory.TabIndex = 6;
             this.lblLogsDirectory.Text = "Logs directory";
             // 
+            // btnCombinedLog
+            // 
+            this.btnCombinedLog.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnCombinedLog.Enabled = false;
+            this.btnCombinedLog.Location = new System.Drawing.Point(560, 130);
+            this.btnCombinedLog.Name = "btnCombinedLog";
+            this.btnCombinedLog.Size = new System.Drawing.Size(75, 23);
+            this.btnCombinedLog.TabIndex = 0;
+            this.btnCombinedLog.Text = "Open";
+            this.btnCombinedLog.UseVisualStyleBackColor = true;
+            this.btnCombinedLog.Click += new System.EventHandler(this.btnCombinedLog_Click);
+            // 
+            // lblCombinedLog
+            // 
+            this.lblCombinedLog.AutoSize = true;
+            this.lblCombinedLog.Location = new System.Drawing.Point(9, 133);
+            this.lblCombinedLog.Name = "lblCombinedLog";
+            this.lblCombinedLog.Size = new System.Drawing.Size(71, 13);
+            this.lblCombinedLog.TabIndex = 6;
+            this.lblCombinedLog.Text = "Combined log";
+            // 
+            // txtCombinedLog
+            // 
+            this.txtCombinedLog.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtCombinedLog.Location = new System.Drawing.Point(84, 130);
+            this.txtCombinedLog.Name = "txtCombinedLog";
+            this.txtCombinedLog.Size = new System.Drawing.Size(470, 20);
+            this.txtCombinedLog.TabIndex = 2;
+            // 
             // frmDebugLogReader
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(639, 489);
+            this.ClientSize = new System.Drawing.Size(646, 489);
+            this.Controls.Add(this.lblCombinedLog);
             this.Controls.Add(this.lblLogsDirectory);
             this.Controls.Add(this.grpFilters);
             this.Controls.Add(this.prgFiles);
+            this.Controls.Add(this.txtCombinedLog);
             this.Controls.Add(this.txtLogDirectory);
             this.Controls.Add(this.lstProgress);
+            this.Controls.Add(this.btnCombinedLog);
             this.Controls.Add(this.btnReadLogs);
             this.Name = "frmDebugLogReader";
             this.Text = "Debug Log Reader";
@@ -264,6 +300,9 @@
         private System.Windows.Forms.TextBox txtLastWroteElapsedAbove;
         private System.Windows.Forms.CheckBox chkLastWroteElapsedAbove;
         private System.Windows.Forms.Label lblLogsDirectory;
+        private System.Windows.Forms.Button btnCombinedLog;
+        private System.Windows.Forms.Label lblCombinedLog;
+        private System.Windows.Forms.TextBox txtCombinedLog;
     }
 }
 
