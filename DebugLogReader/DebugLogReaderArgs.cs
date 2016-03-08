@@ -15,11 +15,11 @@ namespace DebugLogReader
             m_filters = null;
         }
 
-        public void AddFilters(List<DebugLogRowFilter> filter)
+        public void AddFilters(List<DebugLogFilter> filter)
         {
             if (m_filters == null)
             {
-                m_filters = new List<DebugLogRowFilter>();
+                m_filters = new List<DebugLogFilter>();
             }
 
             if (filter != null)
@@ -49,7 +49,7 @@ namespace DebugLogReader
             }
         }
 
-        public List<DebugLogRowFilter> Filters
+        public List<DebugLogFilter> Filters
         {
             get
             {
@@ -59,6 +59,6 @@ namespace DebugLogReader
 
         int m_cameraNumber;
         String m_directory;
-        List<DebugLogRowFilter> m_filters;
+        List<DebugLogFilter> m_filters;
     }
 }

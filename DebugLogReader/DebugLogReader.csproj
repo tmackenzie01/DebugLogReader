@@ -46,23 +46,32 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CSDebugLog.cs" />
-    <Compile Include="DebugLog.cs" />
+    <Compile Include="Logs\CSDebugLog.cs" />
+    <Compile Include="Logs\DebugLog.cs" />
     <Compile Include="DebugLogReaderArgs.cs" />
-    <Compile Include="DebugLogReadResult.cs" />
-    <Compile Include="DebugLogRow.cs" />
-    <Compile Include="DebugLogRowFilter.cs" />
-    <Compile Include="frmDebugLogReader.cs">
+    <Compile Include="DebugLogReaderResult.cs" />
+    <Compile Include="Logs\DebugLogRow.cs" />
+    <Compile Include="Logs\DebugLogFilter.cs" />
+    <Compile Include="Forms\frmCameraSelection.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmDebugLogReader.Designer.cs">
+    <Compile Include="Forms\frmCameraSelection.Designer.cs">
+      <DependentUpon>frmCameraSelection.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frmDebugLogReader.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmDebugLogReader.Designer.cs">
       <DependentUpon>frmDebugLogReader.cs</DependentUpon>
     </Compile>
-    <Compile Include="PopDebugLog.cs" />
+    <Compile Include="Logs\PopDebugLog.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="PushDebugLog.cs" />
-    <EmbeddedResource Include="frmDebugLogReader.resx">
+    <Compile Include="Logs\PushDebugLog.cs" />
+    <EmbeddedResource Include="Forms\frmCameraSelection.resx">
+      <DependentUpon>frmCameraSelection.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmDebugLogReader.resx">
       <DependentUpon>frmDebugLogReader.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">

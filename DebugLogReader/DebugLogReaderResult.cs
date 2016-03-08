@@ -6,27 +6,26 @@ using System.Threading.Tasks;
 
 namespace DebugLogReader
 {
-    public class DebugLogReadResult
+    public class DebugLogReaderResult
     {
-        public DebugLogReadResult(int cameraNumber)
+        public DebugLogReaderResult(int cameraNumber)
         {
             m_success = false;
         }
 
-        public DebugLogReadResult(int cameraNumber, DebugLog pushLog, DebugLog popLog)
+        public DebugLogReaderResult(int cameraNumber, DebugLog pushLog, DebugLog popLog)
         {
             m_success = true;
             m_cameraNumber = cameraNumber;
             m_pushLog = pushLog;
             m_popLog = popLog;
-            m_lines = pushLog.Count + popLog.Count;
         }
 
         public override string ToString()
         {
             if (m_success)
             {
-                return $"Camera {m_cameraNumber.ToString()} logs read, {m_lines} lines";
+                return $"Camera {m_cameraNumber.ToString()} logs read, push log {m_pushLog.SummaryText()}, pop log {m_popLog.SummaryText()}";
             }
             else
             {
@@ -51,7 +50,6 @@ namespace DebugLogReader
         }
 
         bool m_success;
-        int m_lines;
         int m_cameraNumber;
         DebugLog m_pushLog;
         DebugLog m_popLog;

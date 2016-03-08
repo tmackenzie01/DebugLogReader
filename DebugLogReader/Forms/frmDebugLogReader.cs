@@ -18,7 +18,7 @@ namespace DebugLogReader
         {
             InitializeComponent();
 
-            txtLogDirectory.Text = @"C:\Users\tmackenzie01\Documents\Recorder testing\20160302\DebugLogs1";
+            txtLogDirectory.Text = @"D:\Users\thomas\Documents\Recorder testing\20160302\DebugLogs1";
         }
 
         private void btnReadLogs_Click(object sender, EventArgs e)
@@ -30,8 +30,8 @@ namespace DebugLogReader
         {
             lstProgress.Items.Clear();
             btnReadLogs.Enabled = false;
-            List<int> cameraNumbers = GetCameraNumbers();
-            List<DebugLogRowFilter> filters = GetFilters();
+            List<int> cameraNumbers = GetCameraNumbers(txtLogDirectory.Text);
+            List<DebugLogFilter> filters = GetFilters();
 
             cameraNumbers.Sort();
 
@@ -54,9 +54,9 @@ namespace DebugLogReader
             prgFiles.Maximum = cameraNumbers.Count;
         }
 
-        private List<int> GetCameraNumbers()
+        public static List<int> GetCameraNumbers(String parentLogDirectory)
         {
-            String[] logDirectories = Directory.GetDirectories(txtLogDirectory.Text);
+            String[] logDirectories = Directory.GetDirectories(parentLogDirectory);
             List<int> cameraNumbers = new List<int>();
             int cameraNumber = -1;
 
@@ -80,14 +80,17 @@ namespace DebugLogReader
                 }
             }
 
+            cameraNumbers.Sort();
+
             return cameraNumbers;
         }
 
-        List<DebugLogRowFilter> GetFilters()
+        List<DebugLogFilter> GetFilters()
         {
-            List<DebugLogRowFilter> filters = null;
+            List<DebugLogFilter> filters = new List<DebugLogFilter>();
             StringBuilder filterDescription = new StringBuilder();
 
+            // Queue above
             if (chkQueueFilter.Checked)
             {
                 if (!String.IsNullOrEmpty(txtQueueAbove.Text))
@@ -95,22 +98,36 @@ namespace DebugLogReader
                     int queueAbove = 0;
                     if (Int32.TryParse(txtQueueAbove.Text, out queueAbove))
                     {
-                        DebugLogRowFilter filter = new DebugLogRowFilter(eFilterBy.QueueCount, queueAbove.ToString());
+                        DebugLogFilter filter = new DebugLogFilter(eFilterBy.QueueCount, eFilterComparision.GreaterThan, queueAbove.ToString());
                         filterDescription.Append(filter.ToString());
-                        if (filters == null)
-                        {
-                            filters = new List<DebugLogRowFilter>();
-                            filters.Add(filter);
-                        }
+                        filters.Add(filter);
                     }
                 }
             }
 
+            // Cameras
+            if (chkCamerSelect.Checked)
+            {
+                if (!String.IsNullOrEmpty(txtCameras.Text))
+                {
+                    DebugLogFilter filter = new DebugLogFilter(eFilterBy.CameraNumber, eFilterComparision.MemberOf, frmCameraSelection.CameraCSVToList(txtCameras.Text));
+                    filterDescription.Append(filter.ToString());
+                    filters.Add(filter);
+                }
+            }
+
+            // Start at same time
             if (chkStartAtSameTime.Checked)
             {
                 // We cannot create the filter as we need to have the times for all the logs first
                 // we do this just before the sort
                 filterDescription.Append("_StartAtSameTime");
+            }
+
+            // If we have not created any filters then clear the list - we use this to determine there are no filters
+            if (filters.Count == 0)
+            {
+                filters = null;
             }
 
             m_filterDescription = filterDescription.ToString();
@@ -148,7 +165,7 @@ namespace DebugLogReader
                     fileFoundCount++;
                 }
             }
-            
+
             // Try to parse the CSWrite file
             if (!String.IsNullOrEmpty(csFile))
             {
@@ -169,11 +186,11 @@ namespace DebugLogReader
                     popLog.Load(popFile);
                 }
 
-                e.Result = new DebugLogReadResult(args.CameraNumber, pushLog, popLog);
+                e.Result = new DebugLogReaderResult(args.CameraNumber, pushLog, popLog);
             }
             else
             {
-                e.Result = new DebugLogReadResult(args.CameraNumber);
+                e.Result = new DebugLogReaderResult(args.CameraNumber);
             }
         }
 
@@ -186,7 +203,7 @@ namespace DebugLogReader
 
         private void ReadLogs_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            DebugLogReadResult result = (DebugLogReadResult)e.Result;
+            DebugLogReaderResult result = (DebugLogReaderResult)e.Result;
             bool combineLogs = false;
 
             AddMessage(result.ToString());
@@ -243,7 +260,7 @@ namespace DebugLogReader
 
             if (chkStartAtSameTime.Checked)
             {
-                giantLog.Filter(new DebugLogRowFilter(eFilterBy.StartTime, latestStartTime.ToString(@"dd/MM/yyyy HH:mm:ss.fff")));
+                giantLog.Filter(new DebugLogFilter(eFilterBy.StartTime, eFilterComparision.GreaterThan, latestStartTime.ToString(@"dd/MM/yyyy HH:mm:ss.fff")));
             }
             giantLog.Sort();
             progressCount++;
@@ -279,19 +296,28 @@ namespace DebugLogReader
             giantLog.Save(giantLogFilename);
             AddMessage($"File created {giantLogFilename}");
         }
+        private void txtCameras_MouseClick(object sender, MouseEventArgs e)
+        {
+            frmCameraSelection frmCam = new frmCameraSelection(txtLogDirectory.Text, txtCameras.Text);
+            if (frmCam.ShowDialog() == DialogResult.OK)
+            {
+                chkCamerSelect.Checked = !String.IsNullOrEmpty(frmCam.SelectedCameraCSV);
+                txtCameras.Text = frmCam.SelectedCameraCSV;
+            }
+        }
 
         int m_readLogsInProgress;
         List<DebugLog> m_logs;
         String m_filterDescription;
 
         // Declare and intialise these Regex here as it's costly to keep creating them
-        public static Regex m_pushedRegex = new Regex("Pushed...(?<timestamp>[0-9]+.[0-9]+.[0-9]+.[0-9]+.[0-9]+.[0-9]+.[0-9]+).(\\-\\-\\-...[0-9]+.[0-9]+.seconds..)*Q.(?<queueCount>[0-9]+).F..?[0-9]+,.[0-9]+,.[0-9]+$",
+        public static Regex m_pushedRegex = new Regex("Pushed...(?<timestamp>[0-9]+.[0-9]+.[0-9]+.[0-9]+.[0-9]+.[0-9]+.[0-9]+).(\\-\\-\\-...[0-9]+.[0-9]+.seconds..)*Q.(?<queueCount>[0-9]+).F..?[0-9]+,.(?<pushedPopped>[0-9]+),.[0-9]+$",
         RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.Multiline);
 
-        public static Regex m_poppedRegex = new Regex("Popped...(?<timestamp>[0-9]+.[0-9]+.[0-9]+.[0-9]+.[0-9]+.[0-9]+.[0-9]+).(\\-\\-\\-..[0-9]+.[0-9]+.seconds..)*Q.(?<queueCount>[0-9]+).F..?[0-9]+,.[0-9]+,.[0-9]+$",
+        public static Regex m_poppedRegex = new Regex("Popped...(?<timestamp>[0-9]+.[0-9]+.[0-9]+.[0-9]+.[0-9]+.[0-9]+.[0-9]+).(\\-\\-\\-..[0-9]+.[0-9]+.seconds..)*Q.(?<queueCount>[0-9]+).F..?[0-9]+,.(?<pushedPopped>[0-9]+),.[0-9]+$",
             RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.Multiline);
 
-        public static Regex m_csRegex = new Regex("(?<timestamp>[0-9]+.[0-9]+.[0-9]+.[0-9]+.[0-9]+.[0-9]+.[0-9]+).*Q.(?<queueCount>[0-9]+).F..?[0-9]+,.[0-9]+,.[0-9]+$",
+        public static Regex m_csRegex = new Regex("(?<timestamp>[0-9]+.[0-9]+.[0-9]+.[0-9]+.[0-9]+.[0-9]+.[0-9]+).*Q.(?<queueCount>[0-9]+).F..?[0-9]+,.(?<pushedPopped>[0-9]+),.[0-9]+$",
             RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.Multiline);
     }
 }

@@ -27,11 +27,13 @@ namespace DebugLogReader
             // Try the Regex
             if (text.Equals("Wrote data"))
             {
+                m_bWroteData = true;
                 m_timestamp = previousTimestamp;
-                m_text = $"{m_cameraNumber.ToString()} Wrote data - {m_timestamp.ToString("dd/MM/yyyy HH:mm:ss.fff")}";
+                m_text = $"Wrote data - {m_timestamp.ToString("dd/MM/yyyy HH:mm:ss.fff")}";
             }
             else
             {
+                m_text = text;
                 // Can't figure out how else to do this
                 if (text.EndsWith("F:Null"))
                 {
@@ -42,13 +44,15 @@ namespace DebugLogReader
                 if (match.Success)
                 {
                     String timestamp = match.Groups["timestamp"].Value;
+                    if (!Int32.TryParse(match.Groups["pushedPopped"].Value, out m_dataPushedPopped))
+                    {
+                        m_dataPushedPopped = -1;
+                    }
                     if (!Int32.TryParse(match.Groups["queueCount"].Value, out m_queueCount))
                     {
                         m_queueCount = -1;
                     }
                     m_timestamp = DateTime.ParseExact(timestamp, @"dd/MM/yyyy HH:mm:ss.fff", CultureInfo.InvariantCulture);
-                    m_text = $"{m_cameraNumber.ToString()} {text}";
-
                 }
                 else
                 {
@@ -58,13 +62,44 @@ namespace DebugLogReader
 
             if (String.IsNullOrEmpty(m_text))
             {
-                int dfgd = 0;
+                throw new Exception("Ooops");
+            }
+        }
+
+        public void SetWroteDataElapsed(TimeSpan lastWroteElapsed)
+        {
+            m_lastWroteElapsed = lastWroteElapsed;
+            if (lastWroteElapsed.TotalSeconds > 10)
+            {
+                System.Diagnostics.Debug.WriteLine(this.ToString());
+            }
+        }
+
+        public void SetWroteDataWritten(int dataWritten)
+        {
+            m_dataWritten = dataWritten;
+        }
+
+        public String SortingText
+        {
+            get
+            {
+                return m_text;
             }
         }
 
         public override string ToString()
         {
-            return m_text;
+            if (!m_bWroteData)
+            {
+                return $"{m_cameraNumber.ToString()} {m_text}";
+            }
+            else
+            {
+                double dataWritten = m_dataWritten;
+                dataWritten = dataWritten / 1024.0;
+                return $"{CameraNumber} {m_timestamp.ToString("dd/MM/yyyy HH:mm:ss.fff")} ({m_lastWroteElapsed.TotalSeconds.ToString("f3")} seconds since last wrote data - {dataWritten.ToString("f3")}Kb)";
+            }
         }
 
         public DateTime Timestamp
@@ -91,15 +126,35 @@ namespace DebugLogReader
             }
         }
 
+        public bool WroteData
+        {
+            get
+            {
+                return m_bWroteData;
+            }
+        }
+
+        public int DataPopped
+        {
+            get
+            {
+                return m_dataPushedPopped;
+            }
+        }
+
         String m_text;
         int m_cameraNumber;
+        bool m_bWroteData;
+        TimeSpan m_lastWroteElapsed;
+        int m_dataWritten;
+        int m_dataPushedPopped;
+        int m_queueCount;
+        DateTime m_timestamp;
 
         // Not storing any of these at the moment
-        int m_queueCount;
-        int m_frameNumber;
-        int m_frameSize;
-        int m_flags;
-        String m_elapsed;
-        DateTime m_timestamp;
+        //int m_frameNumber;
+        //int m_frameSize;
+        //int m_flags;
+        //String m_elapsed;
     }
 }

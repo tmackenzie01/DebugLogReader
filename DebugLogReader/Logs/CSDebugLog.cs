@@ -6,15 +6,15 @@ using System.Threading.Tasks;
 
 namespace DebugLogReader
 {
-    public class PushDebugLog : DebugLog
+    public class CSDebugLog : DebugLog
     {
-        public PushDebugLog(int cameraNumber, List<DebugLogRowFilter> filters) : base(cameraNumber, filters)
+        public CSDebugLog(int cameraNumber, List<DebugLogFilter> filters) : base(cameraNumber, filters)
         {
         }
 
         protected override void InitialiseRegex()
         {
-            m_rowRegex = frmDebugLogReader.m_pushedRegex;
+            m_rowRegex = frmDebugLogReader.m_csRegex;
         }
     }
 }
