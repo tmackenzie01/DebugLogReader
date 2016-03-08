@@ -57,16 +57,22 @@ namespace DebugLogReader
             {
                 String[] debugLogText = File.ReadAllLines(filename);
 
-                foreach (String line in debugLogText)
+                if (debugLogText.Length > 0)
                 {
-                    newRow = new DebugLogRow(m_cameraNumber, line, m_rowRegex, previousTimestamp);
-                    dataWritten = dataWritten + newRow.DataPopped;
-                    SetWroteDataInfo(newRow, ref dataWritten, ref lastWroteDataTimestamp);
-                    AddRow(newRow, m_filters);
-
-                    if (newRow != null)
+                    foreach (String line in debugLogText)
                     {
-                        previousTimestamp = newRow.Timestamp;
+                        if (!String.IsNullOrEmpty(line))
+                        {
+                            newRow = new DebugLogRow(m_cameraNumber, line, m_rowRegex, m_wroteDataRegex, previousTimestamp);
+                            dataWritten = dataWritten + newRow.DataPopped;
+                            SetWroteDataInfo(newRow, ref dataWritten, ref lastWroteDataTimestamp);
+                            AddRow(newRow, m_filters);
+
+                            if (newRow != null)
+                            {
+                                previousTimestamp = newRow.Timestamp;
+                            }
+                        }
                     }
                 }
 
@@ -253,5 +259,6 @@ namespace DebugLogReader
         List<DebugLogRow> m_rows;
 
         protected Regex m_rowRegex;
+        protected Regex m_wroteDataRegex;
     }
 }

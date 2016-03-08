@@ -21,7 +21,7 @@ namespace DebugLogReader
             InitializeComponent();
 
             String logsDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
-                @"Recorder testing\20160302\DebugLogs1");
+                @"Recorder testing\20160302\DebugLogs7");
 
             txtLogDirectory.Text = logsDir;
         }
@@ -235,25 +235,18 @@ namespace DebugLogReader
                 csLog.Load(csFile);
             }
 
-            if (fileFoundCount == 2)
+            if (!String.IsNullOrEmpty(pushFile))
             {
-                if (!String.IsNullOrEmpty(pushFile))
-                {
-                    pushLog = new PushDebugLog(args.CameraNumber, args.Filters);
-                    pushLog.Load(pushFile);
-                }
-                if (!String.IsNullOrEmpty(popFile))
-                {
-                    popLog = new PopDebugLog(args.CameraNumber, args.Filters);
-                    popLog.Load(popFile);
-                }
+                pushLog = new PushDebugLog(args.CameraNumber, args.Filters);
+                pushLog.Load(pushFile);
+            }
+            if (!String.IsNullOrEmpty(popFile))
+            {
+                popLog = new PopDebugLog(args.CameraNumber, args.Filters);
+                popLog.Load(popFile);
+            }
 
-                e.Result = new DebugLogReaderResult(args.CameraNumber, pushLog, popLog);
-            }
-            else
-            {
-                e.Result = new DebugLogReaderResult(args.CameraNumber);
-            }
+            e.Result = new DebugLogReaderResult(args.CameraNumber, pushLog, popLog);
         }
 
         private void AddMessage(String text)
@@ -273,8 +266,15 @@ namespace DebugLogReader
 
             lock (m_logs)
             {
-                m_logs.Add(result.PushLog);
-                m_logs.Add(result.PopLog);
+                if (result.PushLog != null)
+                {
+                    m_logs.Add(result.PushLog);
+                }
+
+                if (result.PopLog != null)
+                {
+                    m_logs.Add(result.PopLog);
+                }
                 m_readLogsInProgress--;
 
                 combineLogs = (m_readLogsInProgress == 0);
@@ -455,13 +455,19 @@ namespace DebugLogReader
         String m_filterDescription;
 
         // Declare and intialise these Regex here as it's costly to keep creating them
+        // Need to figure out a better way to do this
         public static Regex m_pushedRegex = new Regex("Pushed...(?<timestamp>[0-9]+.[0-9]+.[0-9]+.[0-9]+.[0-9]+.[0-9]+.[0-9]+).(\\-\\-\\-...[0-9]+.[0-9]+.seconds..)*Q.(?<queueCount>[0-9]+).F..?[0-9]+,.(?<pushedPopped>[0-9]+),.[0-9]+$",
         RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.Multiline);
 
-        public static Regex m_poppedRegex = new Regex("Popped...(?<timestamp>[0-9]+.[0-9]+.[0-9]+.[0-9]+.[0-9]+.[0-9]+.[0-9]+).(\\-\\-\\-..[0-9]+.[0-9]+.seconds..)*Q.(?<queueCount>[0-9]+).F..?[0-9]+,.(?<pushedPopped>[0-9]+),.[0-9]+$",
-            RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.Multiline);
+        public static Regex m_poppedRegex = new Regex("Popped..." +
+                "(?<timestamp>[0-9]+.[0-9]+.[0-9]+.[0-9]+.[0-9]+.[0-9]+.[0-9]+).(\\-\\-\\-..[0-9]+.[0-9]+.seconds..)*" +
+                "Q.(?<queueCount>[0-9]+).F..?[0-9]+,.(?<pushedPopped>[0-9]+),.[0-9]+" +
+                "(.T:A.(?<timeA>[0-9]+.[0-9]+.[0-9]+.[0-9]+).(B.(?<timeB>[0-9]+.[0-9]+.[0-9]+.[0-9]+).)*C.(?<timeC>[0-9]+.[0-9]+.[0-9]+.[0-9]+).D.(?<timeD>[0-9]+.[0-9]+.[0-9]+.[0-9]+).)*$");
 
         public static Regex m_csRegex = new Regex("(?<timestamp>[0-9]+.[0-9]+.[0-9]+.[0-9]+.[0-9]+.[0-9]+.[0-9]+).*Q.(?<queueCount>[0-9]+).F..?[0-9]+,.(?<pushedPopped>[0-9]+),.[0-9]+$",
+            RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.Multiline);
+
+        public static Regex m_wroteDataRegex = new Regex("Wrote data( C.(?<coldstoreId>[0-9]+) P.(?<coldstorePort>[0-9]+))*$",
             RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.Multiline);
     }
 }

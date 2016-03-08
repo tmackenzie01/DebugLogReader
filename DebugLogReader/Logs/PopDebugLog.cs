@@ -15,6 +15,7 @@ namespace DebugLogReader
         protected override void InitialiseRegex()
         {
             m_rowRegex = frmDebugLogReader.m_poppedRegex;
+            m_wroteDataRegex = frmDebugLogReader.m_wroteDataRegex;
         }
     }
 }

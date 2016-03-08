@@ -85,21 +85,48 @@ namespace DebugLogReaderTests
         {
             // Get the compiled Regex
             Regex poppedRegex = frmDebugLogReader.m_poppedRegex;
+            Regex wroteDataRegex = frmDebugLogReader.m_wroteDataRegex;
 
             DebugLogRow popRow = new DebugLogRow(1, "Popped - 02/03/2016 17:01:48.412 --- (0.000 seconds) Q:1 F:745, 5234, 0", poppedRegex);
             Assert.AreEqual(1, popRow.CameraNumber);
             Assert.AreEqual(new DateTime(2016, 3, 2, 17, 1, 48).AddMilliseconds(412), popRow.Timestamp);
 
             // If we don't pass in any time "Wrote data" default to max time
-            DebugLogRow popRowWroteDataNoTime = new DebugLogRow(1, "Wrote data", poppedRegex);
-            Assert.AreEqual(DateTime.MaxValue, popRowWroteDataNoTime.Timestamp);
+            DebugLogRow popRowWroteDataNoTime = new DebugLogRow(1, "Wrote data", poppedRegex, wroteDataRegex);
+            Assert.AreEqual(DateTime.MaxValue, popRowWroteDataNoTime.Timestamp); ;
+            Assert.AreEqual(true, popRowWroteDataNoTime.WroteData);
 
             // If we pass in a previous timestamp, "Wrote data" will use that time
-            DebugLogRow popRowWroteDataTime = new DebugLogRow(1, "Wrote data", poppedRegex, DateTime.MinValue);
+            DebugLogRow popRowWroteDataTime = new DebugLogRow(1, "Wrote data", poppedRegex, wroteDataRegex, DateTime.MinValue);
             Assert.AreEqual(DateTime.MinValue, popRowWroteDataTime.Timestamp);
+            Assert.AreEqual(true, popRowWroteDataTime.WroteData);
 
-            DebugLogRow popRowZeroes = new DebugLogRow(1, "Popped - 02/03/2016 17:09:37.973 Q:1 F:0, 0, 0", poppedRegex);
+            DebugLogRow popRowZeroes = new DebugLogRow(1, "Popped - 02/03/2016 17:09:37.973 Q:1 F:0, 0, 0", poppedRegex, wroteDataRegex);
             Assert.AreEqual(new DateTime(2016, 3, 2, 17, 9, 37).AddMilliseconds(973), popRowZeroes.Timestamp);
+
+            // If we pass in a previous timestamp, "Wrote data" will use that time
+            DebugLogRow popRowWroteDataTimeColdstoreInfo = new DebugLogRow(1, "Wrote data C:2 P:50336", poppedRegex, wroteDataRegex, DateTime.MinValue);
+            Assert.AreEqual(DateTime.MinValue, popRowWroteDataTimeColdstoreInfo.Timestamp);
+            Assert.AreEqual(2, popRowWroteDataTimeColdstoreInfo.ColdstoreId);
+            Assert.AreEqual(50336, popRowWroteDataTimeColdstoreInfo.ColdstorePort);
+
+            DebugLogRow popRowWithTimingsABCD = new DebugLogRow(1, "Popped - 08/03/2016 11:58:16.698 --- (0.030 seconds) Q:1 F:83, 6711, 0 T:A 11:58:16.668 B 11:58:16.668 C 11:58:16.698 D 11:58:16.698 ", poppedRegex, wroteDataRegex, DateTime.MinValue);
+            Assert.AreEqual(new DateTime(2016, 3, 8, 11, 58, 16).AddMilliseconds(698), popRowWithTimingsABCD.Timestamp);
+            Assert.AreEqual(0, popRowWithTimingsABCD.TimeElapsedB.TotalSeconds);
+            Assert.AreEqual(0, popRowWithTimingsABCD.TimeElapsedB.Milliseconds);
+            Assert.AreEqual(0.03, popRowWithTimingsABCD.TimeElapsedC.TotalSeconds);
+            Assert.AreEqual(30, popRowWithTimingsABCD.TimeElapsedC.Milliseconds);
+            Assert.AreEqual(0, popRowWithTimingsABCD.TimeElapsedD.TotalSeconds);
+            Assert.AreEqual(0, popRowWithTimingsABCD.TimeElapsedD.Milliseconds);
+
+            DebugLogRow popRowWithTimingsACD = new DebugLogRow(1, "Popped - 08/03/2016 11:58:18.518 --- (0.010 seconds) Q:1 F:128, 6345, 0 T:A 11:58:18.518 C 11:58:18.518 D 11:58:20.518 ", poppedRegex, wroteDataRegex, DateTime.MinValue);
+            Assert.AreEqual(new DateTime(2016, 3, 8, 11, 58, 18).AddMilliseconds(518), popRowWithTimingsACD.Timestamp);
+            Assert.AreEqual(0, popRowWithTimingsACD.TimeElapsedB.TotalSeconds);
+            Assert.AreEqual(0, popRowWithTimingsACD.TimeElapsedB.Milliseconds);
+            Assert.AreEqual(0, popRowWithTimingsACD.TimeElapsedC.TotalSeconds);
+            Assert.AreEqual(0, popRowWithTimingsACD.TimeElapsedC.Milliseconds);
+            Assert.AreEqual(2, popRowWithTimingsACD.TimeElapsedD.TotalSeconds);
+            Assert.AreEqual(0, popRowWithTimingsACD.TimeElapsedD.Milliseconds);
         }
     }
 }

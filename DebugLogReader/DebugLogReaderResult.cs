@@ -25,7 +25,17 @@ namespace DebugLogReader
         {
             if (m_success)
             {
-                return $"Camera {m_cameraNumber.ToString()} logs read, push log {m_pushLog.SummaryText()}, pop log {m_popLog.SummaryText()}";
+                String pushLogSummary = "no push log";
+                if (m_pushLog != null)
+                {
+                    pushLogSummary = $"push log {m_pushLog.SummaryText()}";
+                }
+                String popLogSummary = "no push log";
+                if (m_popLog != null)
+                {
+                    popLogSummary = $"pop log {m_popLog.SummaryText()}";
+                }
+                return $"Camera {m_cameraNumber.ToString()} logs read, {pushLogSummary}, {popLogSummary}";
             }
             else
             {
