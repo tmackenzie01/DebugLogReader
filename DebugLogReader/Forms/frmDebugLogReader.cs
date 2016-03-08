@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -125,6 +126,34 @@ namespace DebugLogReader
                 // We cannot create the filter as we need to have the times for all the logs first
                 // we do this just before the sort
                 filterDescription.Append("_StartAtSameTime");
+            }
+
+            // Start time
+            if (chkStartTime.Checked)
+            {
+                if (!String.IsNullOrEmpty(txtStartTime.Text))
+                {
+                    if ((bool)txtStartTime.Tag)
+                    {
+                        DebugLogFilter filter = new DebugLogFilter(eFilterBy.StartTime, eFilterComparision.GreaterThan, txtStartTime.Text);
+                        filterDescription.Append(filter.ToString());
+                        filters.Add(filter);
+                    }
+                }
+            }
+
+            // End time
+            if (chkEndTime.Checked)
+            {
+                if (!String.IsNullOrEmpty(txtEndTime.Text))
+                {
+                    if ((bool)txtEndTime.Tag)
+                    {
+                        DebugLogFilter filter = new DebugLogFilter(eFilterBy.EndTime, eFilterComparision.LessThan, txtEndTime.Text);
+                        filterDescription.Append(filter.ToString());
+                        filters.Add(filter);
+                    }
+                }
             }
 
             // If we have not created any filters then clear the list - we use this to determine there are no filters
@@ -306,6 +335,35 @@ namespace DebugLogReader
             {
                 chkCamerSelect.Checked = !String.IsNullOrEmpty(frmCam.SelectedCameraCSV);
                 txtCameras.Text = frmCam.SelectedCameraCSV;
+            }
+        }
+
+        private void txtStartTime_TextChanged(object sender, EventArgs e)
+        {
+            TextBox txt = (TextBox)sender;
+            CheckTimeFormat(txt, chkStartTime);
+        }
+
+        private void txtEndTime_TextChanged(object sender, EventArgs e)
+        {
+            TextBox txt = (TextBox)sender;
+            CheckTimeFormat(txt, chkEndTime);
+        }
+
+        private void CheckTimeFormat(TextBox txt, CheckBox chk)
+        {
+            try
+            {
+                DateTime startTime = DateTime.ParseExact(txt.Text, @"dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture);
+                txt.Tag = true;
+                txt.ForeColor = Color.Black;
+                chk.Enabled = true;
+            }
+            catch
+            {
+                txt.ForeColor = Color.Red;
+                chk.Checked = false;
+                chk.Enabled = false;
             }
         }
 

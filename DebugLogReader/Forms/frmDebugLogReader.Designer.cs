@@ -36,13 +36,13 @@
             this.chkQueueFilter = new System.Windows.Forms.CheckBox();
             this.grpFilters = new System.Windows.Forms.GroupBox();
             this.chkStartAtSameTime = new System.Windows.Forms.CheckBox();
+            this.txtEndTime = new System.Windows.Forms.TextBox();
+            this.txtStartTime = new System.Windows.Forms.TextBox();
             this.txtCameras = new System.Windows.Forms.TextBox();
             this.txtQueueAbove = new System.Windows.Forms.TextBox();
-            this.chkCamerSelect = new System.Windows.Forms.CheckBox();
-            this.chkStartTime = new System.Windows.Forms.CheckBox();
-            this.txtStartTime = new System.Windows.Forms.TextBox();
             this.chkEndTime = new System.Windows.Forms.CheckBox();
-            this.txtEndTime = new System.Windows.Forms.TextBox();
+            this.chkStartTime = new System.Windows.Forms.CheckBox();
+            this.chkCamerSelect = new System.Windows.Forms.CheckBox();
             this.grpFilters.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -132,6 +132,22 @@
             this.chkStartAtSameTime.Text = "Start at same time";
             this.chkStartAtSameTime.UseVisualStyleBackColor = true;
             // 
+            // txtEndTime
+            // 
+            this.txtEndTime.Location = new System.Drawing.Point(392, 40);
+            this.txtEndTime.Name = "txtEndTime";
+            this.txtEndTime.Size = new System.Drawing.Size(148, 20);
+            this.txtEndTime.TabIndex = 5;
+            this.txtEndTime.TextChanged += new System.EventHandler(this.txtEndTime_TextChanged);
+            // 
+            // txtStartTime
+            // 
+            this.txtStartTime.Location = new System.Drawing.Point(192, 40);
+            this.txtStartTime.Name = "txtStartTime";
+            this.txtStartTime.Size = new System.Drawing.Size(129, 20);
+            this.txtStartTime.TabIndex = 5;
+            this.txtStartTime.TextChanged += new System.EventHandler(this.txtStartTime_TextChanged);
+            // 
             // txtCameras
             // 
             this.txtCameras.Location = new System.Drawing.Point(306, 16);
@@ -147,6 +163,26 @@
             this.txtQueueAbove.Size = new System.Drawing.Size(100, 20);
             this.txtQueueAbove.TabIndex = 5;
             // 
+            // chkEndTime
+            // 
+            this.chkEndTime.AutoSize = true;
+            this.chkEndTime.Location = new System.Drawing.Point(327, 42);
+            this.chkEndTime.Name = "chkEndTime";
+            this.chkEndTime.Size = new System.Drawing.Size(67, 17);
+            this.chkEndTime.TabIndex = 4;
+            this.chkEndTime.Text = "End time";
+            this.chkEndTime.UseVisualStyleBackColor = true;
+            // 
+            // chkStartTime
+            // 
+            this.chkStartTime.AutoSize = true;
+            this.chkStartTime.Location = new System.Drawing.Point(126, 43);
+            this.chkStartTime.Name = "chkStartTime";
+            this.chkStartTime.Size = new System.Drawing.Size(70, 17);
+            this.chkStartTime.TabIndex = 4;
+            this.chkStartTime.Text = "Start time";
+            this.chkStartTime.UseVisualStyleBackColor = true;
+            // 
             // chkCamerSelect
             // 
             this.chkCamerSelect.AutoSize = true;
@@ -156,42 +192,6 @@
             this.chkCamerSelect.TabIndex = 4;
             this.chkCamerSelect.Text = "Cameras";
             this.chkCamerSelect.UseVisualStyleBackColor = true;
-            // 
-            // chkStartTime
-            // 
-            this.chkStartTime.AutoSize = true;
-            this.chkStartTime.Location = new System.Drawing.Point(140, 42);
-            this.chkStartTime.Name = "chkStartTime";
-            this.chkStartTime.Size = new System.Drawing.Size(70, 17);
-            this.chkStartTime.TabIndex = 4;
-            this.chkStartTime.Text = "Start time";
-            this.chkStartTime.UseVisualStyleBackColor = true;
-            // 
-            // txtStartTime
-            // 
-            this.txtStartTime.Location = new System.Drawing.Point(216, 40);
-            this.txtStartTime.Name = "txtStartTime";
-            this.txtStartTime.Size = new System.Drawing.Size(100, 20);
-            this.txtStartTime.TabIndex = 5;
-            this.txtStartTime.MouseClick += new System.Windows.Forms.MouseEventHandler(this.txtCameras_MouseClick);
-            // 
-            // chkEndTime
-            // 
-            this.chkEndTime.AutoSize = true;
-            this.chkEndTime.Location = new System.Drawing.Point(322, 42);
-            this.chkEndTime.Name = "chkEndTime";
-            this.chkEndTime.Size = new System.Drawing.Size(67, 17);
-            this.chkEndTime.TabIndex = 4;
-            this.chkEndTime.Text = "End time";
-            this.chkEndTime.UseVisualStyleBackColor = true;
-            // 
-            // txtEndTime
-            // 
-            this.txtEndTime.Location = new System.Drawing.Point(398, 40);
-            this.txtEndTime.Name = "txtEndTime";
-            this.txtEndTime.Size = new System.Drawing.Size(100, 20);
-            this.txtEndTime.TabIndex = 5;
-            this.txtEndTime.MouseClick += new System.Windows.Forms.MouseEventHandler(this.txtCameras_MouseClick);
             // 
             // frmDebugLogReader
             // 

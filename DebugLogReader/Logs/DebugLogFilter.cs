@@ -26,8 +26,25 @@ namespace DebugLogReader
                     }
                     break;
                 case eFilterBy.StartTime:
-                    String startTimeText = (String)filterData;
-                    m_filterData = DateTime.ParseExact(startTimeText, @"dd/MM/yyyy HH:mm:ss.fff", CultureInfo.InvariantCulture);
+                case eFilterBy.EndTime:
+                    String timeText = (String)filterData;
+                    bool timeParsed = false;
+                    // Try it with the milliseconds
+                    try
+                    {
+                        m_filterData = DateTime.ParseExact(timeText, @"dd/MM/yyyy HH:mm:ss.fff", CultureInfo.InvariantCulture);
+                        timeParsed = true;
+                    }
+                    catch
+                    {
+                        timeParsed = false;
+                    }
+
+                    if (!timeParsed)
+                    {
+                        m_filterData = DateTime.ParseExact(timeText, @"dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture);
+                        timeParsed = true;
+                    }
                     break;
                 case eFilterBy.CameraNumber:
                     m_filterData = filterData;
@@ -69,6 +86,7 @@ namespace DebugLogReader
                     //conditionsMet = (row.QueueCount > queueCount);
                     break;
                 case eFilterBy.StartTime:
+                case eFilterBy.EndTime:
                     DateTime startTime = (DateTime)m_filterData;
                     conditionsMet = CompareObjects(m_filterBy, m_filterComparision, row.Timestamp, startTime);
                     //conditionsMet = (row.Timestamp > startTime);
@@ -186,8 +204,9 @@ namespace DebugLogReader
                     int queueCount = (int)m_filterData;
                     return $"_QueueCount{m_filterComparision}{queueCount}";
                 case eFilterBy.StartTime:
-                    DateTime startTime = (DateTime)m_filterData;
-                    return $"_StartTime{m_filterComparision}{startTime.ToString("HH:mm:ss")}";
+                case eFilterBy.EndTime:
+                    DateTime time = (DateTime)m_filterData;
+                    return $"_StartTime{m_filterComparision}{time.ToString("HHmmss")}";
                 default:
                     return "";
             }
@@ -200,7 +219,7 @@ namespace DebugLogReader
 
     // Only filter by (equal to camera number / greater than queue count)
     // If we need less than/equal to then add another enum and change MeetsConditions
-    public enum eFilterBy { CameraNumber, QueueCount, StartTime }
+    public enum eFilterBy { CameraNumber, QueueCount, StartTime, EndTime }
 
     public enum eFilterComparision { LessThan, EqualTo, GreaterThan, MemberOf }
 }
