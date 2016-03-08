@@ -156,6 +156,21 @@ namespace DebugLogReader
                 }
             }
 
+            // Last wrote elapsed time
+            if (chkLastWroteElapsedAbove.Checked)
+            {
+                if (!String.IsNullOrEmpty(txtLastWroteElapsedAbove.Text))
+                {
+                    int lastWroteElapsedAbove = 0;
+                    if (Int32.TryParse(txtLastWroteElapsedAbove.Text, out lastWroteElapsedAbove))
+                    {
+                        DebugLogFilter filter = new DebugLogFilter(eFilterBy.LastWroteElapsed, eFilterComparision.GreaterThan, lastWroteElapsedAbove.ToString());
+                        filterDescription.Append(filter.ToString());
+                        filters.Add(filter);
+                    }
+                }
+            }
+
             // If we have not created any filters then clear the list - we use this to determine there are no filters
             if (filters.Count == 0)
             {

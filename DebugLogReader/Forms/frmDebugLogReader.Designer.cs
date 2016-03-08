@@ -39,10 +39,12 @@
             this.txtEndTime = new System.Windows.Forms.TextBox();
             this.txtStartTime = new System.Windows.Forms.TextBox();
             this.txtCameras = new System.Windows.Forms.TextBox();
+            this.txtLastWroteElapsedAbove = new System.Windows.Forms.TextBox();
             this.txtQueueAbove = new System.Windows.Forms.TextBox();
             this.chkEndTime = new System.Windows.Forms.CheckBox();
             this.chkStartTime = new System.Windows.Forms.CheckBox();
             this.chkCamerSelect = new System.Windows.Forms.CheckBox();
+            this.chkLastWroteElapsedAbove = new System.Windows.Forms.CheckBox();
             this.grpFilters.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -63,9 +65,9 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.lstProgress.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.colMessage});
-            this.lstProgress.Location = new System.Drawing.Point(3, 111);
+            this.lstProgress.Location = new System.Drawing.Point(3, 130);
             this.lstProgress.Name = "lstProgress";
-            this.lstProgress.Size = new System.Drawing.Size(551, 275);
+            this.lstProgress.Size = new System.Drawing.Size(627, 327);
             this.lstProgress.TabIndex = 1;
             this.lstProgress.UseCompatibleStateImageBehavior = false;
             this.lstProgress.View = System.Windows.Forms.View.Details;
@@ -81,16 +83,16 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtLogDirectory.Location = new System.Drawing.Point(84, 7);
             this.txtLogDirectory.Name = "txtLogDirectory";
-            this.txtLogDirectory.Size = new System.Drawing.Size(470, 20);
+            this.txtLogDirectory.Size = new System.Drawing.Size(546, 20);
             this.txtLogDirectory.TabIndex = 2;
             // 
             // prgFiles
             // 
             this.prgFiles.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.prgFiles.Location = new System.Drawing.Point(3, 392);
+            this.prgFiles.Location = new System.Drawing.Point(3, 463);
             this.prgFiles.Name = "prgFiles";
-            this.prgFiles.Size = new System.Drawing.Size(551, 23);
+            this.prgFiles.Size = new System.Drawing.Size(627, 23);
             this.prgFiles.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
             this.prgFiles.TabIndex = 3;
             // 
@@ -110,14 +112,16 @@
             this.grpFilters.Controls.Add(this.txtEndTime);
             this.grpFilters.Controls.Add(this.txtStartTime);
             this.grpFilters.Controls.Add(this.txtCameras);
+            this.grpFilters.Controls.Add(this.txtLastWroteElapsedAbove);
             this.grpFilters.Controls.Add(this.txtQueueAbove);
             this.grpFilters.Controls.Add(this.chkEndTime);
             this.grpFilters.Controls.Add(this.chkStartTime);
             this.grpFilters.Controls.Add(this.chkCamerSelect);
+            this.grpFilters.Controls.Add(this.chkLastWroteElapsedAbove);
             this.grpFilters.Controls.Add(this.chkQueueFilter);
             this.grpFilters.Location = new System.Drawing.Point(3, 33);
             this.grpFilters.Name = "grpFilters";
-            this.grpFilters.Size = new System.Drawing.Size(551, 72);
+            this.grpFilters.Size = new System.Drawing.Size(551, 91);
             this.grpFilters.TabIndex = 5;
             this.grpFilters.TabStop = false;
             this.grpFilters.Text = "Filters";
@@ -156,6 +160,13 @@
             this.txtCameras.TabIndex = 5;
             this.txtCameras.MouseClick += new System.Windows.Forms.MouseEventHandler(this.txtCameras_MouseClick);
             // 
+            // txtLastWroteElapsedAbove
+            // 
+            this.txtLastWroteElapsedAbove.Location = new System.Drawing.Point(163, 65);
+            this.txtLastWroteElapsedAbove.Name = "txtLastWroteElapsedAbove";
+            this.txtLastWroteElapsedAbove.Size = new System.Drawing.Size(100, 20);
+            this.txtLastWroteElapsedAbove.TabIndex = 5;
+            // 
             // txtQueueAbove
             // 
             this.txtQueueAbove.Location = new System.Drawing.Point(96, 17);
@@ -193,11 +204,21 @@
             this.chkCamerSelect.Text = "Cameras";
             this.chkCamerSelect.UseVisualStyleBackColor = true;
             // 
+            // chkLastWroteElapsedAbove
+            // 
+            this.chkLastWroteElapsedAbove.AutoSize = true;
+            this.chkLastWroteElapsedAbove.Location = new System.Drawing.Point(9, 68);
+            this.chkLastWroteElapsedAbove.Name = "chkLastWroteElapsedAbove";
+            this.chkLastWroteElapsedAbove.Size = new System.Drawing.Size(148, 17);
+            this.chkLastWroteElapsedAbove.TabIndex = 4;
+            this.chkLastWroteElapsedAbove.Text = "Last wrote elapsed above";
+            this.chkLastWroteElapsedAbove.UseVisualStyleBackColor = true;
+            // 
             // frmDebugLogReader
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(559, 418);
+            this.ClientSize = new System.Drawing.Size(635, 489);
             this.Controls.Add(this.grpFilters);
             this.Controls.Add(this.prgFiles);
             this.Controls.Add(this.txtLogDirectory);
@@ -229,6 +250,8 @@
         private System.Windows.Forms.TextBox txtStartTime;
         private System.Windows.Forms.CheckBox chkEndTime;
         private System.Windows.Forms.CheckBox chkStartTime;
+        private System.Windows.Forms.TextBox txtLastWroteElapsedAbove;
+        private System.Windows.Forms.CheckBox chkLastWroteElapsedAbove;
     }
 }
 

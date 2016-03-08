@@ -49,6 +49,14 @@ namespace DebugLogReader
                 case eFilterBy.CameraNumber:
                     m_filterData = filterData;
                     break;
+                case eFilterBy.LastWroteElapsed:
+                    String lastWroteElapsedText = (String)filterData;
+                    int lastWroteElapsed = 0;
+                    if (Int32.TryParse(lastWroteElapsedText, out lastWroteElapsed))
+                    {
+                        m_filterData = new TimeSpan(0, 0, lastWroteElapsed);
+                    }
+                    break;
             }
         }
 
@@ -91,6 +99,10 @@ namespace DebugLogReader
                     conditionsMet = CompareObjects(m_filterBy, m_filterComparision, row.Timestamp, startTime);
                     //conditionsMet = (row.Timestamp > startTime);
                     break;
+                case eFilterBy.LastWroteElapsed:
+                    TimeSpan lastWroteElapsed = (TimeSpan)m_filterData;
+                    conditionsMet = CompareObjects(m_filterBy, m_filterComparision, row.LastWroteDataElapsed, lastWroteElapsed);
+                    break;
             }
 
             return conditionsMet;
@@ -112,6 +124,10 @@ namespace DebugLogReader
                     else if ((rowData is int) && (filterData is int))
                     {
                         conditionsMet = PerformComparision2(filterComparision, (int)rowData, (int)filterData);
+                    }
+                    else if ((rowData is TimeSpan) && (filterData is TimeSpan))
+                    {
+                        conditionsMet = PerformComparision2(filterComparision, (TimeSpan)rowData, (TimeSpan)filterData);
                     }
                     else
                     {
@@ -150,6 +166,28 @@ namespace DebugLogReader
                     break;
                 default:
                     throw new Exception($"Invalid comparision {filterComparision} - DateTime");
+            }
+
+            return conditionsMet;
+        }
+
+        private bool PerformComparision2(eFilterComparision filterComparision, TimeSpan rowDate, TimeSpan filterDate)
+        {
+            bool conditionsMet = false;
+
+            switch (filterComparision)
+            {
+                case eFilterComparision.LessThan:
+                    conditionsMet = (rowDate < filterDate);
+                    break;
+                case eFilterComparision.EqualTo:
+                    conditionsMet = (rowDate == filterDate);
+                    break;
+                case eFilterComparision.GreaterThan:
+                    conditionsMet = (rowDate > filterDate);
+                    break;
+                default:
+                    throw new Exception($"Invalid comparision {filterComparision} - TimeSpan");
             }
 
             return conditionsMet;
@@ -207,6 +245,9 @@ namespace DebugLogReader
                 case eFilterBy.EndTime:
                     DateTime time = (DateTime)m_filterData;
                     return $"_StartTime{m_filterComparision}{time.ToString("HHmmss")}";
+                case eFilterBy.LastWroteElapsed:
+                    TimeSpan elapsed = (TimeSpan)m_filterData;
+                    return $"_LastWroteElapsed{m_filterComparision}{(int)elapsed.TotalSeconds}";
                 default:
                     return "";
             }
@@ -219,7 +260,7 @@ namespace DebugLogReader
 
     // Only filter by (equal to camera number / greater than queue count)
     // If we need less than/equal to then add another enum and change MeetsConditions
-    public enum eFilterBy { CameraNumber, QueueCount, StartTime, EndTime }
+    public enum eFilterBy { CameraNumber, QueueCount, StartTime, EndTime, LastWroteElapsed }
 
     public enum eFilterComparision { LessThan, EqualTo, GreaterThan, MemberOf }
 }
