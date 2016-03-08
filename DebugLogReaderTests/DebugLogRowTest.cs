@@ -127,6 +127,9 @@ namespace DebugLogReaderTests
             Assert.AreEqual(0, popRowWithTimingsACD.TimeElapsedC.Milliseconds);
             Assert.AreEqual(2, popRowWithTimingsACD.TimeElapsedD.TotalSeconds);
             Assert.AreEqual(0, popRowWithTimingsACD.TimeElapsedD.Milliseconds);
+
+            DebugLogRow popRowNullFrame = new DebugLogRow(1, "Popped - 08/03/2016 13:50:44.814 --- (0.030 seconds) Q:1 F:Null T:A 13:50:44.814 C 13:50:44.814 D 13:50:44.814 ", poppedRegex, wroteDataRegex, DateTime.MinValue);
+            Assert.AreEqual(new DateTime(2016, 3, 8, 13, 50, 44).AddMilliseconds(814), popRowNullFrame.Timestamp);
         }
 
 
@@ -135,9 +138,6 @@ namespace DebugLogReaderTests
         {
             // Get the compiled Regex
             Regex csRegex = frmDebugLogReader.m_csRegex;
-
-            //csRegex = new Regex("(?<timestamp>[0-9]+.[0-9]+.[0-9]+.[0-9]+).*[0-9]+.[0-9]+.(.)*[0-9]+.[0-9]+$",
-            //RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.Multiline);
 
             DebugLogRow csBasicRow = new DebugLogCSRow(1, "12:23:01.374 2 157906 bytes:con-STC 0.005--ws-Above 0.565", csRegex, null, DateTime.MinValue);
             Assert.AreEqual(false, csBasicRow.WroteData);
