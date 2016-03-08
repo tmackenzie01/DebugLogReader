@@ -10,6 +10,10 @@ namespace DebugLogReader
 {
     public class DebugLogRow
     {
+        public DebugLogRow()
+        {
+        }
+
         public DebugLogRow(int cameraNumber, String text, Regex r)
         {
             Initialise(cameraNumber, text, r, null, DateTime.MaxValue);
@@ -30,7 +34,7 @@ namespace DebugLogReader
             Initialise(cameraNumber, text, r, wroteDataRegex, previousTimestamp);
         }
 
-        private void Initialise(int cameraNumber, String text, Regex r, Regex wroteDataRegex, DateTime previousTimestamp)
+        protected virtual void Initialise(int cameraNumber, String text, Regex r, Regex wroteDataRegex, DateTime previousTimestamp)
         {
             m_cameraNumber = cameraNumber;
 
@@ -250,14 +254,14 @@ namespace DebugLogReader
             }
         }
 
-        String m_text;
-        int m_cameraNumber;
+        protected String m_text;
+        protected int m_cameraNumber;
         bool m_bWroteData;
         TimeSpan m_lastWroteElapsed;
         int m_dataWritten;
         int m_dataPushedPopped;
         int m_queueCount;
-        DateTime m_timestamp;
+        protected DateTime m_timestamp;
 
         int m_coldstoreId;
         int m_coldstorePort;

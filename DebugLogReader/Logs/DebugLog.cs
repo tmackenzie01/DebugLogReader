@@ -63,7 +63,7 @@ namespace DebugLogReader
                     {
                         if (!String.IsNullOrEmpty(line))
                         {
-                            newRow = new DebugLogRow(m_cameraNumber, line, m_rowRegex, m_wroteDataRegex, previousTimestamp);
+                            newRow = ParseLine(m_cameraNumber, line, m_rowRegex, m_wroteDataRegex, previousTimestamp);
                             dataWritten = dataWritten + newRow.DataPopped;
                             SetWroteDataInfo(newRow, ref dataWritten, ref lastWroteDataTimestamp);
                             AddRow(newRow, m_filters);
@@ -85,6 +85,12 @@ namespace DebugLogReader
             {
                 m_filterMessage = "filtered out";
             }
+        }
+
+        protected virtual DebugLogRow ParseLine(int cameraNumber, String line, Regex rowRegex, Regex wroteDataRegex, DateTime previousTimestamp)
+        {
+            DebugLogRow newRow  = new DebugLogRow(cameraNumber, line, rowRegex, wroteDataRegex, previousTimestamp);
+            return newRow;
         }
 
         private bool CheckDebugLogFilters(List<DebugLogFilter> filters)
@@ -253,10 +259,10 @@ namespace DebugLogReader
             }
         }
 
-        int m_cameraNumber;
-        List<DebugLogFilter> m_filters;
-        String m_filterMessage;
-        List<DebugLogRow> m_rows;
+        protected int m_cameraNumber;
+        protected List<DebugLogFilter> m_filters;
+        protected String m_filterMessage;
+        protected List<DebugLogRow> m_rows;
 
         protected Regex m_rowRegex;
         protected Regex m_wroteDataRegex;
