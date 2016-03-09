@@ -206,24 +206,31 @@ namespace DebugLogReader
 
         public override string ToString()
         {
+            StringBuilder text = new StringBuilder($"_{m_filterBy}");
             switch (m_filterBy)
             {
                 case eFilterBy.CameraNumber:
                     List<int> cameras = (List<int>)m_filterData;
-                    return $"_CamNum{m_filterComparision}{frmCameraSelection.CameraListToCSV(cameras)}";
+                    text.Append($"{m_filterComparision}{frmCameraSelection.CameraListToCSV(cameras)}");
+                    break;
                 case eFilterBy.QueueCount:
                     int queueCount = (int)m_filterData;
-                    return $"_QueueCount{m_filterComparision}{queueCount}";
+                    text.Append($"{m_filterComparision}{queueCount}");
+                    break;
                 case eFilterBy.StartTime:
                 case eFilterBy.EndTime:
                     DateTime time = (DateTime)m_filterData;
-                    return $"_StartTime{m_filterComparision}{time.ToString("HHmmss")}";
+                    text.Append($"{m_filterComparision}{time.ToString("HHmmss")}");
+                    break;
                 case eFilterBy.LastWroteElapsed:
                     TimeSpan elapsed = (TimeSpan)m_filterData;
-                    return $"_LastWroteElapsed{m_filterComparision}{(int)elapsed.TotalSeconds}";
+                    text.Append($"{m_filterComparision}{(int)elapsed.TotalSeconds}");
+                    break;
                 default:
-                    return "";
+                    break;
             }
+
+            return text.ToString();
         }
 
         Object m_filterData;
