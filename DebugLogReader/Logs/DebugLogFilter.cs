@@ -18,44 +18,17 @@ namespace DebugLogReader
             switch (filterBy)
             {
                 case eFilterBy.QueueCount:
-                    String queueCountText = (String)filterData;
-                    int queueCount = 0;
-                    if (Int32.TryParse(queueCountText, out queueCount))
-                    {
-                        m_filterData = queueCount;
-                    }
+                    m_filterData = (int)filterData;
                     break;
                 case eFilterBy.StartTime:
                 case eFilterBy.EndTime:
-                    String timeText = (String)filterData;
-                    bool timeParsed = false;
-                    // Try it with the milliseconds
-                    try
-                    {
-                        m_filterData = DateTime.ParseExact(timeText, @"dd/MM/yyyy HH:mm:ss.fff", CultureInfo.InvariantCulture);
-                        timeParsed = true;
-                    }
-                    catch
-                    {
-                        timeParsed = false;
-                    }
-
-                    if (!timeParsed)
-                    {
-                        m_filterData = DateTime.ParseExact(timeText, @"dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture);
-                        timeParsed = true;
-                    }
+                    m_filterData = (DateTime)filterData;
                     break;
                 case eFilterBy.CameraNumber:
-                    m_filterData = filterData;
+                    m_filterData = (List<int>)filterData;
                     break;
                 case eFilterBy.LastWroteElapsed:
-                    String lastWroteElapsedText = (String)filterData;
-                    int lastWroteElapsed = 0;
-                    if (Int32.TryParse(lastWroteElapsedText, out lastWroteElapsed))
-                    {
-                        m_filterData = new TimeSpan(0, 0, lastWroteElapsed);
-                    }
+                    m_filterData = (TimeSpan)filterData;
                     break;
             }
         }

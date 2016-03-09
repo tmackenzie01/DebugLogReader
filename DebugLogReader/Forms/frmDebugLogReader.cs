@@ -117,7 +117,7 @@ namespace DebugLogReader
                     int queueAbove = 0;
                     if (Int32.TryParse(txtQueueAbove.Text, out queueAbove))
                     {
-                        DebugLogFilter filter = new DebugLogFilter(eFilterBy.QueueCount, eFilterComparision.GreaterThan, queueAbove.ToString());
+                        DebugLogFilter filter = new DebugLogFilter(eFilterBy.QueueCount, eFilterComparision.GreaterThan, queueAbove);
                         filterDescription.Append(filter.ToString());
                         filters.Add(filter);
                     }
@@ -129,7 +129,8 @@ namespace DebugLogReader
             {
                 if (!String.IsNullOrEmpty(txtCameras.Text))
                 {
-                    DebugLogFilter filter = new DebugLogFilter(eFilterBy.CameraNumber, eFilterComparision.MemberOf, frmCameraSelection.CameraCSVToList(txtCameras.Text));
+                    List<int> cameras = frmCameraSelection.CameraCSVToList(txtCameras.Text);
+                    DebugLogFilter filter = new DebugLogFilter(eFilterBy.CameraNumber, eFilterComparision.MemberOf, cameras);
                     filterDescription.Append(filter.ToString());
                     filters.Add(filter);
                 }
@@ -150,7 +151,8 @@ namespace DebugLogReader
                 {
                     if ((bool)txtStartTime.Tag)
                     {
-                        DebugLogFilter filter = new DebugLogFilter(eFilterBy.StartTime, eFilterComparision.GreaterThan, txtStartTime.Text);
+                        DateTime startTime = DateTime.ParseExact(txtStartTime.Text, @"dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture);
+                        DebugLogFilter filter = new DebugLogFilter(eFilterBy.StartTime, eFilterComparision.GreaterThan, startTime);
                         filterDescription.Append(filter.ToString());
                         filters.Add(filter);
                     }
@@ -164,7 +166,8 @@ namespace DebugLogReader
                 {
                     if ((bool)txtEndTime.Tag)
                     {
-                        DebugLogFilter filter = new DebugLogFilter(eFilterBy.EndTime, eFilterComparision.LessThan, txtEndTime.Text);
+                        DateTime endTime = DateTime.ParseExact(txtEndTime.Text, @"dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture);
+                        DebugLogFilter filter = new DebugLogFilter(eFilterBy.EndTime, eFilterComparision.LessThan, endTime);
                         filterDescription.Append(filter.ToString());
                         filters.Add(filter);
                     }
@@ -179,7 +182,8 @@ namespace DebugLogReader
                     int lastWroteElapsedAbove = 0;
                     if (Int32.TryParse(txtLastWroteElapsedAbove.Text, out lastWroteElapsedAbove))
                     {
-                        DebugLogFilter filter = new DebugLogFilter(eFilterBy.LastWroteElapsed, eFilterComparision.GreaterThan, lastWroteElapsedAbove.ToString());
+                        TimeSpan lastWroteElapsed = new TimeSpan(0, 0, lastWroteElapsedAbove);
+                        DebugLogFilter filter = new DebugLogFilter(eFilterBy.LastWroteElapsed, eFilterComparision.GreaterThan, lastWroteElapsed);
                         filterDescription.Append(filter.ToString());
                         filters.Add(filter);
                     }
@@ -324,7 +328,7 @@ namespace DebugLogReader
 
             if (chkStartAtSameTime.Checked)
             {
-                giantLog.Filter(new DebugLogFilter(eFilterBy.StartTime, eFilterComparision.GreaterThan, latestStartTime.ToString(@"dd/MM/yyyy HH:mm:ss.fff")));
+                giantLog.Filter(new DebugLogFilter(eFilterBy.StartTime, eFilterComparision.GreaterThan, latestStartTime));
             }
             giantLog.Sort();
             progressCount++;
