@@ -201,7 +201,7 @@ namespace DebugLogReader
             if (m_rows.Count > 0)
             {
                 int i = m_rows.Count - 1;
-                while (i > 0)
+                while (i >= 0)
                 {
                     if (m_rows[i].Timestamp > DateTime.MinValue)
                     {
