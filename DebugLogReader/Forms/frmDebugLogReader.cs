@@ -26,17 +26,12 @@ namespace DebugLogReader
 
             txtLogDirectory.Text = logsDir;
             m_stpLogsProcessing = new Stopwatch();
-
-            // List the properties of the DebugLogRow class using reflection
-            DebugLogRow row = new DebugLogRow();
-            foreach (PropertyInfo prop in row.GetType().GetProperties())
-            {
-                Debug.WriteLine($"{prop.Name} {prop.PropertyType}");
-            }
-
-            // We will use these properties to create automatic filters
-            // probably need to create a user control that builds the filters, then once the filter has been created it added to a list of current filters
-            // the current filters should be editable and you are able to delete each one
+        }
+        private void frmDebugLogReader_Load(object sender, EventArgs e)
+        {
+            frmFilters filters = new frmFilters();
+            filters.Show();
+            filters.BringToFront();
         }
 
         private void btnReadLogs_Click(object sender, EventArgs e)

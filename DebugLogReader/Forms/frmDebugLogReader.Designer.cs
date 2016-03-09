@@ -273,6 +273,7 @@
             this.Controls.Add(this.btnReadLogs);
             this.Name = "frmDebugLogReader";
             this.Text = "Debug Log Reader";
+            this.Load += new System.EventHandler(this.frmDebugLogReader_Load);
             this.grpFilters.ResumeLayout(false);
             this.grpFilters.PerformLayout();
             this.ResumeLayout(false);

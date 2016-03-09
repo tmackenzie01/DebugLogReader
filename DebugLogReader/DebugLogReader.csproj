@@ -46,6 +46,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Filters\frmFilters.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Filters\frmFilters.Designer.cs">
+      <DependentUpon>frmFilters.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Filters\ucFilter.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Filters\ucFilter.Designer.cs">
+      <DependentUpon>ucFilter.cs</DependentUpon>
+    </Compile>
     <Compile Include="Logs\CSDebugLog.cs" />
     <Compile Include="Logs\DebugLog.cs" />
     <Compile Include="DebugLogReaderArgs.cs" />
@@ -69,11 +81,17 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Logs\PushDebugLog.cs" />
+    <EmbeddedResource Include="Filters\ucFilter.resx">
+      <DependentUpon>ucFilter.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmCameraSelection.resx">
       <DependentUpon>frmCameraSelection.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmDebugLogReader.resx">
       <DependentUpon>frmDebugLogReader.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Filters\frmFilters.resx">
+      <DependentUpon>frmFilters.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

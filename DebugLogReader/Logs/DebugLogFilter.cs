@@ -32,6 +32,12 @@ namespace DebugLogReader
                     break;
             }
         }
+        public DebugLogFilter(String propertyName, eFilterComparision filterComparison, Object filterData)
+        {
+            m_filterPropertyName = propertyName;
+            m_filterComparision = filterComparison;
+            m_filterData = filterData;
+        }
 
         public bool MeetsConditions(DebugLog log)
         {
@@ -233,6 +239,7 @@ namespace DebugLogReader
             return text.ToString();
         }
 
+        String m_filterPropertyName;
         Object m_filterData;
         eFilterBy m_filterBy;
         eFilterComparision m_filterComparision;
