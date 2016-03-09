@@ -32,7 +32,7 @@ namespace DebugLogReader
 
                 for (int i = 1; i < m_logs.Count; i++)
                 {
-                    logSummary.Append($", {m_logs[0].SummaryText()}");
+                    logSummary.Append($", {m_logs[i].SummaryText()}");
                 }
                 
                 return $"Camera {m_cameraNumber.ToString()} logs read, {logSummary}";

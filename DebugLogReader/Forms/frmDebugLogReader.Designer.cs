@@ -71,7 +71,7 @@
             this.colMessage});
             this.lstProgress.Location = new System.Drawing.Point(3, 159);
             this.lstProgress.Name = "lstProgress";
-            this.lstProgress.Size = new System.Drawing.Size(638, 298);
+            this.lstProgress.Size = new System.Drawing.Size(746, 298);
             this.lstProgress.TabIndex = 1;
             this.lstProgress.UseCompatibleStateImageBehavior = false;
             this.lstProgress.View = System.Windows.Forms.View.Details;
@@ -79,7 +79,7 @@
             // colMessage
             // 
             this.colMessage.Text = "Message";
-            this.colMessage.Width = 546;
+            this.colMessage.Width = 742;
             // 
             // txtLogDirectory
             // 
@@ -87,7 +87,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtLogDirectory.Location = new System.Drawing.Point(84, 7);
             this.txtLogDirectory.Name = "txtLogDirectory";
-            this.txtLogDirectory.Size = new System.Drawing.Size(557, 20);
+            this.txtLogDirectory.Size = new System.Drawing.Size(665, 20);
             this.txtLogDirectory.TabIndex = 2;
             // 
             // prgFiles
@@ -96,7 +96,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.prgFiles.Location = new System.Drawing.Point(3, 463);
             this.prgFiles.Name = "prgFiles";
-            this.prgFiles.Size = new System.Drawing.Size(638, 23);
+            this.prgFiles.Size = new System.Drawing.Size(746, 23);
             this.prgFiles.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
             this.prgFiles.TabIndex = 3;
             // 
@@ -231,7 +231,7 @@
             // 
             this.btnCombinedLog.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnCombinedLog.Enabled = false;
-            this.btnCombinedLog.Location = new System.Drawing.Point(560, 130);
+            this.btnCombinedLog.Location = new System.Drawing.Point(668, 130);
             this.btnCombinedLog.Name = "btnCombinedLog";
             this.btnCombinedLog.Size = new System.Drawing.Size(75, 23);
             this.btnCombinedLog.TabIndex = 0;
@@ -254,14 +254,14 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtCombinedLog.Location = new System.Drawing.Point(84, 130);
             this.txtCombinedLog.Name = "txtCombinedLog";
-            this.txtCombinedLog.Size = new System.Drawing.Size(470, 20);
+            this.txtCombinedLog.Size = new System.Drawing.Size(578, 20);
             this.txtCombinedLog.TabIndex = 2;
             // 
             // frmDebugLogReader
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(646, 489);
+            this.ClientSize = new System.Drawing.Size(754, 489);
             this.Controls.Add(this.lblCombinedLog);
             this.Controls.Add(this.lblLogsDirectory);
             this.Controls.Add(this.grpFilters);
