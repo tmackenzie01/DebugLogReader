@@ -21,7 +21,7 @@ namespace DebugLogReader
             InitializeComponent();
 
             String logsDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
-                @"Recorder testing\20160302\DebugLogsDummy");
+                @"Recorder testing\20160302\DebugLogs13");
 
             txtLogDirectory.Text = logsDir;
             m_stpLogsProcessing = new Stopwatch();
@@ -608,7 +608,7 @@ namespace DebugLogReader
             RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.Multiline);
 
         public static Regex m_frameRegex = new Regex("Record.(?<timestamp>[0-9]+.[0-9]+.[0-9]+.[0-9]+)." +
-                "\\((C:(?<cTimestamp>[0-9]+.[0-9]+).O:(?<oTimestamp>[0-9]+.[0-9]+).)*RV.(?<rvTimestamp>[0-9]+.[0-9]+).\\).TOT.(?<totTimestamp>[0-9]+.[0-9]+).$",
+                "\\((C:(?<cTimestamp1>[0-9]+.[0-9]+).O:(?<oTimestamp>[0-9]+.[0-9]+).)*(RV|C).(?<rvORcTimestamp>[0-9]+.[0-9]+).\\).TOT.(?<totTimestamp>[0-9]+.[0-9]+).$",
                 RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.Multiline);
     }
 }
