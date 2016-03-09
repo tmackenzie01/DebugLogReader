@@ -77,7 +77,7 @@ namespace DebugLogReader
                 {
                     foreach (String line in debugLogText)
                     {
-                        if (!String.IsNullOrEmpty(line))
+                        if (!String.IsNullOrEmpty(line) && (!String.IsNullOrWhiteSpace(line)))
                         {
                             newRow = ParseLine(m_cameraNumber, line, m_rowRegex, m_wroteDataRegex, previousTimestamp);
                             if (newRow.NullFrameDetected)
