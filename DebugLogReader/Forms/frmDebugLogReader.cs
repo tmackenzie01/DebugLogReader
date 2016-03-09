@@ -21,7 +21,7 @@ namespace DebugLogReader
             InitializeComponent();
 
             String logsDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
-                @"Recorder testing\20160302\DebugLogs9");
+                @"Recorder testing\20160302\DebugLogsDummy");
 
             txtLogDirectory.Text = logsDir;
             m_stpLogsProcessing = new Stopwatch();
@@ -225,9 +225,11 @@ namespace DebugLogReader
             String pushFile = "";
             String popFile = "";
             String csFile = "";
+            String frameFile = "";
             DebugLog pushLog = null;
             DebugLog popLog = null;
             DebugLog csLog = null;
+            DebugLog frameLog = null;
             List<DebugLog> logs = new List<DebugLog>();
             int fileFoundCount = 0;
 
@@ -248,6 +250,11 @@ namespace DebugLogReader
                     csFile = logFile;
                     fileFoundCount++;
                 }
+                if (logFile.EndsWith("_FrameWrite.txt"))
+                {
+                    frameFile = logFile;
+                    fileFoundCount++;
+                }
             }
 
             // Try to parse the CSWrite file
@@ -264,11 +271,19 @@ namespace DebugLogReader
                 pushLog.Load(pushFile);
                 logs.Add(pushLog);
             }
+
             if (!String.IsNullOrEmpty(popFile))
             {
                 popLog = new PopDebugLog(args.CameraNumber, args.Filters);
                 popLog.Load(popFile);
                 logs.Add(popLog);
+            }
+
+            if (!String.IsNullOrEmpty(frameFile))
+            {
+                frameLog = new FrameDebugLog(args.CameraNumber, args.Filters);
+                frameLog.Load(frameFile);
+                logs.Add(frameLog);
             }
 
             e.Result = new DebugLogReaderResult(args.CameraNumber, logs);
@@ -591,5 +606,9 @@ namespace DebugLogReader
 
         public static Regex m_wroteDataRegex = new Regex("Wrote data( C.(?<coldstoreId>[0-9]+) P.(?<coldstorePort>[0-9]+))*$",
             RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.Multiline);
+
+        public static Regex m_frameRegex = new Regex("Record.(?<timestamp>[0-9]+.[0-9]+.[0-9]+.[0-9]+)." +
+                "\\((C:(?<cTimestamp>[0-9]+.[0-9]+).O:(?<oTimestamp>[0-9]+.[0-9]+).)*RV.(?<rvTimestamp>[0-9]+.[0-9]+).\\).TOT.(?<totTimestamp>[0-9]+.[0-9]+).$",
+                RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.Multiline);
     }
 }

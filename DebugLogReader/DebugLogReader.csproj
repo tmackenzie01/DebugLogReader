@@ -51,6 +51,7 @@
     <Compile Include="DebugLogReaderArgs.cs" />
     <Compile Include="DebugLogReaderResult.cs" />
     <Compile Include="Logs\DebugLogCSRow.cs" />
+    <Compile Include="Logs\DebugLogFrameRow.cs" />
     <Compile Include="Logs\DebugLogRow.cs" />
     <Compile Include="Logs\DebugLogFilter.cs" />
     <Compile Include="Forms\frmCameraSelection.cs">
@@ -65,6 +66,7 @@
     <Compile Include="Forms\frmDebugLogReader.Designer.cs">
       <DependentUpon>frmDebugLogReader.cs</DependentUpon>
     </Compile>
+    <Compile Include="Logs\FrameDebugLog.cs" />
     <Compile Include="Logs\PopDebugLog.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
