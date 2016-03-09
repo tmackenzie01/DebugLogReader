@@ -190,13 +190,13 @@ namespace DebugLogReader
 
         public void Sort()
         {
-            m_rows.Sort(delegate (DebugLogRow log1, DebugLogRow log2)
+            m_rows.Sort(delegate (DebugLogRow row1, DebugLogRow row2)
             {
-                int timestampComp = log1.Timestamp.CompareTo(log2.Timestamp);
+                int timestampComp = row1.Timestamp.CompareTo(row2.Timestamp);
 
                 if (timestampComp == 0)
                 {
-                    return log1.SortingText.CompareTo(log2.SortingText);
+                    return row1.SortingText.CompareTo(row2.SortingText);
                 }
 
                 return timestampComp;
