@@ -391,6 +391,14 @@ namespace DebugLogReader
             int progressFinish = logs.Count + 2; // One for the sort and one for the saving (done in another background worker)
             DateTime latestStartTime = DateTime.MinValue;
 
+            // Sort the logs before we combine them as they will be in a different order each time
+            // This may affect the results of rows with the same time (easier to compare correct results after changes)
+            m_logs.Sort(delegate (DebugLog log1, DebugLog log2)
+            {
+                return log1.CameraNumber.CompareTo(log2.CameraNumber);
+            });
+
+
             foreach (DebugLog log in logs)
             {
                 if (latestStartTime < log.GetStartTime())
