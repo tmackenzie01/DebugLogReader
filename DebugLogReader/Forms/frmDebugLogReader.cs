@@ -24,6 +24,7 @@ namespace DebugLogReader
                 @"Recorder testing\20160302\DebugLogs7");
 
             txtLogDirectory.Text = logsDir;
+            m_stpLogsProcessing = new Stopwatch();
         }
 
         private void btnReadLogs_Click(object sender, EventArgs e)
@@ -45,6 +46,7 @@ namespace DebugLogReader
 
         private void StartLogReads()
         {
+            m_stpLogsProcessing.Start();
             lstProgress.Items.Clear();
             btnReadLogs.Enabled = false;
             prgFiles.Value = 0;
@@ -411,6 +413,8 @@ namespace DebugLogReader
             {
                 AddMessage("Failed to create log");
             }
+            m_stpLogsProcessing.Stop();
+            AddMessage($"Total time: {m_stpLogsProcessing.Elapsed.TotalSeconds.ToString("f3")} seconds");
 
             txtCombinedLog.Text = logFilename;
             btnReadLogs.Enabled = true;
@@ -459,6 +463,7 @@ namespace DebugLogReader
         int m_readLogsInProgress;
         List<DebugLog> m_logs;
         String m_filterDescription;
+        Stopwatch m_stpLogsProcessing;
 
         // Declare and intialise these Regex here as it's costly to keep creating them
         // Need to figure out a better way to do this
