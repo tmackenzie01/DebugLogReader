@@ -60,7 +60,6 @@ namespace DebugLogReader
                 case eFilterBy.CameraNumber:
                     List<int> cameras = (List<int>)m_filterData;
                     conditionsMet = CompareObjects(m_filterBy, m_filterComparision, row.CameraNumber, cameras);
-                    //conditionsMet = cameras.Contains(row.CameraNumber);
                     break;
                 case eFilterBy.QueueCount:
                     int queueCount = (int)m_filterData;
@@ -74,7 +73,6 @@ namespace DebugLogReader
                 case eFilterBy.EndTime:
                     DateTime startTime = (DateTime)m_filterData;
                     conditionsMet = CompareObjects(m_filterBy, m_filterComparision, row.Timestamp, startTime);
-                    //conditionsMet = (row.Timestamp > startTime);
                     break;
                 case eFilterBy.LastWroteElapsed:
                     TimeSpan lastWroteElapsed = (TimeSpan)m_filterData;
