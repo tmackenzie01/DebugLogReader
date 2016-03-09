@@ -30,7 +30,7 @@ namespace DebugLogReader
         private void btnReadLogs_Click(object sender, EventArgs e)
         {
             txtCombinedLog.Text = "";
-            btnCombinedLog.Enabled = false;
+            btnOpenCombinedLog.Enabled = false;
             StartLogReads();
         }
 
@@ -353,6 +353,7 @@ namespace DebugLogReader
         {
             AddMessage("Logs combined");
             DebugLog giantLog = (DebugLog)e.Result;
+            bool saveFile = true;
 
             String giantLogFilename = Path.Combine(txtLogDirectory.Text, $"giantLog{m_filterDescription}.txt");
             if (File.Exists(giantLogFilename))
@@ -361,16 +362,27 @@ namespace DebugLogReader
                 {
                     File.Delete(giantLogFilename);
                 }
-
+                else
+                {
+                    saveFile = false;
+                }
             }
-            Tuple<DebugLog, String> writeLogArgs = new Tuple<DebugLog, String>(giantLog, giantLogFilename);
 
-            BackgroundWorker bgWriteLog = new BackgroundWorker();
-            bgWriteLog.WorkerReportsProgress = true;
-            bgWriteLog.DoWork += WriteLogs_DoWork;
-            bgWriteLog.ProgressChanged += WriteLogs_ProgressChanged;
-            bgWriteLog.RunWorkerCompleted += WriteLogs_RunWorkerCompleted;
-            bgWriteLog.RunWorkerAsync(writeLogArgs);
+            if (saveFile)
+            {
+                Tuple<DebugLog, String> writeLogArgs = new Tuple<DebugLog, String>(giantLog, giantLogFilename);
+
+                BackgroundWorker bgWriteLog = new BackgroundWorker();
+                bgWriteLog.WorkerReportsProgress = true;
+                bgWriteLog.DoWork += WriteLogs_DoWork;
+                bgWriteLog.ProgressChanged += WriteLogs_ProgressChanged;
+                bgWriteLog.RunWorkerCompleted += WriteLogs_RunWorkerCompleted;
+                bgWriteLog.RunWorkerAsync(writeLogArgs);
+            }
+            else
+            {
+                LogsComplete(false, "", "existing file not overwritten");
+            }
         }
 
         private void WriteLogs_DoWork(object sender, DoWorkEventArgs e)
@@ -402,23 +414,26 @@ namespace DebugLogReader
         private void WriteLogs_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             Tuple<bool, String> args = (Tuple<bool, String>)e.Result;
-            bool fileWritten = args.Item1;
-            String logFilename = args.Item2;
+            LogsComplete(args.Item1, args.Item2, "");
+        }
 
+        private void LogsComplete(bool fileWritten, String logFilename, String errorMessage)
+        {
+            prgFiles.Value = 100;
             if (fileWritten)
             {
                 AddMessage($"File created {logFilename}");
             }
             else
             {
-                AddMessage("Failed to create log");
+                AddMessage($"Failed to create log {errorMessage}");
             }
             m_stpLogsProcessing.Stop();
             AddMessage($"Total time: {m_stpLogsProcessing.Elapsed.TotalSeconds.ToString("f3")} seconds");
 
             txtCombinedLog.Text = logFilename;
             btnReadLogs.Enabled = true;
-            btnCombinedLog.Enabled = true;
+            btnOpenCombinedLog.Enabled = !String.IsNullOrEmpty(logFilename);
 
         }
         private void txtCameras_MouseClick(object sender, MouseEventArgs e)

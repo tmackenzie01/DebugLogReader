@@ -46,7 +46,7 @@
             this.chkCamerSelect = new System.Windows.Forms.CheckBox();
             this.chkLastWroteElapsedAbove = new System.Windows.Forms.CheckBox();
             this.lblLogsDirectory = new System.Windows.Forms.Label();
-            this.btnCombinedLog = new System.Windows.Forms.Button();
+            this.btnOpenCombinedLog = new System.Windows.Forms.Button();
             this.lblCombinedLog = new System.Windows.Forms.Label();
             this.txtCombinedLog = new System.Windows.Forms.TextBox();
             this.grpFilters.SuspendLayout();
@@ -227,17 +227,17 @@
             this.lblLogsDirectory.TabIndex = 6;
             this.lblLogsDirectory.Text = "Logs directory";
             // 
-            // btnCombinedLog
+            // btnOpenCombinedLog
             // 
-            this.btnCombinedLog.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnCombinedLog.Enabled = false;
-            this.btnCombinedLog.Location = new System.Drawing.Point(668, 130);
-            this.btnCombinedLog.Name = "btnCombinedLog";
-            this.btnCombinedLog.Size = new System.Drawing.Size(75, 23);
-            this.btnCombinedLog.TabIndex = 0;
-            this.btnCombinedLog.Text = "Open";
-            this.btnCombinedLog.UseVisualStyleBackColor = true;
-            this.btnCombinedLog.Click += new System.EventHandler(this.btnCombinedLog_Click);
+            this.btnOpenCombinedLog.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnOpenCombinedLog.Enabled = false;
+            this.btnOpenCombinedLog.Location = new System.Drawing.Point(668, 130);
+            this.btnOpenCombinedLog.Name = "btnOpenCombinedLog";
+            this.btnOpenCombinedLog.Size = new System.Drawing.Size(75, 23);
+            this.btnOpenCombinedLog.TabIndex = 0;
+            this.btnOpenCombinedLog.Text = "Open";
+            this.btnOpenCombinedLog.UseVisualStyleBackColor = true;
+            this.btnOpenCombinedLog.Click += new System.EventHandler(this.btnCombinedLog_Click);
             // 
             // lblCombinedLog
             // 
@@ -269,7 +269,7 @@
             this.Controls.Add(this.txtCombinedLog);
             this.Controls.Add(this.txtLogDirectory);
             this.Controls.Add(this.lstProgress);
-            this.Controls.Add(this.btnCombinedLog);
+            this.Controls.Add(this.btnOpenCombinedLog);
             this.Controls.Add(this.btnReadLogs);
             this.Name = "frmDebugLogReader";
             this.Text = "Debug Log Reader";
@@ -300,7 +300,7 @@
         private System.Windows.Forms.TextBox txtLastWroteElapsedAbove;
         private System.Windows.Forms.CheckBox chkLastWroteElapsedAbove;
         private System.Windows.Forms.Label lblLogsDirectory;
-        private System.Windows.Forms.Button btnCombinedLog;
+        private System.Windows.Forms.Button btnOpenCombinedLog;
         private System.Windows.Forms.Label lblCombinedLog;
         private System.Windows.Forms.TextBox txtCombinedLog;
     }
