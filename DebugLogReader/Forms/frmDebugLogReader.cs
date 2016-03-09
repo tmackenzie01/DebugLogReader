@@ -369,17 +369,27 @@ namespace DebugLogReader
             AddMessage("Logs combined");
             DebugLog giantLog = (DebugLog)e.Result;
             bool saveFile = true;
-
+            String errorMessage = "";
             String giantLogFilename = Path.Combine(txtLogDirectory.Text, $"giantLog{m_filterDescription}.txt");
-            if (File.Exists(giantLogFilename))
+
+            if (giantLog.Count == 0)
             {
-                if (MessageBox.Show($"{giantLogFilename} exists\r\nYou want to overwrite it?", "", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                saveFile = false;
+                errorMessage = "Empty file";
+            }
+            else
+            {
+                if (File.Exists(giantLogFilename))
                 {
-                    File.Delete(giantLogFilename);
-                }
-                else
-                {
-                    saveFile = false;
+                    if (MessageBox.Show($"{giantLogFilename} exists\r\nYou want to overwrite it?", "", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    {
+                        File.Delete(giantLogFilename);
+                    }
+                    else
+                    {
+                        saveFile = false;
+                        errorMessage = "existing file not overwritten";
+                    }
                 }
             }
 
@@ -396,119 +406,119 @@ namespace DebugLogReader
             }
             else
             {
-                LogsComplete(false, "", "existing file not overwritten");
+                LogsComplete(false, "", errorMessage);
             }
         }
 
         private void WriteLogs_DoWork(object sender, DoWorkEventArgs e)
-        {
-            BackgroundWorker worker = sender as BackgroundWorker;
+{
+    BackgroundWorker worker = sender as BackgroundWorker;
 
-            Tuple<DebugLog, String> args = (Tuple<DebugLog, String>)e.Argument;
-            DebugLog debugLog = args.Item1;
-            String logFilename = args.Item2;
-            bool fileWritten = false;
-            try
-            {
-                debugLog.Save(logFilename);
-                fileWritten = true;
-            }
-            catch
-            {
-            }
-            worker.ReportProgress(100);
+    Tuple<DebugLog, String> args = (Tuple<DebugLog, String>)e.Argument;
+    DebugLog debugLog = args.Item1;
+    String logFilename = args.Item2;
+    bool fileWritten = false;
+    try
+    {
+        debugLog.Save(logFilename);
+        fileWritten = true;
+    }
+    catch
+    {
+    }
+    worker.ReportProgress(100);
 
-            e.Result = new Tuple<bool, String>(fileWritten, logFilename);
-        }
+    e.Result = new Tuple<bool, String>(fileWritten, logFilename);
+}
 
-        private void WriteLogs_ProgressChanged(object sender, ProgressChangedEventArgs e)
-        {
-            prgFiles.Value = e.ProgressPercentage;
-        }
+private void WriteLogs_ProgressChanged(object sender, ProgressChangedEventArgs e)
+{
+    prgFiles.Value = e.ProgressPercentage;
+}
 
-        private void WriteLogs_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-            Tuple<bool, String> args = (Tuple<bool, String>)e.Result;
-            LogsComplete(args.Item1, args.Item2, "");
-        }
+private void WriteLogs_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+{
+    Tuple<bool, String> args = (Tuple<bool, String>)e.Result;
+    LogsComplete(args.Item1, args.Item2, "");
+}
 
-        private void LogsComplete(bool fileWritten, String logFilename, String errorMessage)
-        {
-            prgFiles.Value = 100;
-            if (fileWritten)
-            {
-                AddMessage($"File created {logFilename}");
-            }
-            else
-            {
-                AddMessage($"Failed to create log {errorMessage}");
-            }
-            m_stpLogsProcessing.Stop();
-            AddMessage($"Total time: {m_stpLogsProcessing.Elapsed.TotalSeconds.ToString("f3")} seconds");
+private void LogsComplete(bool fileWritten, String logFilename, String errorMessage)
+{
+    prgFiles.Value = 100;
+    if (fileWritten)
+    {
+        AddMessage($"File created {logFilename}");
+    }
+    else
+    {
+        AddMessage($"Failed to create log {errorMessage}");
+    }
+    m_stpLogsProcessing.Stop();
+    AddMessage($"Total time: {m_stpLogsProcessing.Elapsed.TotalSeconds.ToString("f3")} seconds");
 
-            txtCombinedLog.Text = logFilename;
-            btnReadLogs.Enabled = true;
-            btnOpenCombinedLog.Enabled = !String.IsNullOrEmpty(logFilename);
+    txtCombinedLog.Text = logFilename;
+    btnReadLogs.Enabled = true;
+    btnOpenCombinedLog.Enabled = !String.IsNullOrEmpty(logFilename);
 
-        }
-        private void txtCameras_MouseClick(object sender, MouseEventArgs e)
-        {
-            frmCameraSelection frmCam = new frmCameraSelection(txtLogDirectory.Text, txtCameras.Text);
-            if (frmCam.ShowDialog() == DialogResult.OK)
-            {
-                chkCamerSelect.Checked = !String.IsNullOrEmpty(frmCam.SelectedCameraCSV);
-                txtCameras.Text = frmCam.SelectedCameraCSV;
-            }
-        }
+}
+private void txtCameras_MouseClick(object sender, MouseEventArgs e)
+{
+    frmCameraSelection frmCam = new frmCameraSelection(txtLogDirectory.Text, txtCameras.Text);
+    if (frmCam.ShowDialog() == DialogResult.OK)
+    {
+        chkCamerSelect.Checked = !String.IsNullOrEmpty(frmCam.SelectedCameraCSV);
+        txtCameras.Text = frmCam.SelectedCameraCSV;
+    }
+}
 
-        private void txtStartTime_TextChanged(object sender, EventArgs e)
-        {
-            TextBox txt = (TextBox)sender;
-            CheckTimeFormat(txt, chkStartTime);
-        }
+private void txtStartTime_TextChanged(object sender, EventArgs e)
+{
+    TextBox txt = (TextBox)sender;
+    CheckTimeFormat(txt, chkStartTime);
+}
 
-        private void txtEndTime_TextChanged(object sender, EventArgs e)
-        {
-            TextBox txt = (TextBox)sender;
-            CheckTimeFormat(txt, chkEndTime);
-        }
+private void txtEndTime_TextChanged(object sender, EventArgs e)
+{
+    TextBox txt = (TextBox)sender;
+    CheckTimeFormat(txt, chkEndTime);
+}
 
-        private void CheckTimeFormat(TextBox txt, CheckBox chk)
-        {
-            try
-            {
-                DateTime startTime = DateTime.ParseExact(txt.Text, @"dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture);
-                txt.Tag = true;
-                txt.ForeColor = Color.Black;
-                chk.Enabled = true;
-            }
-            catch
-            {
-                txt.ForeColor = Color.Red;
-                chk.Checked = false;
-                chk.Enabled = false;
-            }
-        }
+private void CheckTimeFormat(TextBox txt, CheckBox chk)
+{
+    try
+    {
+        DateTime startTime = DateTime.ParseExact(txt.Text, @"dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture);
+        txt.Tag = true;
+        txt.ForeColor = Color.Black;
+        chk.Enabled = true;
+    }
+    catch
+    {
+        txt.ForeColor = Color.Red;
+        chk.Checked = false;
+        chk.Enabled = false;
+    }
+}
 
-        int m_readLogsInProgress;
-        List<DebugLog> m_logs;
-        String m_filterDescription;
-        Stopwatch m_stpLogsProcessing;
+int m_readLogsInProgress;
+List<DebugLog> m_logs;
+String m_filterDescription;
+Stopwatch m_stpLogsProcessing;
 
-        // Declare and intialise these Regex here as it's costly to keep creating them
-        // Need to figure out a better way to do this
-        public static Regex m_pushedRegex = new Regex("Pushed...(?<timestamp>[0-9]+.[0-9]+.[0-9]+.[0-9]+.[0-9]+.[0-9]+.[0-9]+).(\\-\\-\\-...[0-9]+.[0-9]+.seconds..)*Q.(?<queueCount>[0-9]+).F..?[0-9]+,.(?<pushedPopped>[0-9]+),.[0-9]+$",
-        RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.Multiline);
+// Declare and intialise these Regex here as it's costly to keep creating them
+// Need to figure out a better way to do this
+public static Regex m_pushedRegex = new Regex("Pushed...(?<timestamp>[0-9]+.[0-9]+.[0-9]+.[0-9]+.[0-9]+.[0-9]+.[0-9]+).(\\-\\-\\-...[0-9]+.[0-9]+.seconds..)*Q.(?<queueCount>[0-9]+).F..?[0-9]+,.(?<pushedPopped>[0-9]+),.[0-9]+$",
+RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.Multiline);
 
-        public static Regex m_poppedRegex = new Regex("Popped..." +
-                "(?<timestamp>[0-9]+.[0-9]+.[0-9]+.[0-9]+.[0-9]+.[0-9]+.[0-9]+).(\\-\\-\\-..[0-9]+.[0-9]+.seconds..)*" +
-                "Q.(?<queueCount>[0-9]+).F..?([0-9]+|ull)(,.(?<pushedPopped>[0-9]+),.[0-9]+)*" +
-                "(.T:A.(?<timeA>[0-9]+.[0-9]+.[0-9]+.[0-9]+).(B.(?<timeB>[0-9]+.[0-9]+.[0-9]+.[0-9]+).)*C.(?<timeC>[0-9]+.[0-9]+.[0-9]+.[0-9]+).D.(?<timeD>[0-9]+.[0-9]+.[0-9]+.[0-9]+).)*$");
+public static Regex m_poppedRegex = new Regex("Popped..." +
+        "(?<timestamp>[0-9]+.[0-9]+.[0-9]+.[0-9]+.[0-9]+.[0-9]+.[0-9]+).(\\-\\-\\-..[0-9]+.[0-9]+.seconds..)*" +
+        "Q.(?<queueCount>[0-9]+).F..?([0-9]+|ull)(,.(?<pushedPopped>[0-9]+),.[0-9]+)*" +
+        "(.T:A.(?<timeA>[0-9]+.[0-9]+.[0-9]+.[0-9]+).(B.(?<timeB>[0-9]+.[0-9]+.[0-9]+.[0-9]+).)*C.(?<timeC>[0-9]+.[0-9]+.[0-9]+.[0-9]+).D.(?<timeD>[0-9]+.[0-9]+.[0-9]+.[0-9]+).)*$");
 
-        public static Regex m_csRegex = new Regex("(?<timestamp>[0-9]+.[0-9]+.[0-9]+.[0-9]+).*[0-9]+.[0-9]+.(.)*[0-9]+.[0-9]+$",
-            RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.Multiline);
+public static Regex m_csRegex = new Regex("(?<timestamp>[0-9]+.[0-9]+.[0-9]+.[0-9]+).*[0-9]+.[0-9]+.(.)*[0-9]+.[0-9]+$",
+    RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.Multiline);
 
-        public static Regex m_wroteDataRegex = new Regex("Wrote data( C.(?<coldstoreId>[0-9]+) P.(?<coldstorePort>[0-9]+))*$",
-            RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.Multiline);
+public static Regex m_wroteDataRegex = new Regex("Wrote data( C.(?<coldstoreId>[0-9]+) P.(?<coldstorePort>[0-9]+))*$",
+    RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.Multiline);
     }
 }
