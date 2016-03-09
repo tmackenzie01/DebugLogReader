@@ -140,6 +140,11 @@ namespace DebugLogReader
             m_lastWroteElapsed = lastWroteElapsed;
         }
 
+        public void SetColdstoreId(int coldstoreId)
+        {
+            m_coldstoreId = coldstoreId;
+        }
+
         public void SetWroteDataWritten(int dataWritten)
         {
             m_dataWritten = dataWritten;
@@ -228,6 +233,14 @@ namespace DebugLogReader
             get
             {
                 return m_coldstorePort;
+            }
+        }
+
+        public bool ColdstoreInformationDetected
+        {
+            get
+            {
+                return (m_coldstoreId != -1);
             }
         }
 

@@ -18,5 +18,19 @@ namespace DebugLogReader
             m_rowRegex = frmDebugLogReader.m_poppedRegex;
             m_wroteDataRegex = frmDebugLogReader.m_wroteDataRegex;
         }
+
+        protected override void SetColdstoreInfo(DebugLogRow newRow, DebugLogRow oldRow)
+        {
+            if (oldRow != null)
+            {
+                if (oldRow.ColdstoreInformationDetected)
+                {
+                    if (!newRow.ColdstoreInformationDetected)
+                    {
+                        newRow.SetColdstoreId(oldRow.ColdstoreId);
+                    }
+                }
+            }
+        }
     }
 }

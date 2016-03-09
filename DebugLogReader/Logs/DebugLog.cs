@@ -45,9 +45,15 @@ namespace DebugLogReader
             }
         }
 
+        // Only wrote data rows hold coldstore id info, but we want them in all rows for the popping
+        protected virtual void SetColdstoreInfo(DebugLogRow newRow, DebugLogRow oldRow)
+        {
+        }
+
         public void Load(String filename)
         {
             DebugLogRow newRow = null;
+            DebugLogRow previousRow = null;
             DateTime previousTimestamp = DateTime.MinValue;
             DateTime lastWroteDataTimestamp = DateTime.MinValue;
             int dataWritten = 0;
@@ -66,6 +72,7 @@ namespace DebugLogReader
                             newRow = ParseLine(m_cameraNumber, line, m_rowRegex, m_wroteDataRegex, previousTimestamp);
                             dataWritten = dataWritten + newRow.DataPopped;
                             SetWroteDataInfo(newRow, ref dataWritten, ref lastWroteDataTimestamp);
+                            SetColdstoreInfo(newRow, previousRow);
                             AddRow(newRow, m_filters);
 
                             if (newRow != null)
@@ -73,6 +80,7 @@ namespace DebugLogReader
                                 previousTimestamp = newRow.Timestamp;
                             }
                         }
+                        previousRow = newRow;
                     }
                 }
 
