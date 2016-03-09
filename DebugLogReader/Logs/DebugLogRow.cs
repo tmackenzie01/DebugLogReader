@@ -37,6 +37,7 @@ namespace DebugLogReader
         protected virtual void Initialise(int cameraNumber, String text, Regex r, Regex wroteDataRegex, DateTime previousTimestamp)
         {
             m_cameraNumber = cameraNumber;
+            m_coldstoreId = -1; // Coldstore Id 0 is valid so make sure it's not that by default
 
             // Try the Regex
             if (wroteDataRegex != null)

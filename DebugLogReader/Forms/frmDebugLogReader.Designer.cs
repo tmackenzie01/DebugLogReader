@@ -49,6 +49,8 @@
             this.btnOpenCombinedLog = new System.Windows.Forms.Button();
             this.lblCombinedLog = new System.Windows.Forms.Label();
             this.txtCombinedLog = new System.Windows.Forms.TextBox();
+            this.chkColdstoreId = new System.Windows.Forms.CheckBox();
+            this.txtColdstoreId = new System.Windows.Forms.TextBox();
             this.grpFilters.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -117,11 +119,13 @@
             this.grpFilters.Controls.Add(this.txtStartTime);
             this.grpFilters.Controls.Add(this.txtCameras);
             this.grpFilters.Controls.Add(this.txtLastWroteElapsedAbove);
+            this.grpFilters.Controls.Add(this.txtColdstoreId);
             this.grpFilters.Controls.Add(this.txtQueueAbove);
             this.grpFilters.Controls.Add(this.chkEndTime);
             this.grpFilters.Controls.Add(this.chkStartTime);
             this.grpFilters.Controls.Add(this.chkCamerSelect);
             this.grpFilters.Controls.Add(this.chkLastWroteElapsedAbove);
+            this.grpFilters.Controls.Add(this.chkColdstoreId);
             this.grpFilters.Controls.Add(this.chkQueueFilter);
             this.grpFilters.Location = new System.Drawing.Point(3, 33);
             this.grpFilters.Name = "grpFilters";
@@ -257,6 +261,23 @@
             this.txtCombinedLog.Size = new System.Drawing.Size(578, 20);
             this.txtCombinedLog.TabIndex = 2;
             // 
+            // chkColdstoreId
+            // 
+            this.chkColdstoreId.AutoSize = true;
+            this.chkColdstoreId.Location = new System.Drawing.Point(353, 67);
+            this.chkColdstoreId.Name = "chkColdstoreId";
+            this.chkColdstoreId.Size = new System.Drawing.Size(82, 17);
+            this.chkColdstoreId.TabIndex = 4;
+            this.chkColdstoreId.Text = "Coldstore Id";
+            this.chkColdstoreId.UseVisualStyleBackColor = true;
+            // 
+            // txtColdstoreId
+            // 
+            this.txtColdstoreId.Location = new System.Drawing.Point(440, 65);
+            this.txtColdstoreId.Name = "txtColdstoreId";
+            this.txtColdstoreId.Size = new System.Drawing.Size(100, 20);
+            this.txtColdstoreId.TabIndex = 5;
+            // 
             // frmDebugLogReader
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -303,6 +324,8 @@
         private System.Windows.Forms.Button btnOpenCombinedLog;
         private System.Windows.Forms.Label lblCombinedLog;
         private System.Windows.Forms.TextBox txtCombinedLog;
+        private System.Windows.Forms.TextBox txtColdstoreId;
+        private System.Windows.Forms.CheckBox chkColdstoreId;
     }
 }
 

@@ -18,6 +18,7 @@ namespace DebugLogReader
             switch (filterBy)
             {
                 case eFilterBy.QueueCount:
+                case eFilterBy.ColdstoreId:
                     m_filterData = (int)filterData;
                     break;
                 case eFilterBy.StartTime:
@@ -64,7 +65,10 @@ namespace DebugLogReader
                 case eFilterBy.QueueCount:
                     int queueCount = (int)m_filterData;
                     conditionsMet = CompareObjects(m_filterBy, m_filterComparision, row.QueueCount, queueCount);
-                    //conditionsMet = (row.QueueCount > queueCount);
+                    break;
+                case eFilterBy.ColdstoreId:
+                    int coldstoreId = (int)m_filterData;
+                    conditionsMet = CompareObjects(m_filterBy, m_filterComparision, row.ColdstoreId, coldstoreId);
                     break;
                 case eFilterBy.StartTime:
                 case eFilterBy.EndTime:
@@ -214,6 +218,7 @@ namespace DebugLogReader
                     text.Append($"{m_filterComparision}{frmCameraSelection.CameraListToCSV(cameras)}");
                     break;
                 case eFilterBy.QueueCount:
+                case eFilterBy.ColdstoreId:
                     int queueCount = (int)m_filterData;
                     text.Append($"{m_filterComparision}{queueCount}");
                     break;
@@ -240,7 +245,7 @@ namespace DebugLogReader
 
     // Only filter by (equal to camera number / greater than queue count)
     // If we need less than/equal to then add another enum and change MeetsConditions
-    public enum eFilterBy { CameraNumber, QueueCount, StartTime, EndTime, LastWroteElapsed }
+    public enum eFilterBy { CameraNumber, QueueCount, StartTime, EndTime, LastWroteElapsed, ColdstoreId }
 
     public enum eFilterComparision { LessThan, EqualTo, GreaterThan, MemberOf }
 }

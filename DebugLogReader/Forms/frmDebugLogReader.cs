@@ -192,6 +192,21 @@ namespace DebugLogReader
                 }
             }
 
+            // Coldstore Id
+            if (chkColdstoreId.Checked)
+            {
+                if (!String.IsNullOrEmpty(txtColdstoreId.Text))
+                {
+                    int coldstoreId = 0;
+                    if (Int32.TryParse(txtColdstoreId.Text, out coldstoreId))
+                    {
+                        DebugLogFilter filter = new DebugLogFilter(eFilterBy.ColdstoreId, eFilterComparision.EqualTo, coldstoreId);
+                        filterDescription.Append(filter.ToString());
+                        filters.Add(filter);
+                    }
+                }
+            }
+
             // If we have not created any filters then clear the list - we use this to determine there are no filters
             if (filters.Count == 0)
             {
