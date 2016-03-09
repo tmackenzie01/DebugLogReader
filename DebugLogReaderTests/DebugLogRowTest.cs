@@ -153,12 +153,14 @@ namespace DebugLogReaderTests
             Assert.AreEqual(false, frameRow.WroteData);
             Assert.AreEqual("15:08:44.779", frameRow.Timestamp.ToString("HH:mm:ss.fff"));
 
-            //csRegex = new Regex("Record.(?<timestamp>[0-9]+.[0-9]+.[0-9]+.[0-9]+)." +
-            //    "\\((C:(?<cTimestamp>[0-9]+.[0-9]+).O:(?<oTimestamp>[0-9]+.[0-9]+).)*RV.(?<rvTimestamp>[0-9]+.[0-9]+).\\).TOT.(?<totTimestamp>[0-9]+.[0-9]+).$",
-            //    RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.Multiline);
             DebugLogRow frameRow2 = new DebugLogFrameRow(2, "Record 14:56:07.972 (C:0.000 O:0.009 RV:0.000 ) TOT:0.009 ", csRegex, null, DateTime.MinValue);
             Assert.AreEqual(false, frameRow2.WroteData);
             Assert.AreEqual("14:56:07.972", frameRow2.Timestamp.ToString("HH:mm:ss.fff"));
+
+            DebugLogRow frameRow3 = new DebugLogFrameRow(2, "Record 16:27:36.195 (C:0.021 ) TOT:0.021 ", csRegex, null, DateTime.MinValue);
+            Assert.AreEqual(false, frameRow3.WroteData);
+            Assert.AreEqual("16:27:36.195", frameRow3.Timestamp.ToString("HH:mm:ss.fff"));
+            
 
 
         }
