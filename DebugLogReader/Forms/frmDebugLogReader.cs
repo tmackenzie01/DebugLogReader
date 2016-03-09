@@ -569,12 +569,12 @@ namespace DebugLogReader
         // Need to figure out a better way to do this
         public static Regex m_pushedRegex = new Regex("Pushed..." +
                 "(?<timestamp>[0-9]+.[0-9]+.[0-9]+.[0-9]+.[0-9]+.[0-9]+.[0-9]+).(\\-\\-\\-...[0-9]+.[0-9]+.seconds..)*" +
-                "Q.(?<queueCount>[0-9]+).F..?[0-9]+,.(?<pushedPopped>[0-9]+),.[0-9]+$",
+                "Q.(?<queueCount>[0-9]+).F..?([0-9]+|ull)(,.(?<pushedPopped>[0-9]+),.[0-9]+)*$",
         RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.Multiline);
 
         public static Regex m_poppedRegex = new Regex("Popped..." +
             "(?<timestamp>[0-9]+.[0-9]+.[0-9]+.[0-9]+.[0-9]+.[0-9]+.[0-9]+).(\\-\\-\\-..[0-9]+.[0-9]+.seconds..)*" +
-            "Q.(?<queueCount>[0-9]+).F..?([0-9]+|ull)(,.(?<pushedPopped>[0-9]+),.[0-9]+)*" +
+            "Q.(?<queueCount>[0-9]+).F..?((?<frameNo>[0-9]+|ull))(,.(?<pushedPopped>[0-9]+),.[0-9]+)*" +
             "(.T:A.(?<timeA>[0-9]+.[0-9]+.[0-9]+.[0-9]+).(B.(?<timeB>[0-9]+.[0-9]+.[0-9]+.[0-9]+).)*" +
             "C.(?<timeC>[0-9]+.[0-9]+.[0-9]+.[0-9]+).D.(?<timeD>[0-9]+.[0-9]+.[0-9]+.[0-9]+).)*$");
 
