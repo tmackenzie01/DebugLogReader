@@ -7,6 +7,7 @@ using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -25,6 +26,13 @@ namespace DebugLogReader
 
             txtLogDirectory.Text = logsDir;
             m_stpLogsProcessing = new Stopwatch();
+
+            // List the properties of the DebugLogRow class using reflection
+            DebugLogRow row = new DebugLogRow();
+            foreach (PropertyInfo prop in row.GetType().GetProperties())
+            {
+                Debug.WriteLine($"{prop.Name} {prop.PropertyType}");
+            }
         }
 
         private void btnReadLogs_Click(object sender, EventArgs e)
