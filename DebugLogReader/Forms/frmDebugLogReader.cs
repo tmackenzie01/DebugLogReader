@@ -33,6 +33,10 @@ namespace DebugLogReader
             {
                 Debug.WriteLine($"{prop.Name} {prop.PropertyType}");
             }
+
+            // We will use these properties to create automatic filters
+            // probably need to create a user control that builds the filters, then once the filter has been created it added to a list of current filters
+            // the current filters should be editable and you are able to delete each one
         }
 
         private void btnReadLogs_Click(object sender, EventArgs e)
