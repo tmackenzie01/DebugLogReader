@@ -21,7 +21,7 @@ namespace DebugLogReader
             InitializeComponent();
 
             String logsDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
-                @"Recorder testing\20160302\DebugLogs7");
+                @"Recorder testing\20160302\DebugLogs9");
 
             txtLogDirectory.Text = logsDir;
             m_stpLogsProcessing = new Stopwatch();
@@ -302,7 +302,7 @@ namespace DebugLogReader
 
                 combineLogs = (m_readLogsInProgress == 0);
             }
-            
+
             if (combineLogs)
             {
                 GetColdstoreIdLogs();
@@ -353,7 +353,7 @@ namespace DebugLogReader
                     cameraNumbers.Sort();
                     StringBuilder cameras = new StringBuilder();
                     cameras.Append($"{cameraNumbers[0]}");
-                    for (int i =1; i < cameraNumbers.Count; i++)
+                    for (int i = 1; i < cameraNumbers.Count; i++)
                     {
                         cameras.Append($",{cameraNumbers[i]}");
                     }
@@ -363,7 +363,7 @@ namespace DebugLogReader
             }
 
             messages.Sort();
-            foreach(String message in messages)
+            foreach (String message in messages)
             {
                 AddMessage(message);
             }
@@ -567,13 +567,16 @@ namespace DebugLogReader
 
         // Declare and intialise these Regex here as it's costly to keep creating them
         // Need to figure out a better way to do this
-        public static Regex m_pushedRegex = new Regex("Pushed...(?<timestamp>[0-9]+.[0-9]+.[0-9]+.[0-9]+.[0-9]+.[0-9]+.[0-9]+).(\\-\\-\\-...[0-9]+.[0-9]+.seconds..)*Q.(?<queueCount>[0-9]+).F..?[0-9]+,.(?<pushedPopped>[0-9]+),.[0-9]+$",
+        public static Regex m_pushedRegex = new Regex("Pushed..." +
+                "(?<timestamp>[0-9]+.[0-9]+.[0-9]+.[0-9]+.[0-9]+.[0-9]+.[0-9]+).(\\-\\-\\-...[0-9]+.[0-9]+.seconds..)*" +
+                "Q.(?<queueCount>[0-9]+).F..?[0-9]+,.(?<pushedPopped>[0-9]+),.[0-9]+$",
         RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.Multiline);
 
         public static Regex m_poppedRegex = new Regex("Popped..." +
-                "(?<timestamp>[0-9]+.[0-9]+.[0-9]+.[0-9]+.[0-9]+.[0-9]+.[0-9]+).(\\-\\-\\-..[0-9]+.[0-9]+.seconds..)*" +
-                "Q.(?<queueCount>[0-9]+).F..?([0-9]+|ull)(,.(?<pushedPopped>[0-9]+),.[0-9]+)*" +
-                "(.T:A.(?<timeA>[0-9]+.[0-9]+.[0-9]+.[0-9]+).(B.(?<timeB>[0-9]+.[0-9]+.[0-9]+.[0-9]+).)*C.(?<timeC>[0-9]+.[0-9]+.[0-9]+.[0-9]+).D.(?<timeD>[0-9]+.[0-9]+.[0-9]+.[0-9]+).)*$");
+            "(?<timestamp>[0-9]+.[0-9]+.[0-9]+.[0-9]+.[0-9]+.[0-9]+.[0-9]+).(\\-\\-\\-..[0-9]+.[0-9]+.seconds..)*" +
+            "Q.(?<queueCount>[0-9]+).F..?([0-9]+|ull)(,.(?<pushedPopped>[0-9]+),.[0-9]+)*" +
+            "(.T:A.(?<timeA>[0-9]+.[0-9]+.[0-9]+.[0-9]+).(B.(?<timeB>[0-9]+.[0-9]+.[0-9]+.[0-9]+).)*" +
+            "C.(?<timeC>[0-9]+.[0-9]+.[0-9]+.[0-9]+).D.(?<timeD>[0-9]+.[0-9]+.[0-9]+.[0-9]+).)*$");
 
         public static Regex m_csRegex = new Regex("(?<timestamp>[0-9]+.[0-9]+.[0-9]+.[0-9]+).*[0-9]+.[0-9]+.(.)*[0-9]+.[0-9]+$",
             RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.Multiline);
