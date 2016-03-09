@@ -46,7 +46,7 @@ namespace DebugLogReader
 
         private void StartLogReads()
         {
-            m_stpLogsProcessing.Start();
+            m_stpLogsProcessing.Restart();
             lstProgress.Items.Clear();
             btnReadLogs.Enabled = false;
             prgFiles.Value = 0;
