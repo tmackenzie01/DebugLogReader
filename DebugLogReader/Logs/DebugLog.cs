@@ -31,11 +31,20 @@ namespace DebugLogReader
         {
         }
 
-        private void SetWroteDataInfo(DebugLogRow row, ref int dataWritten, ref DateTime lastTime)
+        private void SetWroteDataInfo(DebugLogRow row, ref int dataWritten, ref DateTime lastTime, ref bool nullFrameDetectedPreviously)
         {
             if (row.WroteData)
             {
-                row.SetWroteDataWritten(dataWritten);
+                if (nullFrameDetectedPreviously)
+                {
+                    // If we have wrote data then we can clear the nullFrameDetected
+                    nullFrameDetectedPreviously = false;
+                    row.NewWroteData = true;
+                }
+                else
+                {
+                    row.SetWroteDataWritten(dataWritten);
+                }
                 if (!lastTime.Equals(DateTime.MinValue))
                 {
                     row.SetWroteDataElapsed(row.Timestamp - lastTime);
@@ -57,6 +66,7 @@ namespace DebugLogReader
             DateTime previousTimestamp = DateTime.MinValue;
             DateTime lastWroteDataTimestamp = DateTime.MinValue;
             int dataWritten = 0;
+            bool nullFrameDetectedPreviously = false;
 
             // Check filters for the debug log before we even read file
             if (CheckDebugLogFilters(m_filters))
@@ -70,8 +80,18 @@ namespace DebugLogReader
                         if (!String.IsNullOrEmpty(line))
                         {
                             newRow = ParseLine(m_cameraNumber, line, m_rowRegex, m_wroteDataRegex, previousTimestamp);
-                            dataWritten = dataWritten + newRow.DataPopped;
-                            SetWroteDataInfo(newRow, ref dataWritten, ref lastWroteDataTimestamp);
+                            if (newRow.NullFrameDetected)
+                            {
+                                // Null frame stops recording so clear the data written progress
+                                dataWritten = 0;
+                            }
+                            else
+                            {
+                                dataWritten = dataWritten + newRow.DataPopped;
+                            }
+                            nullFrameDetectedPreviously = newRow.NullFrameDetected || nullFrameDetectedPreviously;
+
+                            SetWroteDataInfo(newRow, ref dataWritten, ref lastWroteDataTimestamp, ref nullFrameDetectedPreviously);
                             SetColdstoreInfo(newRow, previousRow);
                             AddRow(newRow, m_filters);
 
@@ -97,7 +117,7 @@ namespace DebugLogReader
 
         protected virtual DebugLogRow ParseLine(int cameraNumber, String line, Regex rowRegex, Regex wroteDataRegex, DateTime previousTimestamp)
         {
-            DebugLogRow newRow  = new DebugLogRow(cameraNumber, line, rowRegex, wroteDataRegex, previousTimestamp);
+            DebugLogRow newRow = new DebugLogRow(cameraNumber, line, rowRegex, wroteDataRegex, previousTimestamp);
             return newRow;
         }
 
@@ -170,7 +190,7 @@ namespace DebugLogReader
 
         public void Sort()
         {
-            m_rows.Sort(delegate (DebugLogRow log1, DebugLogRow log2) 
+            m_rows.Sort(delegate (DebugLogRow log1, DebugLogRow log2)
             {
                 int timestampComp = log1.Timestamp.CompareTo(log2.Timestamp);
 

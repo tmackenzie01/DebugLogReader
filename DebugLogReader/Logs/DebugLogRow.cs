@@ -64,12 +64,6 @@ namespace DebugLogReader
 
             if (!m_bWroteData)
             {
-                // Can't figure out how else to do this
-                if (text.EndsWith("F:Null"))
-                {
-                    text = text.Replace("F:Null", "F:0, 0, 0");
-                }
-
                 Match match = r.Match(text);
                 if (match.Success)
                 {
@@ -111,6 +105,16 @@ namespace DebugLogReader
                         if (!String.IsNullOrEmpty(timeDText))
                         {
                             timeD = DateTime.ParseExact(timeDText, @"HH:mm:ss.fff", CultureInfo.InvariantCulture);
+                        }
+                    }
+
+                    String frameNo = match.Groups["frameNo"].Value;
+                    if (!String.IsNullOrEmpty(frameNo))
+                    {
+                        // The N of Null matches to a . in the Regex
+                        if (frameNo.Equals("ull"))
+                        {
+                            m_nullFrameDetected = true;
                         }
                     }
 
@@ -166,9 +170,14 @@ namespace DebugLogReader
             }
             else
             {
+                String nullFrameDetected = "";
+                if (m_newWroteData)
+                {
+                    nullFrameDetected = " NULL frame previously";
+                }
                 double dataWritten = m_dataWritten;
                 dataWritten = dataWritten / 1024.0;
-                return $"{CameraNumber} {m_timestamp.ToString("dd/MM/yyyy HH:mm:ss.fff")} ({m_lastWroteElapsed.TotalSeconds.ToString("f3")} seconds since last wrote data - {dataWritten.ToString("f3")}Kb) {m_coldstoreId}:{m_coldstorePort}";
+                return $"{CameraNumber} {m_timestamp.ToString("dd/MM/yyyy HH:mm:ss.fff")} ({m_lastWroteElapsed.TotalSeconds.ToString("f3")} seconds since last wrote data - {dataWritten.ToString("f3")}Kb {nullFrameDetected}) {m_coldstoreId}:{m_coldstorePort}";
             }
         }
 
@@ -268,9 +277,28 @@ namespace DebugLogReader
             }
         }
 
+        public bool NullFrameDetected
+        {
+            get
+            {
+                return m_nullFrameDetected;
+            }
+        }
+
+        public bool NewWroteData
+        {
+            set
+            {
+                m_newWroteData = value;
+            }
+        }
+
         protected String m_text;
         protected int m_cameraNumber;
-        bool m_bWroteData;
+
+        bool m_bWroteData;      // Whenever we write data to the Coldstore
+        bool m_newWroteData;    // First write data after a recording stop (detected by a null frame)
+
         TimeSpan m_lastWroteElapsed;
         int m_dataWritten;
         int m_dataPushedPopped;
@@ -283,6 +311,7 @@ namespace DebugLogReader
         TimeSpan m_timeElapsedB;
         TimeSpan m_timeElapsedC;
         TimeSpan m_timeElapsedD;
+        bool m_nullFrameDetected;
 
         // Not storing any of these at the moment
         //int m_frameNumber;
