@@ -110,14 +110,22 @@ namespace DebugLogReaderTests
             Assert.AreEqual(2, popRowWroteDataTimeColdstoreInfo.ColdstoreId);
             Assert.AreEqual(50336, popRowWroteDataTimeColdstoreInfo.ColdstorePort);
 
-            DebugLogRow popRowWithTimingsABCD = new DebugLogRow(1, "Popped - 08/03/2016 11:58:16.698 --- (0.030 seconds) Q:1 F:83, 6711, 0 T:A 11:58:16.668 B 11:58:16.668 C 11:58:16.698 D 11:58:16.698 ", poppedRegex, wroteDataRegex, DateTime.MinValue);
-            Assert.AreEqual(new DateTime(2016, 3, 8, 11, 58, 16).AddMilliseconds(698), popRowWithTimingsABCD.Timestamp);
-            Assert.AreEqual(0, popRowWithTimingsABCD.TimeElapsedB.TotalSeconds);
-            Assert.AreEqual(0, popRowWithTimingsABCD.TimeElapsedB.Milliseconds);
-            Assert.AreEqual(0.03, popRowWithTimingsABCD.TimeElapsedC.TotalSeconds);
-            Assert.AreEqual(30, popRowWithTimingsABCD.TimeElapsedC.Milliseconds);
-            Assert.AreEqual(0, popRowWithTimingsABCD.TimeElapsedD.TotalSeconds);
-            Assert.AreEqual(0, popRowWithTimingsABCD.TimeElapsedD.Milliseconds);
+            DebugLogRow popRowWithTimingsABCD1 = new DebugLogRow(1, "Popped - 08/03/2016 11:58:16.698 --- (0.030 seconds) " +
+                "Q:1 F:83, 6711, 0 T:A 11:58:16.668 B 11:58:16.668 C 11:58:16.698 D 11:58:16.698 ", poppedRegex, wroteDataRegex, DateTime.MinValue);
+            Assert.AreEqual(new DateTime(2016, 3, 8, 11, 58, 16).AddMilliseconds(698), popRowWithTimingsABCD1.Timestamp);
+            Assert.AreEqual(0, popRowWithTimingsABCD1.TimeElapsedB.TotalSeconds);
+            Assert.AreEqual(0, popRowWithTimingsABCD1.TimeElapsedB.Milliseconds);
+            Assert.AreEqual(30, popRowWithTimingsABCD1.TimeElapsedC.Milliseconds);
+            Assert.AreEqual(0, popRowWithTimingsABCD1.TimeElapsedD.TotalSeconds);
+            Assert.AreEqual(0, popRowWithTimingsABCD1.TimeElapsedD.Milliseconds);
+
+            DebugLogRow popRowWithTimingsABCD2 = new DebugLogRow(1, "Popped - 10/03/2016 12:40:04.137 --- (0.200 seconds) " +
+                "Q:1 F:1122, 6293, 0 T:A 12:40:03.937 B 12:40:03.937 C 12:40:04.137 D 12:40:04.137 ", poppedRegex, wroteDataRegex, DateTime.MinValue);
+            Assert.AreEqual(new DateTime(2016, 3, 10, 12, 40, 4).AddMilliseconds(137), popRowWithTimingsABCD2.Timestamp);
+            Assert.AreEqual(0, popRowWithTimingsABCD2.TimeElapsedB.TotalSeconds);
+            Assert.AreEqual(0, popRowWithTimingsABCD2.TimeElapsedB.Milliseconds);
+            Assert.AreEqual(200, popRowWithTimingsABCD2.TimeElapsedC.Milliseconds);
+            Assert.AreEqual(0, popRowWithTimingsABCD2.TimeElapsedD.Milliseconds);
 
             DebugLogRow popRowWithTimingsACD = new DebugLogRow(1, "Popped - 08/03/2016 11:58:18.518 --- (0.010 seconds) Q:1 F:128, 6345, 0 T:A 11:58:18.518 C 11:58:18.518 D 11:58:20.518 ", poppedRegex, wroteDataRegex, DateTime.MinValue);
             Assert.AreEqual(new DateTime(2016, 3, 8, 11, 58, 18).AddMilliseconds(518), popRowWithTimingsACD.Timestamp);
@@ -138,9 +146,12 @@ namespace DebugLogReaderTests
             // Get the compiled Regex
             Regex csRegex = frmDebugLogReader.m_csRegex;
 
-            DebugLogRow csBasicRow = new DebugLogCSRow(1, "12:23:01.374 2 157906 bytes:con-STC 0.005--ws-Above 0.565", csRegex, null, DateTime.MinValue);
-            Assert.AreEqual(false, csBasicRow.WroteData);
-            Assert.AreEqual("12:23:01.374", csBasicRow.Timestamp.ToString("HH:mm:ss.fff"));
+            DebugLogRow csBasicRow1 = new DebugLogCSRow(1, "12:23:01.374 2 157906 bytes:con-STC 0.005--ws-Above 0.565", csRegex, null, DateTime.MinValue);
+            Assert.AreEqual(false, csBasicRow1.WroteData);
+            Assert.AreEqual("12:23:01.374", csBasicRow1.Timestamp.ToString("HH:mm:ss.fff"));
+
+            DebugLogRow csBasicRow2 = new DebugLogCSRow(1, "12:32:55.017 40 128702 bytes:con-STC 0.003--ws-Above 0.644 ", csRegex, null, DateTime.MinValue);
+            Assert.AreEqual("12:32:55.017", csBasicRow2.Timestamp.ToString("HH:mm:ss.fff"));
         }
 
         [TestMethod]
@@ -184,7 +195,7 @@ namespace DebugLogReaderTests
             Assert.AreEqual("13:04:15.059", frameRowHH2.Timestamp.ToString("HH:mm:ss.fff"));
             Assert.AreEqual(true, frameRowHH2.RVException);
 
-            DebugLogFrameRow frameRow8 = new DebugLogFrameRow(2, "Record 13:05:44.719 " + 
+            DebugLogFrameRow frameRow8 = new DebugLogFrameRow(2, "Record 13:05:44.719 " +
                 "(C:0.000 O:0.007 MPEG4-AA:0.000 BB:0.000 CR:0.000 RV:0.000 ) TOT:0.007", frameRegex, null, DateTime.MinValue);
             Assert.AreEqual("13:05:44.719", frameRow8.Timestamp.ToString("HH:mm:ss.fff"));
             Assert.AreEqual(false, frameRow8.RVException);
