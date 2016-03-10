@@ -156,13 +156,22 @@ namespace DebugLogReaderTests
             DebugLogRow frameRow2 = new DebugLogFrameRow(2, "Record 14:56:07.972 (C:0.000 O:0.009 RV:0.000 ) TOT:0.009 ", csRegex, null, DateTime.MinValue);
             Assert.AreEqual(false, frameRow2.WroteData);
             Assert.AreEqual("14:56:07.972", frameRow2.Timestamp.ToString("HH:mm:ss.fff"));
-            
+
             DebugLogRow frameRow3 = new DebugLogFrameRow(2, "Record 16:27:36.195 (C:0.021 ) TOT:0.021 ", csRegex, null, DateTime.MinValue);
             Assert.AreEqual(false, frameRow3.WroteData);
             Assert.AreEqual("16:27:36.195", frameRow3.Timestamp.ToString("HH:mm:ss.fff"));
-            
 
+            DebugLogRow frameRow4 = new DebugLogFrameRow(2, "Record 11:58:45.219 " +
+                "(C:0.000 O:0.008 RV:0.000 ) TOT:0.008 ", csRegex, null, DateTime.MinValue);
+            Assert.AreEqual("11:58:45.219", frameRow4.Timestamp.ToString("HH:mm:ss.fff"));
 
+            DebugLogRow frameRow5 = new DebugLogFrameRow(2, "Record 11:58:45.219 " +
+                "(C:0.000 O:0.008 MPEG4-AA:0.000 BB:0.000 RV:0.000 ) TOT:0.008 ", csRegex, null, DateTime.MinValue);
+            Assert.AreEqual("11:58:45.219", frameRow5.Timestamp.ToString("HH:mm:ss.fff"));
+
+            DebugLogRow frameRow6 = new DebugLogFrameRow(2, "Record 11:58:45.219 " +
+                "(C:0.000 O:0.008 MPEG4-AA:0.000 BB:0.000 CC:0.000 DD:0.000 EE:0.000 FF:0.000 RV:0.000 ) TOT:0.008 ", csRegex, null, DateTime.MinValue);
+            Assert.AreEqual("11:58:45.219", frameRow6.Timestamp.ToString("HH:mm:ss.fff"));
         }
     }
 }
