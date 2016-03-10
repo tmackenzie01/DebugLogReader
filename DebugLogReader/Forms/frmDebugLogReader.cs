@@ -26,6 +26,7 @@ namespace DebugLogReader
 
             txtLogDirectory.Text = logsDir;
             m_stpLogsProcessing = new Stopwatch();
+            m_fileWrapper = new RealFileWrapper();
         }
         private void frmDebugLogReader_Load(object sender, EventArgs e)
         {
@@ -245,20 +246,20 @@ namespace DebugLogReader
             // Try to parse the CSWrite file
             if (!String.IsNullOrEmpty(csFile))
             {
-                csLog = new CSDebugLog(args.CameraNumber, args.Filters);
+                csLog = new CSDebugLog(m_fileWrapper, args.CameraNumber, args.Filters);
                 csLog.Load(csFile);
                 logs.Add(csLog);
             }
 
             if (!String.IsNullOrEmpty(pushFile))
             {
-                pushLog = new PushDebugLog(args.CameraNumber, args.Filters);
+                pushLog = new PushDebugLog(m_fileWrapper, args.CameraNumber, args.Filters);
                 pushLog.Load(pushFile);
                 logs.Add(pushLog);
             }
             if (!String.IsNullOrEmpty(popFile))
             {
-                popLog = new PopDebugLog(args.CameraNumber, args.Filters);
+                popLog = new PopDebugLog(m_fileWrapper, args.CameraNumber, args.Filters);
                 popLog.Load(popFile);
                 logs.Add(popLog);
             }
@@ -318,7 +319,7 @@ namespace DebugLogReader
         {
             BackgroundWorker worker = sender as BackgroundWorker;
             List<DebugLog> logs = (List<DebugLog>)e.Argument;
-            DebugLog giantLog = new DebugLog();
+            DebugLog giantLog = new DebugLog(m_fileWrapper);
             int progressCount = 0;
             int progressFinish = logs.Count + 2; // One for the sort and one for the saving (done in another background worker)
             DateTime latestStartTime = DateTime.MinValue;
@@ -486,6 +487,8 @@ namespace DebugLogReader
         List<DebugLog> m_logs;
         String m_filterDescription;
         Stopwatch m_stpLogsProcessing;
+
+        IFileWrapper m_fileWrapper;
 
         // Declare and intialise these Regex here as it's costly to keep creating them
         // Need to figure out a better way to do this

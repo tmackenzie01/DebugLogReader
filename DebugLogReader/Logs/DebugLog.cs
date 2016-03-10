@@ -1,26 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace DebugLogReader
 {
     public class DebugLog
     {
-        public DebugLog()
+        public DebugLog(IFileWrapper fileWrapper)
         {
+            m_fileWrapper = fileWrapper;
             m_cameraNumber = -1;
             m_rows = new List<DebugLogRow>();
             m_filters = null;
             InitialiseRegex();
         }
 
-        public DebugLog(int cameraNumber, List<DebugLogFilter> filters)
+        public DebugLog(IFileWrapper fileWrapper, int cameraNumber, List<DebugLogFilter> filters)
         {
+            m_fileWrapper = fileWrapper;
             m_cameraNumber = cameraNumber;
             m_rows = new List<DebugLogRow>();
             m_filters = filters;
@@ -55,7 +52,7 @@ namespace DebugLogReader
             // Check filters for the debug log before we even read file
             if (CheckDebugLogFilters(m_filters))
             {
-                String[] debugLogText = File.ReadAllLines(filename);
+                String[] debugLogText = m_fileWrapper.LoadFromFile(filename);
 
                 if (debugLogText.Length > 0)
                 {
@@ -235,13 +232,7 @@ namespace DebugLogReader
 
         public void Save(String filename)
         {
-            StreamWriter sw = new StreamWriter(filename);
-            foreach (DebugLogRow row in m_rows)
-            {
-                sw.WriteLine(row.ToString());
-            }
-
-            sw.Close();
+            m_fileWrapper.Save(m_rows, filename);
         }
 
         public String SummaryText()
@@ -267,5 +258,7 @@ namespace DebugLogReader
 
         protected Regex m_rowRegex;
         protected Regex m_wroteDataRegex;
+        
+        IFileWrapper m_fileWrapper;
     }
 }

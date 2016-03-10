@@ -46,6 +46,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="RealFileWrapper.cs" />
+    <Compile Include="IFileWrapper.cs" />
     <Compile Include="Filters\frmFilters.cs">
       <SubType>Form</SubType>
     </Compile>
