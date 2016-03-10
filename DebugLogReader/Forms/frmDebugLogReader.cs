@@ -128,7 +128,7 @@ namespace DebugLogReader
                     if (Int32.TryParse(txtQueueAbove.Text, out queueAbove))
                     {
                         DebugLogFilter filter = new DebugLogFilter("QueueCount", eFilterComparision.GreaterThan, queueAbove);
-                        filterDescription.Append(filter.ToString());
+                        filterDescription.Append($"QueueCount{eFilterComparision.GreaterThan}{queueAbove}");
                         filters.Add(filter);
                     }
                 }
@@ -141,7 +141,7 @@ namespace DebugLogReader
                 {
                     List<int> cameras = frmCameraSelection.CameraCSVToList(txtCameras.Text);
                     DebugLogFilter filter = new DebugLogFilter("CameraNumber", eFilterComparision.MemberOf, cameras);
-                    filterDescription.Append(filter.ToString());
+                    filterDescription.Append($"CameraNumber{eFilterComparision.MemberOf}{frmCameraSelection.CameraListToCSV(cameras)}");
                     filters.Add(filter);
                 }
             }
@@ -163,7 +163,7 @@ namespace DebugLogReader
                     {
                         DateTime startTime = DateTime.ParseExact(txtStartTime.Text, @"dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture);
                         DebugLogFilter filter = new DebugLogFilter("Timestamp", eFilterComparision.GreaterThan, startTime);
-                        filterDescription.Append(filter.ToString());
+                        filterDescription.Append($"Timestamp{eFilterComparision.GreaterThan}{startTime.ToString("HHmmss")}");
                         filters.Add(filter);
                     }
                 }
@@ -178,7 +178,7 @@ namespace DebugLogReader
                     {
                         DateTime endTime = DateTime.ParseExact(txtEndTime.Text, @"dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture);
                         DebugLogFilter filter = new DebugLogFilter("Timestamp", eFilterComparision.LessThan, endTime);
-                        filterDescription.Append(filter.ToString());
+                        filterDescription.Append($"Timestamp{eFilterComparision.LessThan}{endTime.ToString("HHmmss")}");
                         filters.Add(filter);
                     }
                 }
@@ -194,7 +194,7 @@ namespace DebugLogReader
                     {
                         TimeSpan lastWroteElapsed = new TimeSpan(0, 0, lastWroteElapsedAbove);
                         DebugLogFilter filter = new DebugLogFilter("LastWroteDataElapsed", eFilterComparision.GreaterThan, lastWroteElapsed);
-                        filterDescription.Append(filter.ToString());
+                        filterDescription.Append($"LastWroteDataElapsed{eFilterComparision.GreaterThan}{lastWroteElapsed.TotalSeconds}");
                         filters.Add(filter);
                     }
                 }
@@ -363,7 +363,7 @@ namespace DebugLogReader
             DebugLog giantLog = (DebugLog)e.Result;
             bool saveFile = true;
 
-            String giantLogFilename = Path.Combine(txtLogDirectory.Text, $"giantLog{m_filterDescription}.txt");
+            String giantLogFilename = Path.Combine(txtLogDirectory.Text, $"giantLog_{m_filterDescription}.txt");
             if (File.Exists(giantLogFilename))
             {
                 if (MessageBox.Show($"{giantLogFilename} exists\r\nYou want to overwrite it?", "", MessageBoxButtons.YesNo) == DialogResult.Yes)

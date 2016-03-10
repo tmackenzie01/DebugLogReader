@@ -15,7 +15,6 @@ namespace DebugLogReader
             m_filterPropertyName = propertyName;
             m_filterComparision = filterComparison;
             m_filterData = filterData;
-            m_filterDescription = "Unknown";
         }
 
         public bool MeetsConditions(DebugLog log)
@@ -132,7 +131,6 @@ namespace DebugLogReader
         private bool PerformComparision2(eFilterComparision filterComparision, DateTime actualDate, DateTime filterDate)
         {
             bool conditionsMet = false;
-            m_filterDescription = $"{filterDate.ToString("HHmmss")}";
 
             switch (filterComparision)
             {
@@ -155,7 +153,6 @@ namespace DebugLogReader
         private bool PerformComparision2(eFilterComparision filterComparision, TimeSpan actualTime, TimeSpan filterTime)
         {
             bool conditionsMet = false;
-            m_filterDescription = $"{(int)filterTime.TotalSeconds}";
 
             switch (filterComparision)
             {
@@ -178,7 +175,6 @@ namespace DebugLogReader
         private bool PerformComparision2(eFilterComparision filterComparision, int actualInt, int filterInt)
         {
             bool conditionsMet = false;
-            m_filterDescription = $"{filterInt}";
 
             switch (filterComparision)
             {
@@ -201,7 +197,6 @@ namespace DebugLogReader
         private bool PerformComparision2(eFilterComparision filterComparision, int actualInt, List<int> filterInts)
         {
             bool conditionsMet = false;
-            m_filterDescription = $"{frmCameraSelection.CameraListToCSV(filterInts)}";
 
             switch (filterComparision)
             {
@@ -215,15 +210,9 @@ namespace DebugLogReader
             return conditionsMet;
         }
 
-        public override string ToString()
-        {
-            return $"_{m_filterPropertyName}{m_filterComparision}{m_filterDescription}"; 
-        }
-
         String m_filterPropertyName;
         Object m_filterData;
         eFilterComparision m_filterComparision;
-        String m_filterDescription;
     }
 
     public enum eFilterComparision { LessThan, EqualTo, GreaterThan, MemberOf }
