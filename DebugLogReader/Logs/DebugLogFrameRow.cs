@@ -47,6 +47,8 @@ namespace DebugLogReader
                 totTimestamp = $"0:0:{totTimestamp}";
                 m_totalFrameProcessing = TimeSpan.Parse(totTimestamp, DateTimeFormatInfo.InvariantInfo);
 
+                m_rvException = !String.IsNullOrEmpty(match.Groups["rvException"].Value);
+
                 m_text = text;
             }
             else
@@ -68,7 +70,16 @@ namespace DebugLogReader
             }
         }
 
+        public bool RVException
+        {
+            get
+            {
+                return m_rvException;
+            }
+        }
+
         private TimeSpan m_totalFrameProcessing;
+        private bool m_rvException;
     }
 
 }
