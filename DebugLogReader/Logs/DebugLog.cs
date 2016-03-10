@@ -278,6 +278,7 @@ namespace DebugLogReader
             {
                 String lineSummary = "no lines";
                 String timeSummary = "";
+                String durationSummary = "";
                 if (m_rows != null)
                 {
                     lineSummary = $"{m_rows.Count} lines";
@@ -285,11 +286,20 @@ namespace DebugLogReader
                     {
                         DateTime startTime = GetStartTime();
                         TimeSpan duration = GetEndime() - startTime;
-                        timeSummary = $", {startTime.ToString("HH:mm:ss")} ({ duration.TotalSeconds} secs)";
+                        if (duration.TotalSeconds > 1.0f)
+                        {
+                            durationSummary = $" ({ (int)duration.TotalSeconds} secs)";
+                        }
+                        else
+                        {
+                            durationSummary = $" ({ duration.TotalHours} ms)";
+                        }
+
+                        timeSummary = $", {startTime.ToString("HH:mm:ss")}";
                     }
                 }
 
-                return $"{m_summaryHeader} {lineSummary}{timeSummary}";
+                return $"{m_summaryHeader} {lineSummary}{timeSummary}{durationSummary}";
             }
             else
             {
