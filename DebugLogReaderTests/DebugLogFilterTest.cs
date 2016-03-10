@@ -23,7 +23,7 @@ namespace DebugLogReaderTests
         }
 
         [TestMethod]
-        public void CameraFilterTest()
+        public void BasicFilterTests()
         {
             // Create mock file wrapper for all tests
             var mockFileWrapper = new Mock<IFileWrapper>();
@@ -76,28 +76,6 @@ namespace DebugLogReaderTests
 
             debugLog4.Load("test");
             Assert.AreEqual(0, debugLog4.Count);
-        }
-
-        [TestMethod]
-        public void NewCameraFilterTest()
-        {
-            // Create mock file wrapper for all tests
-            var mockFileWrapper = new Mock<IFileWrapper>();
-            mockFileWrapper.Setup(x => x.LoadFromFile("test")).Returns(new String[] {
-            "Pushed - 09/03/2016 16:20:16.843 ---  (0.060 seconds) Q:0 F:8, 6174, 0",
-            "Pushed - 09/03/2016 16:20:16.853 ---  (0.010 seconds) Q:1 F:9, 6441, 0",
-            "Pushed - 09/03/2016 16:20:16.893 ---  (0.040 seconds) Q:2 F:10, 6190, 0"
-            });
-
-            // QueueCount equal to 1
-            List<DebugLogFilter> filters = new List<DebugLogFilter>();
-            filters.Add(new DebugLogFilter("QueueCount", eFilterComparision.EqualTo, 1));
-            // Create debugLog with mock file wrapper and test filters
-            DebugLog debugLog1 = new PushDebugLog(mockFileWrapper.Object, 1, filters);
-
-            debugLog1.Load("test");
-            Assert.AreEqual(1, debugLog1.Count);
-            Assert.AreEqual(new DateTime(2016, 3, 9, 16, 20, 16).AddMilliseconds(853), debugLog1.GetStartTime());
         }
     }
 }
