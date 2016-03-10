@@ -276,10 +276,20 @@ namespace DebugLogReader
         {
             if (String.IsNullOrEmpty(m_filterMessage))
             {
-                DateTime startTime = GetStartTime();
-                TimeSpan duration = GetEndime() - startTime;
+                String lineSummary = "no lines";
+                String timeSummary = "";
+                if (m_rows != null)
+                {
+                    lineSummary = $"{m_rows.Count} lines";
+                    if (m_rows.Count > 0)
+                    {
+                        DateTime startTime = GetStartTime();
+                        TimeSpan duration = GetEndime() - startTime;
+                        timeSummary = $", {startTime.ToString("HH:mm:ss")} ({ duration.TotalSeconds} secs)";
+                    }
+                }
 
-                return $"{m_summaryHeader} {m_rows?.Count} lines, {startTime.ToString("HH:mm:ss")} ({duration.TotalSeconds} secs)";
+                return $"{m_summaryHeader} {lineSummary}{timeSummary}";
             }
             else
             {
