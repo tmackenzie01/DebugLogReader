@@ -49,7 +49,23 @@ namespace DebugLogReader
 
                 m_rvException = !String.IsNullOrEmpty(match.Groups["rvException"].Value);
 
-                m_text = text;
+                if (m_totalFrameProcessing.TotalSeconds == 0.0f)
+                {
+                    // If the the total processing time is zero we don't need all the text
+                    int iBracket = text.IndexOf("(");
+                    if (iBracket > 0)
+                    {
+                        m_text = text.Substring(0, (iBracket - 1));
+                    }
+                    else
+                    {
+                        m_text = "";
+                    }
+                }
+                else
+                {
+                    m_text = text;
+                }
             }
             else
             {

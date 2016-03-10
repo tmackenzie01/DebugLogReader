@@ -106,6 +106,24 @@ namespace DebugLogReader
                         {
                             timeD = DateTime.ParseExact(timeDText, @"HH:mm:ss.fff", CultureInfo.InvariantCulture);
                         }
+
+                        if ((timeA.Equals(timeB)) && (timeA.Equals(timeC)) && (timeA.Equals(timeD)))
+                        {
+                            // Clear all these times no need to display them the intervals between all are zero
+                            text = text.Replace($" T:A {timeAText} B {timeBText}", "");
+                            text = text.Replace($" C {timeCText}", "");
+                            text = text.Replace($" D {timeDText}", "");
+                        }
+                        else
+                        {
+                            m_timeElapsedB = timeB - timeA;
+                            m_timeElapsedC = timeC - timeB;
+                            m_timeElapsedD = timeD - timeC;
+
+                            text = text.Replace($"A {timeAText} B {timeBText}", $"A {m_timeElapsedB.TotalSeconds.ToString("f3")}");
+                            text = text.Replace($"C {timeCText}", $"C {m_timeElapsedC.TotalSeconds.ToString("f3")}");
+                            text = text.Replace($"D {timeDText}", $"D {m_timeElapsedD.TotalSeconds.ToString("f3")}");
+                        }
                     }
 
                     String frameNo = match.Groups["frameNo"].Value;
@@ -117,14 +135,6 @@ namespace DebugLogReader
                             m_nullFrameDetected = true;
                         }
                     }
-
-                    m_timeElapsedB = timeB - timeA;
-                    m_timeElapsedC = timeC - timeB;
-                    m_timeElapsedD = timeD - timeC;
-
-                    text = text.Replace($"A {timeAText} B {timeBText}", $"A {m_timeElapsedB.TotalSeconds.ToString("f3")}");
-                    text = text.Replace($"C {timeCText}", $"C {m_timeElapsedC.TotalSeconds.ToString("f3")}");
-                    text = text.Replace($"D {timeDText}", $"D {m_timeElapsedD.TotalSeconds.ToString("f3")}");
                     m_text = text;
                 }
                 else
