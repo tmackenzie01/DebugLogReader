@@ -44,24 +44,8 @@ namespace DebugLogReader
                 m_timestamp = DateTime.ParseExact(timestamp, @"HH:mm:ss.fff", CultureInfo.InvariantCulture);
 
                 String totTimestamp = match.Groups["totTimestamp"].Value;
-
-                String[] splitTime = totTimestamp.Split('.');
-                if (splitTime.Length == 2)
-                {
-                    int secs = -1;
-                    int ms = -1;
-                    if (Int32.TryParse(splitTime[0], out secs))
-                    {
-                        if (Int32.TryParse(splitTime[1], out ms))
-                        {
-                            m_totalFrameProcessing = new TimeSpan(0, 0, 0, secs, ms);
-                        }
-                    }
-                }
-                else
-                {
-                    throw new Exception("Ooops");
-                }
+                totTimestamp = $"0:0:{totTimestamp}";
+                m_totalFrameProcessing = TimeSpan.Parse(totTimestamp, DateTimeFormatInfo.InvariantInfo);
 
                 m_text = text;
             }
