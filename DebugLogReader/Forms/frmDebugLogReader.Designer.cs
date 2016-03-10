@@ -39,20 +39,20 @@
             this.txtEndTime = new System.Windows.Forms.TextBox();
             this.txtStartTime = new System.Windows.Forms.TextBox();
             this.txtCameras = new System.Windows.Forms.TextBox();
+            this.txtTotalFrameProcessing = new System.Windows.Forms.TextBox();
             this.txtLastWroteElapsedAbove = new System.Windows.Forms.TextBox();
             this.txtColdstoreId = new System.Windows.Forms.TextBox();
             this.txtQueueAbove = new System.Windows.Forms.TextBox();
             this.chkEndTime = new System.Windows.Forms.CheckBox();
             this.chkStartTime = new System.Windows.Forms.CheckBox();
             this.chkCamerSelect = new System.Windows.Forms.CheckBox();
+            this.chkTotalFrameProcessing = new System.Windows.Forms.CheckBox();
             this.chkLastWroteElapsedAbove = new System.Windows.Forms.CheckBox();
             this.chkColdstoreId = new System.Windows.Forms.CheckBox();
             this.lblLogsDirectory = new System.Windows.Forms.Label();
             this.btnOpenCombinedLog = new System.Windows.Forms.Button();
             this.lblCombinedLog = new System.Windows.Forms.Label();
             this.txtCombinedLog = new System.Windows.Forms.TextBox();
-            this.chkTotalFrameProcessing = new System.Windows.Forms.CheckBox();
-            this.txtTotalFrameProcessing = new System.Windows.Forms.TextBox();
             this.grpFilters.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -73,9 +73,9 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.lstProgress.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.colMessage});
-            this.lstProgress.Location = new System.Drawing.Point(3, 185);
+            this.lstProgress.Location = new System.Drawing.Point(3, 159);
             this.lstProgress.Name = "lstProgress";
-            this.lstProgress.Size = new System.Drawing.Size(744, 315);
+            this.lstProgress.Size = new System.Drawing.Size(885, 315);
             this.lstProgress.TabIndex = 1;
             this.lstProgress.UseCompatibleStateImageBehavior = false;
             this.lstProgress.View = System.Windows.Forms.View.Details;
@@ -83,7 +83,7 @@
             // colMessage
             // 
             this.colMessage.Text = "Message";
-            this.colMessage.Width = 742;
+            this.colMessage.Width = 878;
             // 
             // txtLogDirectory
             // 
@@ -91,7 +91,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtLogDirectory.Location = new System.Drawing.Point(84, 7);
             this.txtLogDirectory.Name = "txtLogDirectory";
-            this.txtLogDirectory.Size = new System.Drawing.Size(663, 20);
+            this.txtLogDirectory.Size = new System.Drawing.Size(804, 20);
             this.txtLogDirectory.TabIndex = 2;
             // 
             // prgFiles
@@ -100,7 +100,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.prgFiles.Location = new System.Drawing.Point(3, 506);
             this.prgFiles.Name = "prgFiles";
-            this.prgFiles.Size = new System.Drawing.Size(744, 23);
+            this.prgFiles.Size = new System.Drawing.Size(885, 23);
             this.prgFiles.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
             this.prgFiles.TabIndex = 3;
             // 
@@ -172,6 +172,13 @@
             this.txtCameras.TabIndex = 5;
             this.txtCameras.MouseClick += new System.Windows.Forms.MouseEventHandler(this.txtCameras_MouseClick);
             // 
+            // txtTotalFrameProcessing
+            // 
+            this.txtTotalFrameProcessing.Location = new System.Drawing.Point(182, 88);
+            this.txtTotalFrameProcessing.Name = "txtTotalFrameProcessing";
+            this.txtTotalFrameProcessing.Size = new System.Drawing.Size(100, 20);
+            this.txtTotalFrameProcessing.TabIndex = 5;
+            // 
             // txtLastWroteElapsedAbove
             // 
             this.txtLastWroteElapsedAbove.Location = new System.Drawing.Point(163, 65);
@@ -223,6 +230,16 @@
             this.chkCamerSelect.Text = "Cameras";
             this.chkCamerSelect.UseVisualStyleBackColor = true;
             // 
+            // chkTotalFrameProcessing
+            // 
+            this.chkTotalFrameProcessing.AutoSize = true;
+            this.chkTotalFrameProcessing.Location = new System.Drawing.Point(9, 91);
+            this.chkTotalFrameProcessing.Name = "chkTotalFrameProcessing";
+            this.chkTotalFrameProcessing.Size = new System.Drawing.Size(166, 17);
+            this.chkTotalFrameProcessing.TabIndex = 4;
+            this.chkTotalFrameProcessing.Text = "Total frame processing above";
+            this.chkTotalFrameProcessing.UseVisualStyleBackColor = true;
+            // 
             // chkLastWroteElapsedAbove
             // 
             this.chkLastWroteElapsedAbove.AutoSize = true;
@@ -256,7 +273,7 @@
             // 
             this.btnOpenCombinedLog.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnOpenCombinedLog.Enabled = false;
-            this.btnOpenCombinedLog.Location = new System.Drawing.Point(666, 159);
+            this.btnOpenCombinedLog.Location = new System.Drawing.Point(813, 480);
             this.btnOpenCombinedLog.Name = "btnOpenCombinedLog";
             this.btnOpenCombinedLog.Size = new System.Drawing.Size(75, 23);
             this.btnOpenCombinedLog.TabIndex = 0;
@@ -267,7 +284,7 @@
             // lblCombinedLog
             // 
             this.lblCombinedLog.AutoSize = true;
-            this.lblCombinedLog.Location = new System.Drawing.Point(9, 162);
+            this.lblCombinedLog.Location = new System.Drawing.Point(9, 483);
             this.lblCombinedLog.Name = "lblCombinedLog";
             this.lblCombinedLog.Size = new System.Drawing.Size(71, 13);
             this.lblCombinedLog.TabIndex = 6;
@@ -277,33 +294,16 @@
             // 
             this.txtCombinedLog.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtCombinedLog.Location = new System.Drawing.Point(84, 159);
+            this.txtCombinedLog.Location = new System.Drawing.Point(84, 480);
             this.txtCombinedLog.Name = "txtCombinedLog";
-            this.txtCombinedLog.Size = new System.Drawing.Size(576, 20);
+            this.txtCombinedLog.Size = new System.Drawing.Size(723, 20);
             this.txtCombinedLog.TabIndex = 2;
-            // 
-            // chkTotalFrameProcessing
-            // 
-            this.chkTotalFrameProcessing.AutoSize = true;
-            this.chkTotalFrameProcessing.Location = new System.Drawing.Point(9, 91);
-            this.chkTotalFrameProcessing.Name = "chkTotalFrameProcessing";
-            this.chkTotalFrameProcessing.Size = new System.Drawing.Size(166, 17);
-            this.chkTotalFrameProcessing.TabIndex = 4;
-            this.chkTotalFrameProcessing.Text = "Total frame processing above";
-            this.chkTotalFrameProcessing.UseVisualStyleBackColor = true;
-            // 
-            // txtTotalFrameProcessing
-            // 
-            this.txtTotalFrameProcessing.Location = new System.Drawing.Point(182, 88);
-            this.txtTotalFrameProcessing.Name = "txtTotalFrameProcessing";
-            this.txtTotalFrameProcessing.Size = new System.Drawing.Size(100, 20);
-            this.txtTotalFrameProcessing.TabIndex = 5;
             // 
             // frmDebugLogReader
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(752, 532);
+            this.ClientSize = new System.Drawing.Size(893, 532);
             this.Controls.Add(this.lblCombinedLog);
             this.Controls.Add(this.lblLogsDirectory);
             this.Controls.Add(this.grpFilters);

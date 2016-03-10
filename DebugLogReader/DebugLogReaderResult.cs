@@ -35,11 +35,11 @@ namespace DebugLogReader
                     logSummary.Append($", {m_logs[i].SummaryText()}");
                 }
                 
-                return $"Camera {m_cameraNumber.ToString()} logs read, {logSummary}";
+                return $"Camera {m_cameraNumber.ToString()}: {logSummary}";
             }
             else
             {
-                return $"Camera {m_cameraNumber.ToString()} logs failed to read";
+                return $"Camera {m_cameraNumber.ToString()}: logs failed to read";
             }
         }    
         

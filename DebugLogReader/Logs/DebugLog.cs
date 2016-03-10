@@ -288,18 +288,18 @@ namespace DebugLogReader
                         TimeSpan duration = GetEndime() - startTime;
                         if (duration.TotalSeconds > 1.0f)
                         {
-                            durationSummary = $" ({ (int)duration.TotalSeconds} secs)";
+                            durationSummary = $", {(int)duration.TotalSeconds} secs";
                         }
-                        else
+                        else if (duration.TotalSeconds > 0.0f)
                         {
-                            durationSummary = $" ({ duration.TotalHours} ms)";
+                            durationSummary = $", {duration.TotalHours} ms";
                         }
 
-                        timeSummary = $", {startTime.ToString("HH:mm:ss")}";
+                        timeSummary = $"{startTime.ToString("HH:mm:ss")}";
                     }
                 }
 
-                return $"{m_summaryHeader} {lineSummary}{timeSummary}{durationSummary}";
+                return $"{m_summaryHeader} {lineSummary} ({timeSummary}{durationSummary})";
             }
             else
             {
