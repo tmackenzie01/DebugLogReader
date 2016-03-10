@@ -43,6 +43,26 @@ namespace DebugLogReader
                 String timestamp = match.Groups["timestamp"].Value;
                 m_timestamp = DateTime.ParseExact(timestamp, @"HH:mm:ss.fff", CultureInfo.InvariantCulture);
 
+                String totTimestamp = match.Groups["totTimestamp"].Value;
+
+                String[] splitTime = totTimestamp.Split('.');
+                if (splitTime.Length == 2)
+                {
+                    int secs = -1;
+                    int ms = -1;
+                    if (Int32.TryParse(splitTime[0], out secs))
+                    {
+                        if (Int32.TryParse(splitTime[1], out ms))
+                        {
+                            m_totalFrameProcessing = new TimeSpan(0, 0, 0, secs, ms);
+                        }
+                    }
+                }
+                else
+                {
+                    throw new Exception("Ooops");
+                }
+
                 m_text = text;
             }
             else
@@ -55,5 +75,16 @@ namespace DebugLogReader
                 throw new Exception("Ooops");
             }
         }
+
+        public TimeSpan TotalFrameProcessing
+        {
+            get
+            {
+                return m_totalFrameProcessing;
+            }
+        }
+
+        private TimeSpan m_totalFrameProcessing;
     }
+
 }

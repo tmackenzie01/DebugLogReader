@@ -29,6 +29,7 @@ namespace DebugLogReader
                     m_filterData = (List<int>)filterData;
                     break;
                 case eFilterBy.LastWroteElapsed:
+                case eFilterBy.TotalFrameProcessing:
                     m_filterData = (TimeSpan)filterData;
                     break;
             }
@@ -77,6 +78,15 @@ namespace DebugLogReader
                 case eFilterBy.LastWroteElapsed:
                     TimeSpan lastWroteElapsed = (TimeSpan)m_filterData;
                     conditionsMet = CompareObjects(m_filterBy, m_filterComparision, row.LastWroteDataElapsed, lastWroteElapsed);
+                    break;
+                case eFilterBy.TotalFrameProcessing:
+                    // Only works on debug log rows for frames
+                    if (row is DebugLogFrameRow)
+                    {
+                        TimeSpan totalFrameProcessing = (TimeSpan)m_filterData;
+                        DebugLogFrameRow frameRow = (DebugLogFrameRow)row;
+                        conditionsMet = CompareObjects(m_filterBy, m_filterComparision, frameRow.TotalFrameProcessing, totalFrameProcessing);
+                    }
                     break;
             }
 
@@ -226,6 +236,7 @@ namespace DebugLogReader
                     text.Append($"{m_filterComparision}{time.ToString("HHmmss")}");
                     break;
                 case eFilterBy.LastWroteElapsed:
+                case eFilterBy.TotalFrameProcessing:
                     TimeSpan elapsed = (TimeSpan)m_filterData;
                     text.Append($"{m_filterComparision}{(int)elapsed.TotalSeconds}");
                     break;
@@ -243,7 +254,7 @@ namespace DebugLogReader
 
     // Only filter by (equal to camera number / greater than queue count)
     // If we need less than/equal to then add another enum and change MeetsConditions
-    public enum eFilterBy { CameraNumber, QueueCount, StartTime, EndTime, LastWroteElapsed, ColdstoreId }
+    public enum eFilterBy { CameraNumber, QueueCount, StartTime, EndTime, LastWroteElapsed, ColdstoreId, TotalFrameProcessing }
 
     public enum eFilterComparision { LessThan, EqualTo, GreaterThan, MemberOf }
 }

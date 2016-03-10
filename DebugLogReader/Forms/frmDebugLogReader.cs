@@ -206,6 +206,22 @@ namespace DebugLogReader
                     }
                 }
             }
+            
+            // Total frame processing time
+            if (chkTotalFrameProcessing.Checked)
+            {
+                if (!String.IsNullOrEmpty(txtTotalFrameProcessing.Text))
+                {
+                    int totalFrameProcessing = 0;
+                    if (Int32.TryParse(txtTotalFrameProcessing.Text, out totalFrameProcessing))
+                    {
+                        TimeSpan totalFrameProcessingElapsed = new TimeSpan(0, 0, totalFrameProcessing);
+                        DebugLogFilter filter = new DebugLogFilter(eFilterBy.TotalFrameProcessing, eFilterComparision.GreaterThan, totalFrameProcessingElapsed);
+                        filterDescription.Append(filter.ToString());
+                        filters.Add(filter);
+                    }
+                }
+            }
 
             // If we have not created any filters then clear the list - we use this to determine there are no filters
             if (filters.Count == 0)

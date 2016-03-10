@@ -40,17 +40,19 @@
             this.txtStartTime = new System.Windows.Forms.TextBox();
             this.txtCameras = new System.Windows.Forms.TextBox();
             this.txtLastWroteElapsedAbove = new System.Windows.Forms.TextBox();
+            this.txtColdstoreId = new System.Windows.Forms.TextBox();
             this.txtQueueAbove = new System.Windows.Forms.TextBox();
             this.chkEndTime = new System.Windows.Forms.CheckBox();
             this.chkStartTime = new System.Windows.Forms.CheckBox();
             this.chkCamerSelect = new System.Windows.Forms.CheckBox();
             this.chkLastWroteElapsedAbove = new System.Windows.Forms.CheckBox();
+            this.chkColdstoreId = new System.Windows.Forms.CheckBox();
             this.lblLogsDirectory = new System.Windows.Forms.Label();
             this.btnOpenCombinedLog = new System.Windows.Forms.Button();
             this.lblCombinedLog = new System.Windows.Forms.Label();
             this.txtCombinedLog = new System.Windows.Forms.TextBox();
-            this.chkColdstoreId = new System.Windows.Forms.CheckBox();
-            this.txtColdstoreId = new System.Windows.Forms.TextBox();
+            this.chkTotalFrameProcessing = new System.Windows.Forms.CheckBox();
+            this.txtTotalFrameProcessing = new System.Windows.Forms.TextBox();
             this.grpFilters.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -71,9 +73,9 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.lstProgress.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.colMessage});
-            this.lstProgress.Location = new System.Drawing.Point(3, 159);
+            this.lstProgress.Location = new System.Drawing.Point(3, 185);
             this.lstProgress.Name = "lstProgress";
-            this.lstProgress.Size = new System.Drawing.Size(746, 298);
+            this.lstProgress.Size = new System.Drawing.Size(744, 315);
             this.lstProgress.TabIndex = 1;
             this.lstProgress.UseCompatibleStateImageBehavior = false;
             this.lstProgress.View = System.Windows.Forms.View.Details;
@@ -89,16 +91,16 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtLogDirectory.Location = new System.Drawing.Point(84, 7);
             this.txtLogDirectory.Name = "txtLogDirectory";
-            this.txtLogDirectory.Size = new System.Drawing.Size(665, 20);
+            this.txtLogDirectory.Size = new System.Drawing.Size(663, 20);
             this.txtLogDirectory.TabIndex = 2;
             // 
             // prgFiles
             // 
             this.prgFiles.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.prgFiles.Location = new System.Drawing.Point(3, 463);
+            this.prgFiles.Location = new System.Drawing.Point(3, 506);
             this.prgFiles.Name = "prgFiles";
-            this.prgFiles.Size = new System.Drawing.Size(746, 23);
+            this.prgFiles.Size = new System.Drawing.Size(744, 23);
             this.prgFiles.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
             this.prgFiles.TabIndex = 3;
             // 
@@ -118,18 +120,20 @@
             this.grpFilters.Controls.Add(this.txtEndTime);
             this.grpFilters.Controls.Add(this.txtStartTime);
             this.grpFilters.Controls.Add(this.txtCameras);
+            this.grpFilters.Controls.Add(this.txtTotalFrameProcessing);
             this.grpFilters.Controls.Add(this.txtLastWroteElapsedAbove);
             this.grpFilters.Controls.Add(this.txtColdstoreId);
             this.grpFilters.Controls.Add(this.txtQueueAbove);
             this.grpFilters.Controls.Add(this.chkEndTime);
             this.grpFilters.Controls.Add(this.chkStartTime);
             this.grpFilters.Controls.Add(this.chkCamerSelect);
+            this.grpFilters.Controls.Add(this.chkTotalFrameProcessing);
             this.grpFilters.Controls.Add(this.chkLastWroteElapsedAbove);
             this.grpFilters.Controls.Add(this.chkColdstoreId);
             this.grpFilters.Controls.Add(this.chkQueueFilter);
             this.grpFilters.Location = new System.Drawing.Point(3, 33);
             this.grpFilters.Name = "grpFilters";
-            this.grpFilters.Size = new System.Drawing.Size(551, 91);
+            this.grpFilters.Size = new System.Drawing.Size(551, 120);
             this.grpFilters.TabIndex = 5;
             this.grpFilters.TabStop = false;
             this.grpFilters.Text = "Filters";
@@ -174,6 +178,13 @@
             this.txtLastWroteElapsedAbove.Name = "txtLastWroteElapsedAbove";
             this.txtLastWroteElapsedAbove.Size = new System.Drawing.Size(100, 20);
             this.txtLastWroteElapsedAbove.TabIndex = 5;
+            // 
+            // txtColdstoreId
+            // 
+            this.txtColdstoreId.Location = new System.Drawing.Point(440, 65);
+            this.txtColdstoreId.Name = "txtColdstoreId";
+            this.txtColdstoreId.Size = new System.Drawing.Size(100, 20);
+            this.txtColdstoreId.TabIndex = 5;
             // 
             // txtQueueAbove
             // 
@@ -222,6 +233,16 @@
             this.chkLastWroteElapsedAbove.Text = "Last wrote elapsed above";
             this.chkLastWroteElapsedAbove.UseVisualStyleBackColor = true;
             // 
+            // chkColdstoreId
+            // 
+            this.chkColdstoreId.AutoSize = true;
+            this.chkColdstoreId.Location = new System.Drawing.Point(353, 67);
+            this.chkColdstoreId.Name = "chkColdstoreId";
+            this.chkColdstoreId.Size = new System.Drawing.Size(82, 17);
+            this.chkColdstoreId.TabIndex = 4;
+            this.chkColdstoreId.Text = "Coldstore Id";
+            this.chkColdstoreId.UseVisualStyleBackColor = true;
+            // 
             // lblLogsDirectory
             // 
             this.lblLogsDirectory.AutoSize = true;
@@ -235,7 +256,7 @@
             // 
             this.btnOpenCombinedLog.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnOpenCombinedLog.Enabled = false;
-            this.btnOpenCombinedLog.Location = new System.Drawing.Point(668, 130);
+            this.btnOpenCombinedLog.Location = new System.Drawing.Point(666, 159);
             this.btnOpenCombinedLog.Name = "btnOpenCombinedLog";
             this.btnOpenCombinedLog.Size = new System.Drawing.Size(75, 23);
             this.btnOpenCombinedLog.TabIndex = 0;
@@ -246,7 +267,7 @@
             // lblCombinedLog
             // 
             this.lblCombinedLog.AutoSize = true;
-            this.lblCombinedLog.Location = new System.Drawing.Point(9, 133);
+            this.lblCombinedLog.Location = new System.Drawing.Point(9, 162);
             this.lblCombinedLog.Name = "lblCombinedLog";
             this.lblCombinedLog.Size = new System.Drawing.Size(71, 13);
             this.lblCombinedLog.TabIndex = 6;
@@ -256,33 +277,33 @@
             // 
             this.txtCombinedLog.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtCombinedLog.Location = new System.Drawing.Point(84, 130);
+            this.txtCombinedLog.Location = new System.Drawing.Point(84, 159);
             this.txtCombinedLog.Name = "txtCombinedLog";
-            this.txtCombinedLog.Size = new System.Drawing.Size(578, 20);
+            this.txtCombinedLog.Size = new System.Drawing.Size(576, 20);
             this.txtCombinedLog.TabIndex = 2;
             // 
-            // chkColdstoreId
+            // chkTotalFrameProcessing
             // 
-            this.chkColdstoreId.AutoSize = true;
-            this.chkColdstoreId.Location = new System.Drawing.Point(353, 67);
-            this.chkColdstoreId.Name = "chkColdstoreId";
-            this.chkColdstoreId.Size = new System.Drawing.Size(82, 17);
-            this.chkColdstoreId.TabIndex = 4;
-            this.chkColdstoreId.Text = "Coldstore Id";
-            this.chkColdstoreId.UseVisualStyleBackColor = true;
+            this.chkTotalFrameProcessing.AutoSize = true;
+            this.chkTotalFrameProcessing.Location = new System.Drawing.Point(9, 91);
+            this.chkTotalFrameProcessing.Name = "chkTotalFrameProcessing";
+            this.chkTotalFrameProcessing.Size = new System.Drawing.Size(166, 17);
+            this.chkTotalFrameProcessing.TabIndex = 4;
+            this.chkTotalFrameProcessing.Text = "Total frame processing above";
+            this.chkTotalFrameProcessing.UseVisualStyleBackColor = true;
             // 
-            // txtColdstoreId
+            // txtTotalFrameProcessing
             // 
-            this.txtColdstoreId.Location = new System.Drawing.Point(440, 65);
-            this.txtColdstoreId.Name = "txtColdstoreId";
-            this.txtColdstoreId.Size = new System.Drawing.Size(100, 20);
-            this.txtColdstoreId.TabIndex = 5;
+            this.txtTotalFrameProcessing.Location = new System.Drawing.Point(182, 88);
+            this.txtTotalFrameProcessing.Name = "txtTotalFrameProcessing";
+            this.txtTotalFrameProcessing.Size = new System.Drawing.Size(100, 20);
+            this.txtTotalFrameProcessing.TabIndex = 5;
             // 
             // frmDebugLogReader
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(754, 489);
+            this.ClientSize = new System.Drawing.Size(752, 532);
             this.Controls.Add(this.lblCombinedLog);
             this.Controls.Add(this.lblLogsDirectory);
             this.Controls.Add(this.grpFilters);
@@ -326,6 +347,8 @@
         private System.Windows.Forms.TextBox txtCombinedLog;
         private System.Windows.Forms.TextBox txtColdstoreId;
         private System.Windows.Forms.CheckBox chkColdstoreId;
+        private System.Windows.Forms.TextBox txtTotalFrameProcessing;
+        private System.Windows.Forms.CheckBox chkTotalFrameProcessing;
     }
 }
 
