@@ -242,6 +242,7 @@ namespace DebugLogReader
             DebugLog newLog = null;
             foreach (String logFile in logFiles)
             {
+                newLog = null;
                 if (CreateDebugLog(logFile, args.CameraNumber, args.Filters, ref newLog))
                 {
                     logs.Add(newLog);
