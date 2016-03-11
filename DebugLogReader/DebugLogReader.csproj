@@ -46,10 +46,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Logs\AviDebugLog.cs" />
     <Compile Include="Logs\CSDebugLog.cs" />
     <Compile Include="Logs\DebugLog.cs" />
     <Compile Include="DebugLogReaderArgs.cs" />
     <Compile Include="DebugLogReaderResult.cs" />
+    <Compile Include="Logs\DebugLogAviRow.cs" />
     <Compile Include="Logs\DebugLogCSRow.cs" />
     <Compile Include="Logs\DebugLogFrameRow.cs" />
     <Compile Include="Logs\DebugLogRow.cs" />

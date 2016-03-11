@@ -21,7 +21,7 @@ namespace DebugLogReader
             InitializeComponent();
 
             String logsDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
-                @"Recorder testing\20160302\DebugLogs16");
+                @"Recorder testing\20160302\DebugLogs19");
 
             txtLogDirectory.Text = logsDir;
             m_stpLogsProcessing = new Stopwatch();
@@ -242,34 +242,35 @@ namespace DebugLogReader
             String popFile = "";
             String csFile = "";
             String frameFile = "";
+            String aviFile = "";
             DebugLog pushLog = null;
             DebugLog popLog = null;
             DebugLog csLog = null;
             DebugLog frameLog = null;
+            DebugLog aviLog = null;
             List<DebugLog> logs = new List<DebugLog>();
-            int fileFoundCount = 0;
 
             foreach (String logFile in logFiles)
             {
                 if (logFile.EndsWith("_Push.txt"))
                 {
                     pushFile = logFile;
-                    fileFoundCount++;
                 }
                 if (logFile.EndsWith("_Pop.txt"))
                 {
                     popFile = logFile;
-                    fileFoundCount++;
                 }
                 if (logFile.EndsWith("_CSWrite.txt"))
                 {
                     csFile = logFile;
-                    fileFoundCount++;
                 }
                 if (logFile.EndsWith("_FrameWrite.txt"))
                 {
                     frameFile = logFile;
-                    fileFoundCount++;
+                }
+                if (logFile.EndsWith("_AviFile.txt"))
+                {
+                    aviFile = logFile;
                 }
             }
 
@@ -300,6 +301,13 @@ namespace DebugLogReader
                 frameLog = new FrameDebugLog(args.CameraNumber, args.Filters);
                 frameLog.Load(frameFile);
                 logs.Add(frameLog);
+            }
+
+            if (!String.IsNullOrEmpty(aviFile))
+            {
+                aviLog = new AviDebugLog(args.CameraNumber, args.Filters);
+                aviLog.Load(aviFile);
+                logs.Add(aviLog);
             }
 
             e.Result = new DebugLogReaderResult(args.CameraNumber, logs);
@@ -630,6 +638,14 @@ namespace DebugLogReader
                 "(.EE:(?<eeTimestamp>[0-9]+.[0-9]+).)*" + "(.FF:(?<ffTimestamp>[0-9]+.[0-9]+).)*" +
                 "(.GG:(?<ggTimestamp>[0-9]+.[0-9]+).)*" + "(.HH:(?<hhTimestamp>([0-9]+.[0-9]+.)*[0-9]+.[0-9]+).)*" +
                 "(RV|C|(?<rvException>RVE)).(?<rvORcTimestamp>[0-9]+.[0-9]+)." + "\\)" + ".TOT.(?<totTimestamp>[0-9]+.[0-9]+).$",
+                RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.Multiline);
+
+        public static Regex m_aviRegex = new Regex("Create.(?<timestamp>[0-9]+.[0-9]+.[0-9]+.[0-9]+)" +
+                "(.CR1:(?<cr1Timestamp>[0-9]+.[0-9]+).)*" + "(.CR2:(?<cr2Timestamp>[0-9]+.[0-9]+).)*" +
+                "(.CR3:(?<cr3Timestamp>[0-9]+.[0-9]+).)*" + "(.CR4:(?<cr4Timestamp>[0-9]+.[0-9]+).)*" +
+                "(.CR5:(?<cr5Timestamp>[0-9]+.[0-9]+).)*" + "(.CR6:(?<cr6Timestamp>[0-9]+.[0-9]+).)*" +
+                "(.CR7:(?<cr7Timestamp>[0-9]+.[0-9]+).)*" + "(.CR8:(?<cr8Timestamp>[0-9]+.[0-9]+).)*" +
+                "(.CRE:(?<creTimestamp>[0-9]+.[0-9]+).)*" + "(.CRX:(?<crxException>(.)+))*$",
                 RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.Multiline);
     }
 }
