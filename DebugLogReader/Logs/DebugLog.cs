@@ -292,7 +292,7 @@ namespace DebugLogReader
                         }
                         else if (duration.TotalSeconds > 0.0f)
                         {
-                            durationSummary = $", {duration.TotalHours} ms";
+                            durationSummary = $", {(int)duration.TotalMilliseconds} ms";
                         }
 
                         timeSummary = $"{startTime.ToString("HH:mm:ss")}";
