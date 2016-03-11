@@ -238,79 +238,52 @@ namespace DebugLogReader
             DebugLogReaderArgs args = (DebugLogReaderArgs)e.Argument;
 
             String[] logFiles = Directory.GetFiles(args.LogDirectory());
-            String pushFile = "";
-            String popFile = "";
-            String csFile = "";
-            String frameFile = "";
-            String aviFile = "";
-            DebugLog pushLog = null;
-            DebugLog popLog = null;
-            DebugLog csLog = null;
-            DebugLog frameLog = null;
-            DebugLog aviLog = null;
             List<DebugLog> logs = new List<DebugLog>();
-
+            DebugLog newLog = null;
             foreach (String logFile in logFiles)
             {
-                if (logFile.EndsWith("_Push.txt"))
+                if (CreateDebugLog(logFile, args.CameraNumber, args.Filters, ref newLog))
                 {
-                    pushFile = logFile;
-                }
-                if (logFile.EndsWith("_Pop.txt"))
-                {
-                    popFile = logFile;
-                }
-                if (logFile.EndsWith("_CSWrite.txt"))
-                {
-                    csFile = logFile;
-                }
-                if (logFile.EndsWith("_FrameWrite.txt"))
-                {
-                    frameFile = logFile;
-                }
-                if (logFile.EndsWith("_AviFile.txt"))
-                {
-                    aviFile = logFile;
+                    logs.Add(newLog);
                 }
             }
-
-            // Try to parse the CSWrite file
-            if (!String.IsNullOrEmpty(csFile))
-            {
-                csLog = new CSDebugLog(args.CameraNumber, args.Filters);
-                csLog.Load(csFile);
-                logs.Add(csLog);
-            }
-
-            if (!String.IsNullOrEmpty(pushFile))
-            {
-                pushLog = new PushDebugLog(args.CameraNumber, args.Filters);
-                pushLog.Load(pushFile);
-                logs.Add(pushLog);
-            }
-
-            if (!String.IsNullOrEmpty(popFile))
-            {
-                popLog = new PopDebugLog(args.CameraNumber, args.Filters);
-                popLog.Load(popFile);
-                logs.Add(popLog);
-            }
-
-            if (!String.IsNullOrEmpty(frameFile))
-            {
-                frameLog = new FrameDebugLog(args.CameraNumber, args.Filters);
-                frameLog.Load(frameFile);
-                logs.Add(frameLog);
-            }
-
-            if (!String.IsNullOrEmpty(aviFile))
-            {
-                aviLog = new AviDebugLog(args.CameraNumber, args.Filters);
-                aviLog.Load(aviFile);
-                logs.Add(aviLog);
-            }
-
+            
             e.Result = new DebugLogReaderResult(args.CameraNumber, logs);
+        }
+
+        private bool CreateDebugLog(String filename, int cameraNumber, List<DebugLogFilter> filters, ref DebugLog log)
+        {
+            // Try to parse the CSWrite file
+            if (!String.IsNullOrEmpty(filename))
+            {
+                if (filename.EndsWith("_Push.txt"))
+                {
+                    log = new PushDebugLog(cameraNumber, filters);
+                    log.Load(filename);
+                }
+                else if (filename.EndsWith("_Pop.txt"))
+                {
+                    log = new PopDebugLog(cameraNumber, filters);
+                    log.Load(filename);
+                }
+                else if (filename.EndsWith("_CSWrite.txt"))
+                {
+                    log = new CSDebugLog(cameraNumber, filters);
+                    log.Load(filename);
+                }
+                else if (filename.EndsWith("_FrameWrite.txt"))
+                {
+                    log = new FrameDebugLog(cameraNumber, filters);
+                    log.Load(filename);
+                }
+                else if (filename.EndsWith("_AviFile.txt"))
+                {
+                    log = new AviDebugLog(cameraNumber, filters);
+                    log.Load(filename);
+                }
+            }
+
+            return (log != null);
         }
 
         private void AddMessage(String text)
