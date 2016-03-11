@@ -200,5 +200,27 @@ namespace DebugLogReaderTests
             Assert.AreEqual("13:05:44.719", frameRow8.Timestamp.ToString("HH:mm:ss.fff"));
             Assert.AreEqual(false, frameRow8.RVException);
         }
+
+        [TestMethod]
+        public void AviTests()
+        {
+            // Get the compiled Regex
+            Regex aviRegex = frmDebugLogReader.m_aviRegex;
+
+            DebugLogAviRow aviRow1 = new DebugLogAviRow(1, "Create 12:21:23.578 CR1:0.000 CR2:0.000 CR3:0.008 CR4:0.000 CR5:0.000 CR7:0.000 ", aviRegex, null, DateTime.MinValue);
+            Assert.AreEqual(false, aviRow1.WroteData);
+            Assert.AreEqual(false, aviRow1.CRException);
+            Assert.AreEqual(false, aviRow1.CRError);
+            Assert.AreEqual("12:21:23.578", aviRow1.Timestamp.ToString("HH:mm:ss.fff"));
+
+            DebugLogAviRow aviRow2 = new DebugLogAviRow(1, "Create 13:48:24.660 CR1:0.000 CR2:0.000 CR3:20.152 CRE:0.000 " + 
+                "CRX:An I/O error occured on Coldstore. Object reference not set to an instance of an object.", aviRegex, null, DateTime.MinValue);
+            Assert.AreEqual(false, aviRow2.WroteData);
+            Assert.AreEqual(true, aviRow2.CRException);
+            Assert.AreEqual(true, aviRow2.CRError);
+            Assert.AreEqual("13:48:24.660", aviRow2.Timestamp.ToString("HH:mm:ss.fff"));
+
+        }
+
     }
 }
