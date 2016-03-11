@@ -439,7 +439,7 @@ namespace DebugLogReader
                 giantLog.AddLog(log);
                 progressCount++;
 
-                worker.ReportProgress((progressCount * 100) / progressFinish, log.CameraNumber);
+                worker.ReportProgress((progressCount * 100) / progressFinish, log);
             }
 
             if (chkStartAtSameTime.Checked)
@@ -449,16 +449,16 @@ namespace DebugLogReader
             giantLog.Sort();
             progressCount++;
 
-            worker.ReportProgress((progressCount * 100) / progressFinish, -1);
+            worker.ReportProgress((progressCount * 100) / progressFinish, null);
             e.Result = giantLog;
         }
 
         private void CombineLogs_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-            int cameraNumber = (int)e.UserState;
-            if (cameraNumber >= 0)
+            DebugLog debugLog = (DebugLog)e.UserState;
+            if (debugLog != null)
             {
-                AddMessage($"Camera {cameraNumber} logs combined");
+                AddMessage($"{debugLog} log combined");
             }
             prgFiles.Value = e.ProgressPercentage;
         }

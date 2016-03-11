@@ -307,6 +307,11 @@ namespace DebugLogReader
             }
         }
 
+        public override string ToString()
+        {
+            return $"{m_summaryHeader} Cam {m_cameraNumber}";
+        }
+
         protected String m_summaryHeader;
         protected int m_cameraNumber;
         protected List<DebugLogFilter> m_filters;
