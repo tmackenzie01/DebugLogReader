@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -56,6 +57,7 @@ namespace DebugLogReader
                     // the totTimestamp is built from totalSeconds, most of the time it will be under a minute so the above easy way to 
                     // get the TimeSpan using Parse will work ok, but if the totalSeconds is above 60 then we'll get here instead
                     timeParsed = false;
+                    Debug.WriteLine("Handling OverflowException");
                 }
 
                 if (!timeParsed)
