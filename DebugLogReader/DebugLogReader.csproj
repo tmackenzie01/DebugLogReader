@@ -54,6 +54,8 @@
     <Compile Include="Logs\DebugLogAviRow.cs" />
     <Compile Include="Logs\DebugLogCSRow.cs" />
     <Compile Include="Logs\DebugLogFrameRow.cs" />
+    <Compile Include="Logs\DebugLogPopRow.cs" />
+    <Compile Include="Logs\DebugLogPushRow.cs" />
     <Compile Include="Logs\DebugLogRow.cs" />
     <Compile Include="Logs\DebugLogFilter.cs" />
     <Compile Include="Forms\frmCameraSelection.cs">

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace DebugLogReader
@@ -20,8 +21,41 @@ namespace DebugLogReader
             m_wroteDataRegex = frmDebugLogReader.m_wroteDataRegex;
         }
 
-        protected override void SetColdstoreInfo(DebugLogRow newRow, DebugLogRow oldRow)
+        protected override DebugLogRow ParseLine(int cameraNumber, String line, Regex rowRegex, DateTime previousTimestamp)
         {
+            DebugLogRow newRow = new DebugLogPopRow(cameraNumber, line, rowRegex, m_wroteDataRegex, previousTimestamp);
+            return newRow;
+        }
+
+        protected override void SetWroteDataInfo(DebugLogRow baseRow, ref int dataWritten, ref DateTime lastTime, ref bool nullFrameDetectedPreviously)
+        {
+            DebugLogPopRow row = (DebugLogPopRow)baseRow;
+            if (row.WroteData)
+            {
+                if (nullFrameDetectedPreviously)
+                {
+                    // If we have wrote data then we can clear the nullFrameDetected
+                    nullFrameDetectedPreviously = false;
+                    row.NewWroteData = true;
+                }
+                else
+                {
+                    row.SetWroteDataWritten(dataWritten);
+                }
+                if (!lastTime.Equals(DateTime.MinValue))
+                {
+                    row.SetWroteDataElapsed(row.Timestamp - lastTime);
+                }
+                dataWritten = 0;
+                lastTime = row.Timestamp;
+            }
+        }
+
+        protected override void SetColdstoreInfo(DebugLogRow baseRow, DebugLogRow baseOldRow)
+        {
+            DebugLogPopRow newRow = (DebugLogPopRow)baseRow;
+            DebugLogPopRow oldRow = (DebugLogPopRow)baseOldRow;
+
             if (oldRow != null)
             {
                 if (oldRow.ColdstoreInformationDetected)
@@ -49,5 +83,6 @@ namespace DebugLogReader
         }
 
         List<int> m_coldstoreIds;
+        Regex m_wroteDataRegex;
     }
 }

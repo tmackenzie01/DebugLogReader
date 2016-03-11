@@ -31,29 +31,6 @@ namespace DebugLogReader
         {
         }
 
-        private void SetWroteDataInfo(DebugLogRow row, ref int dataWritten, ref DateTime lastTime, ref bool nullFrameDetectedPreviously)
-        {
-            if (row.WroteData)
-            {
-                if (nullFrameDetectedPreviously)
-                {
-                    // If we have wrote data then we can clear the nullFrameDetected
-                    nullFrameDetectedPreviously = false;
-                    row.NewWroteData = true;
-                }
-                else
-                {
-                    row.SetWroteDataWritten(dataWritten);
-                }
-                if (!lastTime.Equals(DateTime.MinValue))
-                {
-                    row.SetWroteDataElapsed(row.Timestamp - lastTime);
-                }
-                dataWritten = 0;
-                lastTime = row.Timestamp;
-            }
-        }
-
         // Only wrote data rows hold coldstore id info, but we want them in all rows for the popping
         protected virtual void SetColdstoreInfo(DebugLogRow newRow, DebugLogRow oldRow)
         {
@@ -79,7 +56,7 @@ namespace DebugLogReader
                     {
                         if (!String.IsNullOrEmpty(line) && (!String.IsNullOrWhiteSpace(line)))
                         {
-                            newRow = ParseLine(m_cameraNumber, line, m_rowRegex, m_wroteDataRegex, previousTimestamp);
+                            newRow = ParseLine(m_cameraNumber, line, m_rowRegex, previousTimestamp);
                             if (newRow.NullFrameDetected)
                             {
                                 // Null frame stops recording so clear the data written progress
@@ -115,9 +92,14 @@ namespace DebugLogReader
             }
         }
 
-        protected virtual DebugLogRow ParseLine(int cameraNumber, String line, Regex rowRegex, Regex wroteDataRegex, DateTime previousTimestamp)
+        protected virtual void SetWroteDataInfo(DebugLogRow row, ref int dataWritten, ref DateTime lastTime, ref bool nullFrameDetectedPreviously)
         {
-            DebugLogRow newRow = new DebugLogRow(cameraNumber, line, rowRegex, wroteDataRegex, previousTimestamp);
+            nullFrameDetectedPreviously = false;
+        }
+
+        protected virtual DebugLogRow ParseLine(int cameraNumber, String line, Regex rowRegex, DateTime previousTimestamp)
+        {
+            DebugLogRow newRow = new DebugLogRow(cameraNumber, line, rowRegex, null, previousTimestamp);
             return newRow;
         }
 
@@ -319,6 +301,5 @@ namespace DebugLogReader
         protected List<DebugLogRow> m_rows;
 
         protected Regex m_rowRegex;
-        protected Regex m_wroteDataRegex;
     }
 }

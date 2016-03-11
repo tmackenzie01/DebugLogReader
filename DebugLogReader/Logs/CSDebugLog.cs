@@ -19,9 +19,9 @@ namespace DebugLogReader
             m_rowRegex = frmDebugLogReader.m_csRegex;
         }
 
-        protected override DebugLogRow ParseLine(int cameraNumber, String line, Regex rowRegex, Regex wroteDataRegex, DateTime previousTimestamp)
+        protected override DebugLogRow ParseLine(int cameraNumber, String line, Regex rowRegex, DateTime previousTimestamp)
         {
-            DebugLogRow newRow = new DebugLogCSRow(cameraNumber, line, rowRegex, wroteDataRegex, previousTimestamp);
+            DebugLogRow newRow = new DebugLogCSRow(cameraNumber, line, rowRegex, null, previousTimestamp);
             return newRow;
         }
     }

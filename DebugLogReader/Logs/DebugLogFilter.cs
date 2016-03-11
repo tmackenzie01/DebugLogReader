@@ -68,7 +68,11 @@ namespace DebugLogReader
                     break;
                 case eFilterBy.ColdstoreId:
                     int coldstoreId = (int)m_filterData;
-                    conditionsMet = CompareObjects(m_filterBy, m_filterComparision, row.ColdstoreId, coldstoreId);
+                    if (row is DebugLogPopRow)
+                    {
+                        DebugLogPopRow popRow = (DebugLogPopRow)row;
+                        conditionsMet = CompareObjects(m_filterBy, m_filterComparision, popRow.ColdstoreId, coldstoreId);
+            }
                     break;
                 case eFilterBy.StartTime:
                 case eFilterBy.EndTime:
@@ -77,7 +81,11 @@ namespace DebugLogReader
                     break;
                 case eFilterBy.LastWroteElapsed:
                     TimeSpan lastWroteElapsed = (TimeSpan)m_filterData;
-                    conditionsMet = CompareObjects(m_filterBy, m_filterComparision, row.LastWroteDataElapsed, lastWroteElapsed);
+                    if (row is DebugLogPopRow)
+                    {
+                        DebugLogPopRow popRow = (DebugLogPopRow)row;
+                        conditionsMet = CompareObjects(m_filterBy, m_filterComparision, popRow.LastWroteDataElapsed, lastWroteElapsed);
+                    }
                     break;
                 case eFilterBy.TotalFrameProcessing:
                     // Only works on debug log rows for frames
