@@ -44,8 +44,37 @@ namespace DebugLogReader
                 m_timestamp = DateTime.ParseExact(timestamp, @"HH:mm:ss.fff", CultureInfo.InvariantCulture);
 
                 String totTimestamp = match.Groups["totTimestamp"].Value;
-                totTimestamp = $"0:0:{totTimestamp}";
-                m_totalFrameProcessing = TimeSpan.Parse(totTimestamp, DateTimeFormatInfo.InvariantInfo);
+                bool timeParsed = false;
+                try
+                {
+                    String totTimestampWithHoursMins = $"0:0:{totTimestamp}";
+                    m_totalFrameProcessing = TimeSpan.Parse(totTimestampWithHoursMins, DateTimeFormatInfo.InvariantInfo);
+                    timeParsed = true;
+                }
+                catch (OverflowException)
+                {
+                    // the totTimestamp is built from totalSeconds, most of the time it will be under a minute so the above easy way to 
+                    // get the TimeSpan using Parse will work ok, but if the totalSeconds is above 60 then we'll get here instead
+                    timeParsed = false;
+                }
+
+                if (!timeParsed)
+                {
+                    // Split the string and do it manually
+                    String[] timestampSplit = totTimestamp.Split('.');
+                    if (timestampSplit.Length == 2)
+                    {
+                        int secs = 0;
+                        if (Int32.TryParse(timestampSplit[0], out secs))
+                        {
+                            int ms = 0;
+                            if (Int32.TryParse(timestampSplit[1], out ms))
+                            {
+                                m_totalFrameProcessing = new TimeSpan(0, 0, 0, secs, ms);
+                            }
+                        }
+                    }
+                }
 
                 m_rvException = !String.IsNullOrEmpty(match.Groups["rvException"].Value);
 
