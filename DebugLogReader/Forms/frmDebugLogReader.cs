@@ -206,7 +206,7 @@ namespace DebugLogReader
                     int coldstoreId = 0;
                     if (Int32.TryParse(txtColdstoreId.Text, out coldstoreId))
                     {
-                        DebugLogFilter filter = new DebugLogFilter(eFilterBy.ColdstoreId, eFilterComparision.EqualTo, coldstoreId);
+                        DebugLogFilter filter = new DebugLogFilter("ColdstoreId", eFilterComparision.EqualTo, coldstoreId);
                         filterDescription.Append(filter.ToString());
                         filters.Add(filter);
                     }
@@ -222,7 +222,7 @@ namespace DebugLogReader
                     if (Int32.TryParse(txtTotalFrameProcessing.Text, out totalFrameProcessing))
                     {
                         TimeSpan totalFrameProcessingElapsed = new TimeSpan(0, 0, totalFrameProcessing);
-                        DebugLogFilter filter = new DebugLogFilter(eFilterBy.TotalFrameProcessing, eFilterComparision.GreaterThan, totalFrameProcessingElapsed);
+                        DebugLogFilter filter = new DebugLogFilter("TotalFrameProcessing", eFilterComparision.GreaterThan, totalFrameProcessingElapsed);
                         filterDescription.Append(filter.ToString());
                         filters.Add(filter);
                     }
@@ -232,7 +232,7 @@ namespace DebugLogReader
             // RTSP error count changed
             if (chkRTSPErrorCountChanged.Checked)
             {
-                DebugLogFilter filter = new DebugLogFilter(eFilterBy.RTSPErrorCountChanged, eFilterComparision.EqualTo, true);
+                DebugLogFilter filter = new DebugLogFilter("RTSPErrorCountChanged", eFilterComparision.EqualTo, true);
                 filterDescription.Append(filter.ToString());
                 filters.Add(filter);
             }
