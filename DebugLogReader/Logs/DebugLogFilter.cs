@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -9,34 +10,6 @@ namespace DebugLogReader
 {
     public class DebugLogFilter
     {
-        public DebugLogFilter(eFilterBy filterBy, eFilterComparision filterComparison, Object filterData)
-        {
-            m_filterBy = filterBy;
-            m_filterComparision = filterComparison;
-
-            // Change each object into what it's supposed to be then stick in a object
-            switch (filterBy)
-            {
-                case eFilterBy.QueueCount:
-                case eFilterBy.ColdstoreId:
-                    m_filterData = (int)filterData;
-                    break;
-                case eFilterBy.StartTime:
-                case eFilterBy.EndTime:
-                    m_filterData = (DateTime)filterData;
-                    break;
-                case eFilterBy.CameraNumber:
-                    m_filterData = (List<int>)filterData;
-                    break;
-                case eFilterBy.LastWroteElapsed:
-                case eFilterBy.TotalFrameProcessing:
-                    m_filterData = (TimeSpan)filterData;
-                    break;
-                case eFilterBy.RTSPErrorCountChanged:
-                    m_filterData = (bool)filterData;
-                    break;
-            }
-        }
         public DebugLogFilter(String propertyName, eFilterComparision filterComparison, Object filterData)
         {
             m_filterPropertyName = propertyName;
@@ -49,13 +22,19 @@ namespace DebugLogReader
             // Default is true as most conditions we can't check at the debug log stage only at the row stage
             bool conditionsMet = true;
 
-            switch (m_filterBy)
+            Type logTypeObject = log.GetType();
+            PropertyInfo selectedPropertyInfo = logTypeObject.GetProperty(m_filterPropertyName);
+            // null means the property is not supported
+            if (selectedPropertyInfo != null)
             {
-                case eFilterBy.CameraNumber:
+                Type selectedPropertyType = selectedPropertyInfo.PropertyType;
+                Object selectedPropertyValue = selectedPropertyInfo.GetValue(log);
+
+                if (m_filterPropertyName.Equals("CameraNumber"))
+                {
                     List<int> cameras = (List<int>)m_filterData;
-                    conditionsMet = CompareObjects(m_filterBy, m_filterComparision, log.CameraNumber, cameras);
-                    //conditionsMet = cameras.Contains(log.CameraNumber);
-                    break;
+                    conditionsMet = CompareObjects44(m_filterComparision, selectedPropertyValue, m_filterData, selectedPropertyType);
+            }
             }
 
             return conditionsMet;
@@ -65,60 +44,50 @@ namespace DebugLogReader
         {
             bool conditionsMet = false;
 
-            switch (m_filterBy)
+            Type rowTypeObject = row.GetType();
+            PropertyInfo selectedPropertyInfo = rowTypeObject.GetProperty(m_filterPropertyName);
+
+            // null means the property is not supported
+            if (selectedPropertyInfo != null)
             {
-                case eFilterBy.CameraNumber:
-                    List<int> cameras = (List<int>)m_filterData;
-                    conditionsMet = CompareObjects(m_filterBy, m_filterComparision, row.CameraNumber, cameras);
-                    break;
-                case eFilterBy.QueueCount:
-                    int queueCount = (int)m_filterData;
-                    conditionsMet = CompareObjects(m_filterBy, m_filterComparision, row.QueueCount, queueCount);
-                    break;
-                case eFilterBy.ColdstoreId:
-                    int coldstoreId = (int)m_filterData;
-                    if (row is DebugLogPopRow)
-                    {
-                        DebugLogPopRow popRow = (DebugLogPopRow)row;
-                        conditionsMet = CompareObjects(m_filterBy, m_filterComparision, popRow.ColdstoreId, coldstoreId);
-                    }
-                    break;
-                case eFilterBy.StartTime:
-                case eFilterBy.EndTime:
-                    DateTime startTime = (DateTime)m_filterData;
-                    conditionsMet = CompareObjects(m_filterBy, m_filterComparision, row.Timestamp, startTime);
-                    break;
-                case eFilterBy.LastWroteElapsed:
-                    TimeSpan lastWroteElapsed = (TimeSpan)m_filterData;
-                    if (row is DebugLogPopRow)
-                    {
-                        DebugLogPopRow popRow = (DebugLogPopRow)row;
-                        conditionsMet = CompareObjects(m_filterBy, m_filterComparision, popRow.LastWroteDataElapsed, lastWroteElapsed);
-                    }
-                    break;
-                case eFilterBy.TotalFrameProcessing:
-                    // Only works on debug log rows for frames
-                    if (row is DebugLogFrameRow)
-                    {
-                        TimeSpan totalFrameProcessing = (TimeSpan)m_filterData;
-                        DebugLogFrameRow frameRow = (DebugLogFrameRow)row;
-                        conditionsMet = CompareObjects(m_filterBy, m_filterComparision, frameRow.TotalFrameProcessing, totalFrameProcessing);
-                    }
-                    break;
-                case eFilterBy.RTSPErrorCountChanged:
-                    bool changed = (bool)m_filterData;
-                    if (row is DebugLogFrameRow)
-                    {
-                        DebugLogFrameRow frameRow = (DebugLogFrameRow)row;
-                        conditionsMet = CompareObjects(m_filterBy, m_filterComparision, frameRow.RTSPErrorCountChanged, changed);
-                    }
-                    break;
+                Type selectedPropertyType = selectedPropertyInfo.PropertyType;
+                var selectedPropertyValue = selectedPropertyInfo.GetValue(row);
+
+                conditionsMet = CompareObjects44(m_filterComparision, selectedPropertyValue, m_filterData, selectedPropertyType);
             }
 
             return conditionsMet;
         }
 
-        private bool CompareObjects(eFilterBy filterBy, eFilterComparision filterComparision, Object rowData, Object filterData)
+        private bool CompareObjects44(eFilterComparision filterComparision, Object actualData, Object filterData, Type propertyType)
+        {
+            bool conditionsMet = false;
+
+            if ((propertyType.Equals(typeof(int))) && (filterData is int))
+            {
+                conditionsMet = PerformComparision2(filterComparision, (int)actualData, (int)filterData);
+            }
+            else if ((propertyType.Equals(typeof(int))) && (filterData is List<int>))
+            {
+                conditionsMet = PerformComparision2(filterComparision, (int)actualData, (List<int>)filterData);
+            }
+            else if ((propertyType.Equals(typeof(DateTime))) && (filterData is DateTime))
+            {
+                conditionsMet = PerformComparision2(filterComparision, (DateTime)actualData, (DateTime)filterData);
+            }
+            else if ((propertyType.Equals(typeof(TimeSpan))) && (filterData is TimeSpan))
+            {
+                conditionsMet = PerformComparision2(filterComparision, (TimeSpan)actualData, (TimeSpan)filterData);
+            }
+            else
+            {
+                throw new Exception("Oops");
+            }
+
+            return conditionsMet;
+        }
+
+        private bool CompareObjects(eFilterComparision filterComparision, Object actualData, Object filterData)
         {
             bool conditionsMet = false;
 
@@ -127,17 +96,17 @@ namespace DebugLogReader
                 case eFilterComparision.GreaterThan:
                 case eFilterComparision.LessThan:
                 case eFilterComparision.EqualTo:
-                    if ((rowData is DateTime) && (filterData is DateTime))
+                    if ((actualData is DateTime) && (filterData is DateTime))
                     {
-                        conditionsMet = PerformComparision2(filterComparision, (DateTime)rowData, (DateTime)filterData);
+                        conditionsMet = PerformComparision2(filterComparision, (DateTime)actualData, (DateTime)filterData);
                     }
-                    else if ((rowData is int) && (filterData is int))
+                    else if ((actualData is int) && (filterData is int))
                     {
-                        conditionsMet = PerformComparision2(filterComparision, (int)rowData, (int)filterData);
+                        conditionsMet = PerformComparision2(filterComparision, (int)actualData, (int)filterData);
                     }
-                    else if ((rowData is TimeSpan) && (filterData is TimeSpan))
+                    else if ((actualData is TimeSpan) && (filterData is TimeSpan))
                     {
-                        conditionsMet = PerformComparision2(filterComparision, (TimeSpan)rowData, (TimeSpan)filterData);
+                        conditionsMet = PerformComparision2(filterComparision, (TimeSpan)actualData, (TimeSpan)filterData);
                     }
                     else if ((rowData is bool) && (filterData is bool))
                     {
@@ -149,9 +118,9 @@ namespace DebugLogReader
                     }
                     break;
                 case eFilterComparision.MemberOf:
-                    if ((rowData is int) && (filterData is List<int>))
+                    if ((actualData is int) && (filterData is List<int>))
                     {
-                        conditionsMet = PerformComparision2(filterComparision, (int)rowData, (List<int>)filterData);
+                        conditionsMet = PerformComparision2(filterComparision, (int)actualData, (List<int>)filterData);
                     }
                     else
                     {
@@ -163,20 +132,20 @@ namespace DebugLogReader
             return conditionsMet;
         }
 
-        private bool PerformComparision2(eFilterComparision filterComparision, DateTime rowDate, DateTime filterDate)
+        private bool PerformComparision2(eFilterComparision filterComparision, DateTime actualDate, DateTime filterDate)
         {
             bool conditionsMet = false;
 
             switch (filterComparision)
             {
                 case eFilterComparision.LessThan:
-                    conditionsMet = (rowDate < filterDate);
+                    conditionsMet = (actualDate < filterDate);
                     break;
                 case eFilterComparision.EqualTo:
-                    conditionsMet = (rowDate == filterDate);
+                    conditionsMet = (actualDate == filterDate);
                     break;
                 case eFilterComparision.GreaterThan:
-                    conditionsMet = (rowDate > filterDate);
+                    conditionsMet = (actualDate > filterDate);
                     break;
                 default:
                     throw new Exception($"Invalid comparision {filterComparision} - DateTime");
@@ -185,20 +154,20 @@ namespace DebugLogReader
             return conditionsMet;
         }
 
-        private bool PerformComparision2(eFilterComparision filterComparision, TimeSpan rowDate, TimeSpan filterDate)
+        private bool PerformComparision2(eFilterComparision filterComparision, TimeSpan actualTime, TimeSpan filterTime)
         {
             bool conditionsMet = false;
 
             switch (filterComparision)
             {
                 case eFilterComparision.LessThan:
-                    conditionsMet = (rowDate < filterDate);
+                    conditionsMet = (actualTime < filterTime);
                     break;
                 case eFilterComparision.EqualTo:
-                    conditionsMet = (rowDate == filterDate);
+                    conditionsMet = (actualTime == filterTime);
                     break;
                 case eFilterComparision.GreaterThan:
-                    conditionsMet = (rowDate > filterDate);
+                    conditionsMet = (actualTime > filterTime);
                     break;
                 default:
                     throw new Exception($"Invalid comparision {filterComparision} - TimeSpan");
@@ -207,36 +176,36 @@ namespace DebugLogReader
             return conditionsMet;
         }
 
-        private bool PerformComparision2(eFilterComparision filterComparision, int rowInt, int filterInt)
+        private bool PerformComparision2(eFilterComparision filterComparision, int actualInt, int filterInt)
         {
             bool conditionsMet = false;
 
             switch (filterComparision)
             {
                 case eFilterComparision.LessThan:
-                    conditionsMet = (rowInt < filterInt);
+                    conditionsMet = (actualInt < filterInt);
                     break;
                 case eFilterComparision.EqualTo:
-                    conditionsMet = (rowInt == filterInt);
+                    conditionsMet = (actualInt == filterInt);
                     break;
                 case eFilterComparision.GreaterThan:
-                    conditionsMet = (rowInt > filterInt);
+                    conditionsMet = (actualInt > filterInt);
                     break;
                 default:
-                    throw new Exception($"Invalid comparision {filterComparision} - DateTime");
+                    throw new Exception($"Invalid comparision {filterComparision} - int");
             }
 
             return conditionsMet;
         }
 
-        private bool PerformComparision2(eFilterComparision filterComparision, int rowInt, List<int> filterInts)
+        private bool PerformComparision2(eFilterComparision filterComparision, int actualInt, List<int> filterInts)
         {
             bool conditionsMet = false;
 
             switch (filterComparision)
             {
                 case eFilterComparision.MemberOf:
-                    conditionsMet = filterInts.Contains(rowInt);
+                    conditionsMet = filterInts.Contains(actualInt);
                     break;
                 default:
                     throw new Exception($"Invalid comparision {filterComparision} - DateTime");
@@ -260,47 +229,10 @@ namespace DebugLogReader
 
             return conditionsMet;
         }
-
-        public override string ToString()
-        {
-            StringBuilder text = new StringBuilder($"_{m_filterBy}");
-            switch (m_filterBy)
-            {
-                case eFilterBy.CameraNumber:
-                    List<int> cameras = (List<int>)m_filterData;
-                    text.Append($"{m_filterComparision}{frmCameraSelection.CameraListToCSV(cameras)}");
-                    break;
-                case eFilterBy.QueueCount:
-                case eFilterBy.ColdstoreId:
-                    int queueCount = (int)m_filterData;
-                    text.Append($"{m_filterComparision}{queueCount}");
-                    break;
-                case eFilterBy.StartTime:
-                case eFilterBy.EndTime:
-                    DateTime time = (DateTime)m_filterData;
-                    text.Append($"{m_filterComparision}{time.ToString("HHmmss")}");
-                    break;
-                case eFilterBy.LastWroteElapsed:
-                case eFilterBy.TotalFrameProcessing:
-                    TimeSpan elapsed = (TimeSpan)m_filterData;
-                    text.Append($"{m_filterComparision}{(int)elapsed.TotalSeconds}");
-                    break;
-                default:
-                    break;
-            }
-
-            return text.ToString();
-        }
-
         String m_filterPropertyName;
         Object m_filterData;
-        eFilterBy m_filterBy;
         eFilterComparision m_filterComparision;
     }
-
-    // Only filter by (equal to camera number / greater than queue count)
-    // If we need less than/equal to then add another enum and change MeetsConditions
-    public enum eFilterBy { CameraNumber, QueueCount, StartTime, EndTime, LastWroteElapsed, ColdstoreId, TotalFrameProcessing, RTSPErrorCountChanged }
 
     public enum eFilterComparision { LessThan, EqualTo, GreaterThan, MemberOf }
 }
