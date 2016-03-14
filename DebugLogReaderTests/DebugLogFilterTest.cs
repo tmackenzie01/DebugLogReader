@@ -43,30 +43,31 @@ namespace DebugLogReaderTests
 
             debugLog1.Load("test");
             Assert.AreEqual(1, debugLog1.Count);
-            Assert.AreEqual(new DateTime(2016, 3, 9, 16, 20, 16).AddMilliseconds(853), debugLog1.GetStartTime());
+            Assert.AreEqual("16:20:16.853", debugLog1.GetEndime().ToString("HH:mm:ss.fff"));
 
             // Start time less than
             filters = new List<DebugLogFilter>();
-            filters.Add(new DebugLogFilter("Timestamp", eFilterComparision.LessThan, new DateTime(2016, 3, 9, 16, 20, 16).AddMilliseconds(860)));
+
+            filters.Add(new DebugLogFilter("Timestamp", eFilterComparision.LessThan, new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 16, 20, 16).AddMilliseconds(860)));
             // Create debugLog with mock file wrapper and test filters
             DebugLog debugLog2 = new PushDebugLog(mockFileWrapper.Object, 1, filters);
 
             debugLog2.Load("test");
             Assert.AreEqual(2, debugLog2.Count);
-            Assert.AreEqual(new DateTime(2016, 3, 9, 16, 20, 16).AddMilliseconds(843), debugLog2.GetStartTime());
-            Assert.AreEqual(new DateTime(2016, 3, 9, 16, 20, 16).AddMilliseconds(853), debugLog2.GetEndime());
+            Assert.AreEqual("16:20:16.843", debugLog2.GetStartTime().ToString("HH:mm:ss.fff"));
+            Assert.AreEqual("16:20:16.853", debugLog2.GetEndime().ToString("HH:mm:ss.fff"));
             
             // Start time less than and greater than
             filters = new List<DebugLogFilter>();
-            filters.Add(new DebugLogFilter("Timestamp", eFilterComparision.GreaterThan, new DateTime(2016, 3, 9, 16, 20, 16).AddMilliseconds(850)));
-            filters.Add(new DebugLogFilter("Timestamp", eFilterComparision.LessThan, new DateTime(2016, 3, 9, 16, 20, 17).AddMilliseconds(200)));
+            filters.Add(new DebugLogFilter("Timestamp", eFilterComparision.GreaterThan, new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 16, 20, 16).AddMilliseconds(850)));
+            filters.Add(new DebugLogFilter("Timestamp", eFilterComparision.LessThan, new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 16, 20, 17).AddMilliseconds(200)));
             // Create debugLog with mock file wrapper and test filters
             DebugLog debugLog3 = new PushDebugLog(mockFileWrapper.Object, 1, filters);
 
             debugLog3.Load("test");
             Assert.AreEqual(3, debugLog3.Count);
-            Assert.AreEqual(new DateTime(2016, 3, 9, 16, 20, 16).AddMilliseconds(853), debugLog3.GetStartTime());
-            Assert.AreEqual(new DateTime(2016, 3, 9, 16, 20, 17).AddMilliseconds(193), debugLog3.GetEndime());
+            Assert.AreEqual("16:20:16.853", debugLog3.GetStartTime().ToString("HH:mm:ss.fff"));
+            Assert.AreEqual("16:20:17.193", debugLog3.GetEndime().ToString("HH:mm:ss.fff"));
 
             // Invalid filter
             filters = new List<DebugLogFilter>();
