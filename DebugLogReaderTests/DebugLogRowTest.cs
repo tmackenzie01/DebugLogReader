@@ -112,7 +112,7 @@ namespace DebugLogReaderTests
 
             DebugLogPopRow popRowWroteDataTimeColdstoreInfo2 = new DebugLogPopRow(1, "11/03/2016 13:12:25.893 Wrote data C:1 P:55055", poppedRegex, wroteDataRegex, DateTime.MinValue);
             Assert.AreEqual(1, popRowWroteDataTimeColdstoreInfo2.ColdstoreId);
-            Assert.AreEqual(55055, popRowWroteDataTimeColdstoreInfo2.ColdstorePort);            
+            Assert.AreEqual(55055, popRowWroteDataTimeColdstoreInfo2.ColdstorePort);
 
             DebugLogPopRow popRowWithTimingsABCD1 = new DebugLogPopRow(1, "Popped - 08/03/2016 11:58:16.698 --- (0.030 seconds) " +
                 "Q:1 F:83, 6711, 0 T:A 11:58:16.668 B 11:58:16.668 C 11:58:16.698 D 11:58:16.698 ", poppedRegex, wroteDataRegex, DateTime.MinValue);
@@ -200,6 +200,12 @@ namespace DebugLogReaderTests
                 "(C:0.000 O:0.007 MPEG4-AA:0.000 BB:0.000 CR:0.000 RV:0.000 ) TOT:0.007", frameRegex, null, DateTime.MinValue);
             Assert.AreEqual("13:05:44.719", frameRow8.Timestamp.ToString("HH:mm:ss.fff"));
             Assert.AreEqual(false, frameRow8.RVException);
+
+            DebugLogFrameRow frameRowWithRTSPErrorCount = new DebugLogFrameRow(2, "Record 09:52:05.767 " +
+                "RT:0 (MPEG4-AA:0.000 BB:0.000 CC:0.000 DD:0.000 EE:0.000 FF:0.000 RV:0.000 ) TOT:0.000 ", frameRegex, null, DateTime.MinValue);
+            Assert.AreEqual("09:52:05.767", frameRowWithRTSPErrorCount.Timestamp.ToString("HH:mm:ss.fff"));
+            Assert.AreEqual(false, frameRowWithRTSPErrorCount.RVException);
+
         }
 
         [TestMethod]
@@ -213,7 +219,7 @@ namespace DebugLogReaderTests
             Assert.AreEqual(false, aviRow1.CRError);
             Assert.AreEqual("12:21:23.578", aviRow1.Timestamp.ToString("HH:mm:ss.fff"));
 
-            DebugLogAviRow aviRow2 = new DebugLogAviRow(1, "Create 13:48:24.660 CR1:0.000 CR2:0.000 CR3:20.152 CRE:0.000 " + 
+            DebugLogAviRow aviRow2 = new DebugLogAviRow(1, "Create 13:48:24.660 CR1:0.000 CR2:0.000 CR3:20.152 CRE:0.000 " +
                 "CRX:An I/O error occured on Coldstore. Object reference not set to an instance of an object.", aviRegex, null, DateTime.MinValue);
             Assert.AreEqual(true, aviRow2.CRException);
             Assert.AreEqual(true, aviRow2.CRError);

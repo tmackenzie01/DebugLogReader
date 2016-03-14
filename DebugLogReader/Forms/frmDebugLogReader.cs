@@ -21,7 +21,7 @@ namespace DebugLogReader
             InitializeComponent();
 
             String logsDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
-                @"Recorder testing\20160302\DebugLogs19");
+                @"Recorder testing\20160302\DebugLogs20");
 
             txtLogDirectory.Text = logsDir;
             m_stpLogsProcessing = new Stopwatch();
@@ -206,7 +206,7 @@ namespace DebugLogReader
                     }
                 }
             }
-            
+
             // Total frame processing time
             if (chkTotalFrameProcessing.Checked)
             {
@@ -248,7 +248,7 @@ namespace DebugLogReader
                     logs.Add(newLog);
                 }
             }
-            
+
             e.Result = new DebugLogReaderResult(args.CameraNumber, logs);
         }
 
@@ -605,7 +605,8 @@ namespace DebugLogReader
         public static Regex m_wroteDataRegex = new Regex("Wrote data( C.(?<coldstoreId>[0-9]+) P.(?<coldstorePort>[0-9]+))*$",
             RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.Multiline);
 
-        public static Regex m_frameRegex = new Regex("Record.(?<timestamp>[0-9]+.[0-9]+.[0-9]+.[0-9]+)." + "\\(" +
+        public static Regex m_frameRegex = new Regex("Record.(?<timestamp>[0-9]+.[0-9]+.[0-9]+.[0-9]+)." +
+                "(RT:(?<rtspErrorCount>[0-9]+).)*" + "\\(" +
                 "(C:(?<cTimestamp1>[0-9]+.[0-9]+).O:(?<oTimestamp>[0-9]+.[0-9]+).)*" +
                 "(MPEG4-AA:(?<aaTimestamp>[0-9]+.[0-9]+).)*" + "(.BB:(?<bbTimestamp>[0-9]+.[0-9]+).)*" +
                 "(.(CC|CR):(?<ccTimestamp>[0-9]+.[0-9]+).)*" + "(.DD:(?<ddTimestamp>[0-9]+.[0-9]+).)*" +
