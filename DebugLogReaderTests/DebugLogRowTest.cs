@@ -183,7 +183,12 @@ namespace DebugLogReaderTests
             DebugLogFrameRow frameRowWithRTSPErrorCount = new DebugLogFrameRow(2, "Record 09:52:05.767 " +
                 "RT:0 (MPEG4-AA:0.000 BB:0.000 CC:0.000 DD:0.000 EE:0.000 FF:0.000 RV:0.000 ) TOT:0.000 ", DateTime.MinValue);
             Assert.AreEqual("09:52:05.767", frameRowWithRTSPErrorCount.Timestamp.ToString("HH:mm:ss.fff"));
-            Assert.AreEqual(false, frameRowWithRTSPErrorCount.RVException);
+            Assert.AreEqual(0, frameRowWithRTSPErrorCount.RTSPErrorCount);
+
+            DebugLogFrameRow frameRowWithRTSPErrorCount2 = new DebugLogFrameRow(2, "Record 09:52:05.767 " +
+                "RT:4 (MPEG4-AA:0.000 BB:0.000 CC:0.000 DD:0.000 EE:0.000 FF:0.000 RV:0.000 ) TOT:0.000 ", DateTime.MinValue);
+            Assert.AreEqual("09:52:05.767", frameRowWithRTSPErrorCount2.Timestamp.ToString("HH:mm:ss.fff"));
+            Assert.AreEqual(4, frameRowWithRTSPErrorCount2.RTSPErrorCount);
 
         }
 
