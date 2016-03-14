@@ -1,11 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace DebugLogReader
 {
@@ -16,7 +11,6 @@ namespace DebugLogReader
             m_cameraNumber = -1;
             m_rows = new List<DebugLogRow>();
             m_filters = null;
-            InitialiseRegex();
         }
 
         public DebugLog(int cameraNumber, List<DebugLogFilter> filters)
@@ -24,11 +18,6 @@ namespace DebugLogReader
             m_cameraNumber = cameraNumber;
             m_rows = new List<DebugLogRow>();
             m_filters = filters;
-            InitialiseRegex();
-        }
-
-        protected virtual void InitialiseRegex()
-        {
         }
 
         // Only wrote data rows hold coldstore id info, but we want them in all rows for the popping
@@ -56,7 +45,7 @@ namespace DebugLogReader
                     {
                         if (!String.IsNullOrEmpty(line) && (!String.IsNullOrWhiteSpace(line)))
                         {
-                            newRow = ParseLine(m_cameraNumber, line, m_rowRegex, previousTimestamp);
+                            newRow = ParseLine(m_cameraNumber, line, previousTimestamp);
                             if (newRow.NullFrameDetected)
                             {
                                 // Null frame stops recording so clear the data written progress
@@ -97,10 +86,9 @@ namespace DebugLogReader
             nullFrameDetectedPreviously = false;
         }
 
-        protected virtual DebugLogRow ParseLine(int cameraNumber, String line, Regex rowRegex, DateTime previousTimestamp)
+        protected virtual DebugLogRow ParseLine(int cameraNumber, String line, DateTime previousTimestamp)
         {
-            DebugLogRow newRow = new DebugLogRow(cameraNumber, line, rowRegex, null, previousTimestamp);
-            return newRow;
+            throw new Exception("Not implemented");
         }
 
         private bool CheckDebugLogFilters(List<DebugLogFilter> filters)
@@ -299,7 +287,5 @@ namespace DebugLogReader
         protected List<DebugLogFilter> m_filters;
         protected String m_filterMessage;
         protected List<DebugLogRow> m_rows;
-
-        protected Regex m_rowRegex;
     }
 }

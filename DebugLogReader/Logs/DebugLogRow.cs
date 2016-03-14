@@ -14,27 +14,17 @@ namespace DebugLogReader
         {
         }
 
-        public DebugLogRow(int cameraNumber, String text, Regex r)
+        public DebugLogRow(int cameraNumber, String text)
         {
-            Initialise(cameraNumber, text, r, null, DateTime.MaxValue);
+            Initialise(cameraNumber, text, DateTime.MaxValue);
         }
 
-        public DebugLogRow(int cameraNumber, String text, Regex r, Regex wroteDataRegex)
+        public DebugLogRow(int cameraNumber, String text, DateTime previousTimestamp)
         {
-            Initialise(cameraNumber, text, r, wroteDataRegex, DateTime.MaxValue);
+            Initialise(cameraNumber, text, previousTimestamp);
         }
 
-        public DebugLogRow(int cameraNumber, String text, Regex r, DateTime previousTimestamp)
-        {
-            Initialise(cameraNumber, text, r, null, previousTimestamp);
-        }
-
-        public DebugLogRow(int cameraNumber, String text, Regex r, Regex wroteDataRegex, DateTime previousTimestamp)
-        {
-            Initialise(cameraNumber, text, r, wroteDataRegex, previousTimestamp);
-        }
-
-        protected virtual void Initialise(int cameraNumber, String text, Regex r, Regex wroteDataRegex, DateTime previousTimestamp)
+        protected virtual void Initialise(int cameraNumber, String text, DateTime previousTimestamp)
         {
             throw new Exception("Not implemented");
         }

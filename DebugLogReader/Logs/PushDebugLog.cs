@@ -14,14 +14,9 @@ namespace DebugLogReader
             m_summaryHeader = "push log";
         }
 
-        protected override void InitialiseRegex()
+        protected override DebugLogRow ParseLine(int cameraNumber, String line, DateTime previousTimestamp)
         {
-            m_rowRegex = frmDebugLogReader.m_pushedRegex;
-        }
-
-        protected override DebugLogRow ParseLine(int cameraNumber, String line, Regex rowRegex, DateTime previousTimestamp)
-        {
-            DebugLogRow newRow = new DebugLogPushRow(cameraNumber, line, rowRegex, null, previousTimestamp);
+            DebugLogRow newRow = new DebugLogPushRow(cameraNumber, line, previousTimestamp);
             return newRow;
         }
     }

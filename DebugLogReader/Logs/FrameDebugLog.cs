@@ -14,14 +14,9 @@ namespace DebugLogReader
             m_summaryHeader = "frame log";
         }
 
-        protected override void InitialiseRegex()
+        protected override DebugLogRow ParseLine(int cameraNumber, String line, DateTime previousTimestamp)
         {
-            m_rowRegex = frmDebugLogReader.m_frameRegex;
-        }
-
-        protected override DebugLogRow ParseLine(int cameraNumber, String line, Regex rowRegex, DateTime previousTimestamp)
-        {
-            DebugLogRow newRow = new DebugLogFrameRow(cameraNumber, line, rowRegex, null, previousTimestamp);
+            DebugLogRow newRow = new DebugLogFrameRow(cameraNumber, line, previousTimestamp);
             return newRow;
         }
     }

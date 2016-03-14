@@ -15,28 +15,20 @@ namespace DebugLogReader
         {
         }
 
-        public DebugLogFrameRow(int cameraNumber, String text, Regex r) : base(cameraNumber, text, r)
+        public DebugLogFrameRow(int cameraNumber, String text) : base(cameraNumber, text)
         {
-            Initialise(cameraNumber, text, r, null, DateTime.MaxValue);
+            Initialise(cameraNumber, text, DateTime.MaxValue);
         }
 
-        public DebugLogFrameRow(int cameraNumber, String text, Regex r, Regex wroteDataRegex) : base(cameraNumber, text, r, wroteDataRegex)
+        public DebugLogFrameRow(int cameraNumber, String text, DateTime previousTimestamp) : base(cameraNumber, text, previousTimestamp)
         {
-            Initialise(cameraNumber, text, r, wroteDataRegex, DateTime.MaxValue);
+            Initialise(cameraNumber, text, previousTimestamp);
         }
 
-        public DebugLogFrameRow(int cameraNumber, String text, Regex r, DateTime previousTimestamp) : base(cameraNumber, text, r, previousTimestamp)
+        protected override void Initialise(int cameraNumber, String text, DateTime previousTimestamp)
         {
-            Initialise(cameraNumber, text, r, null, previousTimestamp);
-        }
+            Regex r = LogRegex.m_frameRegex;
 
-        public DebugLogFrameRow(int cameraNumber, String text, Regex r, Regex wroteDataRegex, DateTime previousTimestamp) : base(cameraNumber, text, r, wroteDataRegex, previousTimestamp)
-        {
-            Initialise(cameraNumber, text, r, wroteDataRegex, previousTimestamp);
-        }
-
-        protected override void Initialise(int cameraNumber, String text, Regex r, Regex wroteDataRegex, DateTime previousTimestamp)
-        {
             m_cameraNumber = cameraNumber;
             Match match = r.Match(text);
             if (match.Success)

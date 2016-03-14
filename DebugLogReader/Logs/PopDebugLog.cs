@@ -15,15 +15,9 @@ namespace DebugLogReader
             m_coldstoreIds = new List<int>();
         }
 
-        protected override void InitialiseRegex()
+        protected override DebugLogRow ParseLine(int cameraNumber, String line, DateTime previousTimestamp)
         {
-            m_rowRegex = frmDebugLogReader.m_poppedRegex;
-            m_wroteDataRegex = frmDebugLogReader.m_wroteDataRegex;
-        }
-
-        protected override DebugLogRow ParseLine(int cameraNumber, String line, Regex rowRegex, DateTime previousTimestamp)
-        {
-            DebugLogRow newRow = new DebugLogPopRow(cameraNumber, line, rowRegex, m_wroteDataRegex, previousTimestamp);
+            DebugLogRow newRow = new DebugLogPopRow(cameraNumber, line, previousTimestamp);
             return newRow;
         }
 
@@ -83,6 +77,5 @@ namespace DebugLogReader
         }
 
         List<int> m_coldstoreIds;
-        Regex m_wroteDataRegex;
     }
 }

@@ -46,6 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="LogRegex.cs" />
     <Compile Include="Logs\AviDebugLog.cs" />
     <Compile Include="Logs\CSDebugLog.cs" />
     <Compile Include="Logs\DebugLog.cs" />

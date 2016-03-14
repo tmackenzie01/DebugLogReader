@@ -14,29 +14,21 @@ namespace DebugLogReader
         {
         }
 
-        public DebugLogPopRow(int cameraNumber, String text, Regex r) : base(cameraNumber, text, r)
+        public DebugLogPopRow(int cameraNumber, String text) : base(cameraNumber, text)
         {
-            Initialise(cameraNumber, text, r, null, DateTime.MaxValue);
+            Initialise(cameraNumber, text, DateTime.MaxValue);
         }
 
-        public DebugLogPopRow(int cameraNumber, String text, Regex r, Regex wroteDataRegex) : base(cameraNumber, text, r, wroteDataRegex)
+        public DebugLogPopRow(int cameraNumber, String text, DateTime previousTimestamp) : base(cameraNumber, text, previousTimestamp)
         {
-            Initialise(cameraNumber, text, r, wroteDataRegex, DateTime.MaxValue);
+            Initialise(cameraNumber, text, previousTimestamp);
         }
 
-        public DebugLogPopRow(int cameraNumber, String text, Regex r, DateTime previousTimestamp) : base(cameraNumber, text, r, previousTimestamp)
+        protected override void Initialise(int cameraNumber, String text, DateTime previousTimestamp)
         {
-            Initialise(cameraNumber, text, r, null, previousTimestamp);
-        }
+            Regex wroteDataRegex = LogRegex.m_wroteDataRegex;
+            Regex r = LogRegex.m_poppedRegex;
 
-        public DebugLogPopRow(int cameraNumber, String text, Regex r, Regex wroteDataRegex, DateTime previousTimestamp) : base(cameraNumber, text, r, wroteDataRegex, previousTimestamp)
-        {
-            Initialise(cameraNumber, text, r, wroteDataRegex, previousTimestamp);
-        }
-
-
-        protected override void Initialise(int cameraNumber, String text, Regex r, Regex wroteDataRegex, DateTime previousTimestamp)
-        {
             m_cameraNumber = cameraNumber;
             m_coldstoreId = -1; // Coldstore Id 0 is valid so make sure it's not that by default
             
@@ -77,7 +69,8 @@ namespace DebugLogReader
                     {
                         m_queueCount = -1;
                     }
-                    m_timestamp = DateTime.ParseExact(timestamp, @"dd/MM/yyyy HH:mm:ss.fff", CultureInfo.InvariantCulture);
+
+                    m_timestamp = DateTime.ParseExact(timestamp, @"HH:mm:ss.fff", CultureInfo.InvariantCulture);
 
                     DateTime timeA = DateTime.MinValue;
                     DateTime timeB = DateTime.MinValue;
@@ -165,7 +158,7 @@ namespace DebugLogReader
                 }
                 double dataWritten = m_dataWritten;
                 dataWritten = dataWritten / 1024.0;
-                return $"{CameraNumber} {m_timestamp.ToString("dd/MM/yyyy HH:mm:ss.fff")} ({m_lastWroteElapsed.TotalSeconds.ToString("f3")} seconds since last wrote data - {dataWritten.ToString("f3")}Kb {nullFrameDetected}) {m_coldstoreId}:{m_coldstorePort}";
+                return $"{CameraNumber} {m_timestamp.ToString("HH:mm:ss.fff")} ({m_lastWroteElapsed.TotalSeconds.ToString("f3")} seconds since last wrote data - {dataWritten.ToString("f3")}Kb {nullFrameDetected}) {m_coldstoreId}:{m_coldstorePort}";
             }
         }
 
