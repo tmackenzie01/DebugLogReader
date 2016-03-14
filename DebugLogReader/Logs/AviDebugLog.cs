@@ -9,7 +9,7 @@ namespace DebugLogReader
 {
     public class AviDebugLog : DebugLog
     {
-        public AviDebugLog(int cameraNumber, List<DebugLogFilter> filters) : base(cameraNumber, filters)
+        public AviDebugLog(IFileWrapper fileWrapper, int cameraNumber, List<DebugLogFilter> filters) : base(fileWrapper, cameraNumber, filters)
         {
             m_summaryHeader = "Avi log";
         }

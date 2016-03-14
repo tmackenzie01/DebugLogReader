@@ -9,7 +9,7 @@ namespace DebugLogReader
 {
     public class PopDebugLog : DebugLog
     {
-        public PopDebugLog(int cameraNumber, List<DebugLogFilter> filters) : base(cameraNumber, filters)
+        public PopDebugLog(IFileWrapper fileWrapper, int cameraNumber, List<DebugLogFilter> filters) : base(fileWrapper, cameraNumber, filters)
         {
             m_summaryHeader = "pop log";
             m_coldstoreIds = new List<int>();

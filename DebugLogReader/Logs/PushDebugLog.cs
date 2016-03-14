@@ -9,7 +9,7 @@ namespace DebugLogReader
 {
     public class PushDebugLog : DebugLog
     {
-        public PushDebugLog(int cameraNumber, List<DebugLogFilter> filters) : base(cameraNumber, filters)
+        public PushDebugLog(IFileWrapper fileWrapper, int cameraNumber, List<DebugLogFilter> filters) : base(fileWrapper, cameraNumber, filters)
         {
             m_summaryHeader = "push log";
         }

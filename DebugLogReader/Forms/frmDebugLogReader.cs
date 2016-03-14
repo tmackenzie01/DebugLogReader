@@ -5,6 +5,8 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
+using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
@@ -22,6 +24,13 @@ namespace DebugLogReader
 
             txtLogDirectory.Text = logsDir;
             m_stpLogsProcessing = new Stopwatch();
+            m_fileWrapper = new RealFileWrapper();
+        }
+        private void frmDebugLogReader_Load(object sender, EventArgs e)
+        {
+            frmFilters filters = new frmFilters();
+            filters.Show();
+            filters.BringToFront();
         }
 
         private void btnReadLogs_Click(object sender, EventArgs e)
@@ -252,10 +261,10 @@ namespace DebugLogReader
                 {
                     logs.Add(newLog);
                 }
-            }
+                }
 
             e.Result = new DebugLogReaderResult(args.CameraNumber, logs);
-        }
+                }
 
         private bool CreateDebugLog(String filename, int cameraNumber, List<DebugLogFilter> filters, ref DebugLog log)
         {
@@ -264,27 +273,27 @@ namespace DebugLogReader
             {
                 if (filename.EndsWith("_Push.txt"))
                 {
-                    log = new PushDebugLog(cameraNumber, filters);
+                    log = new PushDebugLog(m_fileWrapper, cameraNumber, filters);
                     log.Load(filename);
-                }
+            }
                 else if (filename.EndsWith("_Pop.txt"))
-                {
-                    log = new PopDebugLog(cameraNumber, filters);
+            {
+                    log = new PopDebugLog(m_fileWrapper, cameraNumber, filters);
                     log.Load(filename);
-                }
+            }
                 else if (filename.EndsWith("_CSWrite.txt"))
-                {
-                    log = new CSDebugLog(cameraNumber, filters);
+            {
+                    log = new CSDebugLog(m_fileWrapper, cameraNumber, filters);
                     log.Load(filename);
-                }
+            }
                 else if (filename.EndsWith("_FrameWrite.txt"))
                 {
-                    log = new FrameDebugLog(cameraNumber, filters);
+                    log = new FrameDebugLog(m_fileWrapper, cameraNumber, filters);
                     log.Load(filename);
                 }
                 else if (filename.EndsWith("_AviFile.txt"))
                 {
-                    log = new AviDebugLog(cameraNumber, filters);
+                    log = new AviDebugLog(m_fileWrapper, cameraNumber, filters);
                     log.Load(filename);
                 }
             }
@@ -404,7 +413,7 @@ namespace DebugLogReader
         {
             BackgroundWorker worker = sender as BackgroundWorker;
             List<DebugLog> logs = (List<DebugLog>)e.Argument;
-            DebugLog giantLog = new DebugLog();
+            DebugLog giantLog = new DebugLog(m_fileWrapper);
             int progressCount = 0;
             int progressFinish = logs.Count + 2; // One for the sort and one for the saving (done in another background worker)
             DateTime latestStartTime = DateTime.MinValue;
@@ -465,15 +474,15 @@ namespace DebugLogReader
             }
             else
             {
-                if (File.Exists(giantLogFilename))
+            if (File.Exists(giantLogFilename))
+            {
+                if (MessageBox.Show($"{giantLogFilename} exists\r\nYou want to overwrite it?", "", MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
-                    if (MessageBox.Show($"{giantLogFilename} exists\r\nYou want to overwrite it?", "", MessageBoxButtons.YesNo) == DialogResult.Yes)
-                    {
-                        File.Delete(giantLogFilename);
-                    }
-                    else
-                    {
-                        saveFile = false;
+                    File.Delete(giantLogFilename);
+                }
+                else
+                {
+                    saveFile = false;
                         errorMessage = "existing file not overwritten";
                     }
                 }
@@ -590,5 +599,23 @@ namespace DebugLogReader
         List<DebugLog> m_logs;
         String m_filterDescription;
         Stopwatch m_stpLogsProcessing;
+
+        IFileWrapper m_fileWrapper;
+
+        // Declare and intialise these Regex here as it's costly to keep creating them
+        // Need to figure out a better way to do this
+        public static Regex m_pushedRegex = new Regex("Pushed...(?<timestamp>[0-9]+.[0-9]+.[0-9]+.[0-9]+.[0-9]+.[0-9]+.[0-9]+).(\\-\\-\\-...[0-9]+.[0-9]+.seconds..)*Q.(?<queueCount>[0-9]+).F..?[0-9]+,.(?<pushedPopped>[0-9]+),.[0-9]+$",
+        RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.Multiline);
+
+        public static Regex m_poppedRegex = new Regex("Popped..." +
+                "(?<timestamp>[0-9]+.[0-9]+.[0-9]+.[0-9]+.[0-9]+.[0-9]+.[0-9]+).(\\-\\-\\-..[0-9]+.[0-9]+.seconds..)*" +
+                "Q.(?<queueCount>[0-9]+).F..?([0-9]+|ull)(,.(?<pushedPopped>[0-9]+),.[0-9]+)*" +
+                "(.T:A.(?<timeA>[0-9]+.[0-9]+.[0-9]+.[0-9]+).(B.(?<timeB>[0-9]+.[0-9]+.[0-9]+.[0-9]+).)*C.(?<timeC>[0-9]+.[0-9]+.[0-9]+.[0-9]+).D.(?<timeD>[0-9]+.[0-9]+.[0-9]+.[0-9]+).)*$");
+
+        public static Regex m_csRegex = new Regex("(?<timestamp>[0-9]+.[0-9]+.[0-9]+.[0-9]+).*[0-9]+.[0-9]+.(.)*[0-9]+.[0-9]+$",
+            RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.Multiline);
+
+        public static Regex m_wroteDataRegex = new Regex("Wrote data( C.(?<coldstoreId>[0-9]+) P.(?<coldstorePort>[0-9]+))*$",
+            RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.Multiline);
     }
 }

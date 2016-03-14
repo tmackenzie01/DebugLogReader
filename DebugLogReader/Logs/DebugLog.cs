@@ -1,20 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using System.IO;
 
 namespace DebugLogReader
 {
     public class DebugLog
     {
-        public DebugLog()
+        public DebugLog(IFileWrapper fileWrapper)
         {
+            m_fileWrapper = fileWrapper;
             m_cameraNumber = -1;
             m_rows = new List<DebugLogRow>();
             m_filters = null;
         }
 
-        public DebugLog(int cameraNumber, List<DebugLogFilter> filters)
+        public DebugLog(IFileWrapper fileWrapper, int cameraNumber, List<DebugLogFilter> filters)
         {
+            m_fileWrapper = fileWrapper;
             m_cameraNumber = cameraNumber;
             m_rows = new List<DebugLogRow>();
             m_filters = filters;
@@ -28,7 +31,7 @@ namespace DebugLogReader
         // Only frame data rows hold RTSP error count info
         protected virtual void SetRTSPErrorCountInfo(DebugLogRow newRow, DebugLogRow oldRow)
         {
-        }
+                }
 
         public void Load(String filename)
         {
@@ -42,7 +45,7 @@ namespace DebugLogReader
             // Check filters for the debug log before we even read file
             if (CheckDebugLogFilters(m_filters))
             {
-                String[] debugLogText = File.ReadAllLines(filename);
+                String[] debugLogText = m_fileWrapper.LoadFromFile(filename);
 
                 if (debugLogText.Length > 0)
                 {
@@ -57,8 +60,8 @@ namespace DebugLogReader
                                 dataWritten = 0;
                             }
                             else
-                            {
-                                dataWritten = dataWritten + newRow.DataPopped;
+                        {
+                            dataWritten = dataWritten + newRow.DataPopped;
                             }
                             nullFrameDetectedPreviously = newRow.NullFrameDetected || nullFrameDetectedPreviously;
 
@@ -239,13 +242,7 @@ namespace DebugLogReader
 
         public void Save(String filename)
         {
-            StreamWriter sw = new StreamWriter(filename);
-            foreach (DebugLogRow row in m_rows)
-            {
-                sw.WriteLine(row.ToString());
-            }
-
-            sw.Close();
+            m_fileWrapper.Save(m_rows, filename);
         }
 
         public String SummaryText()
@@ -260,8 +257,8 @@ namespace DebugLogReader
                     lineSummary = $"{m_rows.Count} lines";
                     if (m_rows.Count > 0)
                     {
-                        DateTime startTime = GetStartTime();
-                        TimeSpan duration = GetEndime() - startTime;
+                DateTime startTime = GetStartTime();
+                TimeSpan duration = GetEndime() - startTime;
                         if (duration.TotalSeconds > 1.0f)
                         {
                             durationSummary = $", {(int)duration.TotalSeconds} secs";
@@ -293,5 +290,10 @@ namespace DebugLogReader
         protected List<DebugLogFilter> m_filters;
         protected String m_filterMessage;
         protected List<DebugLogRow> m_rows;
+
+        IFileWrapper m_fileWrapper;
+
+        protected Regex m_rowRegex;
+        protected Regex m_wroteDataRegex;
     }
 }

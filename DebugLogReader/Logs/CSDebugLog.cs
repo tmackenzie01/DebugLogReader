@@ -9,7 +9,7 @@ namespace DebugLogReader
 {
     public class CSDebugLog : DebugLog
     {
-        public CSDebugLog(int cameraNumber, List<DebugLogFilter> filters) : base(cameraNumber, filters)
+        public CSDebugLog(IFileWrapper fileWrapper, int cameraNumber, List<DebugLogFilter> filters) : base(fileWrapper, cameraNumber, filters)
         {
             m_summaryHeader = "CS log";
         }

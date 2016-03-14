@@ -9,7 +9,7 @@ namespace DebugLogReader
 {
     public class FrameDebugLog : DebugLog
     {
-        public FrameDebugLog(int cameraNumber, List<DebugLogFilter> filters) : base(cameraNumber, filters)
+        public FrameDebugLog(IFileWrapper fileWrapper, int cameraNumber, List<DebugLogFilter> filters) : base(fileWrapper, cameraNumber, filters)
         {
             m_summaryHeader = "frame log";
         }
