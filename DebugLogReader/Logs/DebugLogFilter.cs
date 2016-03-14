@@ -34,7 +34,7 @@ namespace DebugLogReader
                 {
                     List<int> cameras = (List<int>)m_filterData;
                     conditionsMet = CompareObjects44(m_filterComparision, selectedPropertyValue, m_filterData, selectedPropertyType);
-            }
+                }
             }
 
             return conditionsMet;
@@ -108,9 +108,9 @@ namespace DebugLogReader
                     {
                         conditionsMet = PerformComparision2(filterComparision, (TimeSpan)actualData, (TimeSpan)filterData);
                     }
-                    else if ((rowData is bool) && (filterData is bool))
+                    else if ((actualData is bool) && (filterData is bool))
                     {
-                        conditionsMet = PerformComparision2(filterComparision, (bool)rowData, (bool)filterData);
+                        conditionsMet = PerformComparision2(filterComparision, (bool)actualData, (bool)filterData);
                     }
                     else
                     {
