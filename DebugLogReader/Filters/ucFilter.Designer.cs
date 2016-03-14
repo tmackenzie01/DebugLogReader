@@ -40,7 +40,7 @@
             this.cbxProperty.FormattingEnabled = true;
             this.cbxProperty.Location = new System.Drawing.Point(12, 13);
             this.cbxProperty.Name = "cbxProperty";
-            this.cbxProperty.Size = new System.Drawing.Size(208, 21);
+            this.cbxProperty.Size = new System.Drawing.Size(333, 21);
             this.cbxProperty.TabIndex = 0;
             this.cbxProperty.SelectedIndexChanged += new System.EventHandler(this.cbxProperty_SelectedIndexChanged);
             // 
