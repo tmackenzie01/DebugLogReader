@@ -18,7 +18,7 @@ namespace DebugLogReader
             InitializeComponent();
 
             String logsDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
-                @"Recorder testing\20160302\DebugLogs19");
+                @"Recorder testing\20160302\DebugLogs21");
 
             txtLogDirectory.Text = logsDir;
             m_stpLogsProcessing = new Stopwatch();
@@ -218,6 +218,14 @@ namespace DebugLogReader
                         filters.Add(filter);
                     }
                 }
+            }
+
+            // RTSP error count changed
+            if (chkRTSPErrorCountChanged.Checked)
+            {
+                DebugLogFilter filter = new DebugLogFilter(eFilterBy.RTSPErrorCountChanged, eFilterComparision.EqualTo, true);
+                filterDescription.Append(filter.ToString());
+                filters.Add(filter);
             }
 
             // If we have not created any filters then clear the list - we use this to determine there are no filters

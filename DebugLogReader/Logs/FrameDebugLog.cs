@@ -19,5 +19,19 @@ namespace DebugLogReader
             DebugLogRow newRow = new DebugLogFrameRow(cameraNumber, line, previousTimestamp);
             return newRow;
         }
+
+        protected override void SetRTSPErrorCountInfo(DebugLogRow baseRow, DebugLogRow baseOldRow)
+        {
+            DebugLogFrameRow newRow = (DebugLogFrameRow)baseRow;
+            DebugLogFrameRow oldRow = (DebugLogFrameRow)baseOldRow;
+
+            if (oldRow != null)
+            {
+                if (oldRow.RTSPErrorCount != newRow.RTSPErrorCount)
+                {
+                    newRow.SetRTSPErrorCountChanged(true);
+                }
+            }
+        }
     }
 }

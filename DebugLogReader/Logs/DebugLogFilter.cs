@@ -32,6 +32,9 @@ namespace DebugLogReader
                 case eFilterBy.TotalFrameProcessing:
                     m_filterData = (TimeSpan)filterData;
                     break;
+                case eFilterBy.RTSPErrorCountChanged:
+                    m_filterData = (bool)filterData;
+                    break;
             }
         }
 
@@ -72,7 +75,7 @@ namespace DebugLogReader
                     {
                         DebugLogPopRow popRow = (DebugLogPopRow)row;
                         conditionsMet = CompareObjects(m_filterBy, m_filterComparision, popRow.ColdstoreId, coldstoreId);
-            }
+                    }
                     break;
                 case eFilterBy.StartTime:
                 case eFilterBy.EndTime:
@@ -94,6 +97,14 @@ namespace DebugLogReader
                         TimeSpan totalFrameProcessing = (TimeSpan)m_filterData;
                         DebugLogFrameRow frameRow = (DebugLogFrameRow)row;
                         conditionsMet = CompareObjects(m_filterBy, m_filterComparision, frameRow.TotalFrameProcessing, totalFrameProcessing);
+                    }
+                    break;
+                case eFilterBy.RTSPErrorCountChanged:
+                    bool changed = (bool)m_filterData;
+                    if (row is DebugLogFrameRow)
+                    {
+                        DebugLogFrameRow frameRow = (DebugLogFrameRow)row;
+                        conditionsMet = CompareObjects(m_filterBy, m_filterComparision, frameRow.RTSPErrorCountChanged, changed);
                     }
                     break;
             }
@@ -121,6 +132,10 @@ namespace DebugLogReader
                     else if ((rowData is TimeSpan) && (filterData is TimeSpan))
                     {
                         conditionsMet = PerformComparision2(filterComparision, (TimeSpan)rowData, (TimeSpan)filterData);
+                    }
+                    else if ((rowData is bool) && (filterData is bool))
+                    {
+                        conditionsMet = PerformComparision2(filterComparision, (bool)rowData, (bool)filterData);
                     }
                     else
                     {
@@ -224,6 +239,22 @@ namespace DebugLogReader
             return conditionsMet;
         }
 
+        private bool PerformComparision2(eFilterComparision filterComparision, bool rowVal, bool filterVal)
+        {
+            bool conditionsMet = false;
+
+            switch (filterComparision)
+            {
+                case eFilterComparision.EqualTo:
+                    conditionsMet = (rowVal == filterVal);
+                    break;
+                default:
+                    throw new Exception($"Invalid comparision {filterComparision} - bool");
+            }
+
+            return conditionsMet;
+        }
+
         public override string ToString()
         {
             StringBuilder text = new StringBuilder($"_{m_filterBy}");
@@ -262,7 +293,7 @@ namespace DebugLogReader
 
     // Only filter by (equal to camera number / greater than queue count)
     // If we need less than/equal to then add another enum and change MeetsConditions
-    public enum eFilterBy { CameraNumber, QueueCount, StartTime, EndTime, LastWroteElapsed, ColdstoreId, TotalFrameProcessing }
+    public enum eFilterBy { CameraNumber, QueueCount, StartTime, EndTime, LastWroteElapsed, ColdstoreId, TotalFrameProcessing, RTSPErrorCountChanged }
 
     public enum eFilterComparision { LessThan, EqualTo, GreaterThan, MemberOf }
 }

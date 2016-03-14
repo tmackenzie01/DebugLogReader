@@ -25,6 +25,11 @@ namespace DebugLogReader
         {
         }
 
+        // Only frame data rows hold RTSP error count info
+        protected virtual void SetRTSPErrorCountInfo(DebugLogRow newRow, DebugLogRow oldRow)
+        {
+        }
+
         public void Load(String filename)
         {
             DebugLogRow newRow = null;
@@ -59,6 +64,7 @@ namespace DebugLogReader
 
                             SetWroteDataInfo(newRow, ref dataWritten, ref lastWroteDataTimestamp, ref nullFrameDetectedPreviously);
                             SetColdstoreInfo(newRow, previousRow);
+                            SetRTSPErrorCountInfo(newRow, previousRow);
                             AddRow(newRow, m_filters);
 
                             if (newRow != null)

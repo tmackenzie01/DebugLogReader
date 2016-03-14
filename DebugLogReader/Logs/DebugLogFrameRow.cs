@@ -71,6 +71,11 @@ namespace DebugLogReader
                 }
 
                 m_rvException = !String.IsNullOrEmpty(match.Groups["rvException"].Value);
+                String rstpErrorCountText = match.Groups["rtspErrorCount"].Value;
+                if (!String.IsNullOrEmpty(rstpErrorCountText))
+                {
+                    Int32.TryParse(rstpErrorCountText, out m_rtspErrorCount);
+                }
 
                 if (m_totalFrameProcessing.TotalSeconds == 0.0f)
                 {
@@ -101,6 +106,11 @@ namespace DebugLogReader
             }
         }
 
+        public void SetRTSPErrorCountChanged(bool RTSPErrorCountChanged)
+        {
+            m_RTSPErrorCountChanged = RTSPErrorCountChanged;
+        }
+
         public TimeSpan TotalFrameProcessing
         {
             get
@@ -117,8 +127,26 @@ namespace DebugLogReader
             }
         }
 
-        private TimeSpan m_totalFrameProcessing;
-        private bool m_rvException;
+        public int RTSPErrorCount
+        {
+            get
+            {
+                return m_rtspErrorCount;
+            }
+        }
+
+        public bool RTSPErrorCountChanged
+        {
+            get
+            {
+                return m_RTSPErrorCountChanged;
+            }
+        }
+
+        TimeSpan m_totalFrameProcessing;
+        bool m_rvException;
+        int m_rtspErrorCount;
+        bool m_RTSPErrorCountChanged;
     }
 
 }

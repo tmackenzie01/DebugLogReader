@@ -53,6 +53,7 @@
             this.btnOpenCombinedLog = new System.Windows.Forms.Button();
             this.lblCombinedLog = new System.Windows.Forms.Label();
             this.txtCombinedLog = new System.Windows.Forms.TextBox();
+            this.chkRTSPErrorCountChanged = new System.Windows.Forms.CheckBox();
             this.grpFilters.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -127,6 +128,7 @@
             this.grpFilters.Controls.Add(this.chkEndTime);
             this.grpFilters.Controls.Add(this.chkStartTime);
             this.grpFilters.Controls.Add(this.chkCamerSelect);
+            this.grpFilters.Controls.Add(this.chkRTSPErrorCountChanged);
             this.grpFilters.Controls.Add(this.chkTotalFrameProcessing);
             this.grpFilters.Controls.Add(this.chkLastWroteElapsedAbove);
             this.grpFilters.Controls.Add(this.chkColdstoreId);
@@ -299,6 +301,16 @@
             this.txtCombinedLog.Size = new System.Drawing.Size(723, 20);
             this.txtCombinedLog.TabIndex = 2;
             // 
+            // chkRTSPErrorCountChanged
+            // 
+            this.chkRTSPErrorCountChanged.AutoSize = true;
+            this.chkRTSPErrorCountChanged.Location = new System.Drawing.Point(353, 91);
+            this.chkRTSPErrorCountChanged.Name = "chkRTSPErrorCountChanged";
+            this.chkRTSPErrorCountChanged.Size = new System.Drawing.Size(154, 17);
+            this.chkRTSPErrorCountChanged.TabIndex = 4;
+            this.chkRTSPErrorCountChanged.Text = "RTSP error count changed";
+            this.chkRTSPErrorCountChanged.UseVisualStyleBackColor = true;
+            // 
             // frmDebugLogReader
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -349,6 +361,7 @@
         private System.Windows.Forms.CheckBox chkColdstoreId;
         private System.Windows.Forms.TextBox txtTotalFrameProcessing;
         private System.Windows.Forms.CheckBox chkTotalFrameProcessing;
+        private System.Windows.Forms.CheckBox chkRTSPErrorCountChanged;
     }
 }
 
