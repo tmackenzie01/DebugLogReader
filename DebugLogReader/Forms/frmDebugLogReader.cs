@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ProtoBuf;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -19,25 +20,122 @@ namespace DebugLogReader
         {
             InitializeComponent();
 
-            String logsDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
-                @"Recorder testing\20160302\DebugLogs21");
-
-            txtLogDirectory.Text = logsDir;
             m_stpLogsProcessing = new Stopwatch();
             m_fileWrapper = new RealFileWrapper();
         }
+
         private void frmDebugLogReader_Load(object sender, EventArgs e)
         {
+            m_settings = new DebugLogReaderSettings();
+            m_settings.LogDirectory = @"Recorder testing\20160302\DebugLogs22";
+
+            LoadSettings();
+
+            String logsDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), m_settings.LogDirectory);
+            txtLogDirectory.Text = logsDir;
+
             frmFilters filters = new frmFilters();
             filters.Show();
             filters.BringToFront();
         }
 
+        private String GetSettingsFolder()
+        {
+            String folder = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
+            folder = Path.Combine(folder, Application.ProductName);
+
+            return folder;
+        }
+
+        private String GetSettingsFile()
+        {
+            return Path.Combine(GetSettingsFolder(), "settings.bin");
+        }
+
+        private void LoadSettings()
+        {
+            String folder = GetSettingsFolder();
+            if (!Directory.Exists(folder))
+            {
+                Directory.CreateDirectory(folder);
+            }
+
+            if (Directory.Exists(folder))
+            {
+                String settingsFile = GetSettingsFile();
+                if (!File.Exists(settingsFile))
+                {
+                    using (FileStream fs = File.Create(settingsFile))
+                    {
+                        Serializer.Serialize(fs, m_settings);
+                    }
+                    AddMessage($"Settings created in {folder}");
+                }
+                else
+                {
+
+                    using (FileStream fs = File.OpenRead(settingsFile))
+                    {
+                        m_settings = Serializer.Deserialize<DebugLogReaderSettings>(fs);
+                    }
+                    AddMessage($"Settings read from {folder}");
+                }
+            }
+            else
+            {
+                AddMessage($"Failed to load settings from {folder}");
+            }
+        }
+
+        private void SaveSettings()
+        {
+            String folder = GetSettingsFolder();
+            if (!Directory.Exists(folder))
+            {
+                Directory.CreateDirectory(folder);
+            }
+
+            if (Directory.Exists(folder))
+            {
+                String settingsFile = GetSettingsFile();
+                using (FileStream fs = File.Create(settingsFile))
+                {
+                    Serializer.Serialize(fs, m_settings);
+                }
+                AddMessage($"Settings saved in {folder}");
+            }
+        }
+
+        private void CaptureSettingsChanges()
+        {
+            String logDirectory = txtLogDirectory.Text;
+
+            m_settings.LogDirectory = logDirectory;
+        }
+
         private void btnReadLogs_Click(object sender, EventArgs e)
         {
+            bool checkSuccess = false;
+
             txtCombinedLog.Text = "";
             btnOpenCombinedLog.Enabled = false;
-            StartLogReads();
+
+            // Confirm log directory exists
+            if (Directory.Exists(txtLogDirectory.Text))
+            {
+                checkSuccess = true;
+            }
+            else
+            {
+                AddMessage($"Invalid log directory {txtLogDirectory.Text}");
+            }
+
+            if (checkSuccess)
+            {
+                CaptureSettingsChanges();
+                SaveSettings();
+                StartLogReads();
+            }
         }
 
         private void btnCombinedLog_Click(object sernder, EventArgs e)
@@ -261,13 +359,13 @@ namespace DebugLogReader
                 {
                     logs.Add(newLog);
                 }
-                }
+            }
 
             e.Result = new DebugLogReaderResult(args.CameraNumber, logs);
-                }
+        }
 
         private bool CreateDebugLog(String filename, int cameraNumber, List<DebugLogFilter> filters, ref DebugLog log)
-                {
+        {
             // Try to parse the CSWrite file
             if (!String.IsNullOrEmpty(filename))
             {
@@ -282,20 +380,20 @@ namespace DebugLogReader
                     log.Load(filename);
                 }
                 else if (filename.EndsWith("_CSWrite.txt"))
-            {
+                {
                     log = new CSDebugLog(m_fileWrapper, cameraNumber, filters);
                     log.Load(filename);
-            }
+                }
                 else if (filename.EndsWith("_FrameWrite.txt"))
-            {
+                {
                     log = new FrameDebugLog(m_fileWrapper, cameraNumber, filters);
                     log.Load(filename);
-            }
+                }
                 else if (filename.EndsWith("_AviFile.txt"))
-            {
+                {
                     log = new AviDebugLog(m_fileWrapper, cameraNumber, filters);
                     log.Load(filename);
-            }
+                }
             }
 
             return (log != null);
@@ -474,15 +572,15 @@ namespace DebugLogReader
             }
             else
             {
-            if (File.Exists(giantLogFilename))
-            {
-                if (MessageBox.Show($"{giantLogFilename} exists\r\nYou want to overwrite it?", "", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                if (File.Exists(giantLogFilename))
                 {
-                    File.Delete(giantLogFilename);
-                }
-                else
-                {
-                    saveFile = false;
+                    if (MessageBox.Show($"{giantLogFilename} exists\r\nYou want to overwrite it?", "", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    {
+                        File.Delete(giantLogFilename);
+                    }
+                    else
+                    {
+                        saveFile = false;
                         errorMessage = "existing file not overwritten";
                     }
                 }
@@ -602,20 +700,6 @@ namespace DebugLogReader
 
         IFileWrapper m_fileWrapper;
 
-        // Declare and intialise these Regex here as it's costly to keep creating them
-        // Need to figure out a better way to do this
-        public static Regex m_pushedRegex = new Regex("Pushed...(?<timestamp>[0-9]+.[0-9]+.[0-9]+.[0-9]+.[0-9]+.[0-9]+.[0-9]+).(\\-\\-\\-...[0-9]+.[0-9]+.seconds..)*Q.(?<queueCount>[0-9]+).F..?[0-9]+,.(?<pushedPopped>[0-9]+),.[0-9]+$",
-        RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.Multiline);
-
-        public static Regex m_poppedRegex = new Regex("Popped..." +
-                "(?<timestamp>[0-9]+.[0-9]+.[0-9]+.[0-9]+.[0-9]+.[0-9]+.[0-9]+).(\\-\\-\\-..[0-9]+.[0-9]+.seconds..)*" +
-                "Q.(?<queueCount>[0-9]+).F..?([0-9]+|ull)(,.(?<pushedPopped>[0-9]+),.[0-9]+)*" +
-                "(.T:A.(?<timeA>[0-9]+.[0-9]+.[0-9]+.[0-9]+).(B.(?<timeB>[0-9]+.[0-9]+.[0-9]+.[0-9]+).)*C.(?<timeC>[0-9]+.[0-9]+.[0-9]+.[0-9]+).D.(?<timeD>[0-9]+.[0-9]+.[0-9]+.[0-9]+).)*$");
-
-        public static Regex m_csRegex = new Regex("(?<timestamp>[0-9]+.[0-9]+.[0-9]+.[0-9]+).*[0-9]+.[0-9]+.(.)*[0-9]+.[0-9]+$",
-            RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.Multiline);
-
-        public static Regex m_wroteDataRegex = new Regex("Wrote data( C.(?<coldstoreId>[0-9]+) P.(?<coldstorePort>[0-9]+))*$",
-            RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.Multiline);
+        DebugLogReaderSettings m_settings;
     }
 }
