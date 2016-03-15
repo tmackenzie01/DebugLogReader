@@ -4,18 +4,18 @@ using System.Text.RegularExpressions;
 
 namespace DebugLogReader
 {
-    public class DebugLogPopRow : DebugLogRow
+    public class DebugLogRowPop : DebugLogRowBase
     {
-        public DebugLogPopRow()
+        public DebugLogRowPop()
         {
         }
 
-        public DebugLogPopRow(int cameraNumber, String text) : base(cameraNumber, text)
+        public DebugLogRowPop(int cameraNumber, String text) : base(cameraNumber, text)
         {
             Initialise(cameraNumber, text, DateTime.MaxValue);
         }
 
-        public DebugLogPopRow(int cameraNumber, String text, DateTime previousTimestamp) : base(cameraNumber, text, previousTimestamp)
+        public DebugLogRowPop(int cameraNumber, String text, DateTime previousTimestamp) : base(cameraNumber, text, previousTimestamp)
         {
             Initialise(cameraNumber, text, previousTimestamp);
         }

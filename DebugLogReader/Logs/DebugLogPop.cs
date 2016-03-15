@@ -3,23 +3,23 @@ using System.Collections.Generic;
 
 namespace DebugLogReader
 {
-    public class PopDebugLog : DebugLog
+    public class DebugLogPop : DebugLogBase
     {
-        public PopDebugLog(IFileWrapper fileWrapper, int cameraNumber, List<DebugLogFilter> filters) : base(fileWrapper, cameraNumber, filters)
+        public DebugLogPop(IFileWrapper fileWrapper, int cameraNumber, List<DebugLogFilter> filters) : base(fileWrapper, cameraNumber, filters)
         {
             m_summaryHeader = "pop log";
             m_coldstoreIds = new List<int>();
         }
 
-        protected override DebugLogRow ParseLine(int cameraNumber, String line, DateTime previousTimestamp)
+        protected override DebugLogRowBase ParseLine(int cameraNumber, String line, DateTime previousTimestamp)
         {
-            DebugLogRow newRow = new DebugLogPopRow(cameraNumber, line, previousTimestamp);
+            DebugLogRowBase newRow = new DebugLogRowPop(cameraNumber, line, previousTimestamp);
             return newRow;
         }
 
-        protected override void SetWroteDataInfo(DebugLogRow baseRow, ref int dataWritten, ref DateTime lastTime, ref bool nullFrameDetectedPreviously)
+        protected override void SetWroteDataInfo(DebugLogRowBase baseRow, ref int dataWritten, ref DateTime lastTime, ref bool nullFrameDetectedPreviously)
         {
-            DebugLogPopRow row = (DebugLogPopRow)baseRow;
+            DebugLogRowPop row = (DebugLogRowPop)baseRow;
             if (row.WroteData)
             {
                 if (nullFrameDetectedPreviously)
@@ -41,10 +41,10 @@ namespace DebugLogReader
             }
         }
 
-        protected override void SetColdstoreInfo(DebugLogRow baseRow, DebugLogRow baseOldRow)
+        protected override void SetColdstoreInfo(DebugLogRowBase baseRow, DebugLogRowBase baseOldRow)
         {
-            DebugLogPopRow newRow = (DebugLogPopRow)baseRow;
-            DebugLogPopRow oldRow = (DebugLogPopRow)baseOldRow;
+            DebugLogRowPop newRow = (DebugLogRowPop)baseRow;
+            DebugLogRowPop oldRow = (DebugLogRowPop)baseOldRow;
 
             if (oldRow != null)
             {

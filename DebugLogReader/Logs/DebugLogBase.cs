@@ -4,38 +4,38 @@ using System.Text.RegularExpressions;
 
 namespace DebugLogReader
 {
-    public class DebugLog
+    public class DebugLogBase
     {
-        public DebugLog(IFileWrapper fileWrapper)
+        public DebugLogBase(IFileWrapper fileWrapper)
         {
             m_fileWrapper = fileWrapper;
             m_cameraNumber = -1;
-            m_rows = new List<DebugLogRow>();
+            m_rows = new List<DebugLogRowBase>();
             m_filters = null;
         }
 
-        public DebugLog(IFileWrapper fileWrapper, int cameraNumber, List<DebugLogFilter> filters)
+        public DebugLogBase(IFileWrapper fileWrapper, int cameraNumber, List<DebugLogFilter> filters)
         {
             m_fileWrapper = fileWrapper;
             m_cameraNumber = cameraNumber;
-            m_rows = new List<DebugLogRow>();
+            m_rows = new List<DebugLogRowBase>();
             m_filters = filters;
         }
 
         // Only wrote data rows hold coldstore id info, but we want them in all rows for the popping
-        protected virtual void SetColdstoreInfo(DebugLogRow newRow, DebugLogRow oldRow)
+        protected virtual void SetColdstoreInfo(DebugLogRowBase newRow, DebugLogRowBase oldRow)
         {
         }
 
         // Only frame data rows hold RTSP error count info
-        protected virtual void SetRTSPErrorCountInfo(DebugLogRow newRow, DebugLogRow oldRow)
+        protected virtual void SetRTSPErrorCountInfo(DebugLogRowBase newRow, DebugLogRowBase oldRow)
         {
                 }
 
         public void Load(String filename)
         {
-            DebugLogRow newRow = null;
-            DebugLogRow previousRow = null;
+            DebugLogRowBase newRow = null;
+            DebugLogRowBase previousRow = null;
             DateTime previousTimestamp = DateTime.MinValue;
             DateTime lastWroteDataTimestamp = DateTime.MinValue;
             int dataWritten = 0;
@@ -89,12 +89,12 @@ namespace DebugLogReader
             }
         }
 
-        protected virtual void SetWroteDataInfo(DebugLogRow row, ref int dataWritten, ref DateTime lastTime, ref bool nullFrameDetectedPreviously)
+        protected virtual void SetWroteDataInfo(DebugLogRowBase row, ref int dataWritten, ref DateTime lastTime, ref bool nullFrameDetectedPreviously)
         {
             nullFrameDetectedPreviously = false;
         }
 
-        protected virtual DebugLogRow ParseLine(int cameraNumber, String line, DateTime previousTimestamp)
+        protected virtual DebugLogRowBase ParseLine(int cameraNumber, String line, DateTime previousTimestamp)
         {
             throw new Exception("Not implemented");
         }
@@ -126,7 +126,7 @@ namespace DebugLogReader
             return conditionsMet;
         }
 
-        private bool CheckDebugLogRowFilters(DebugLogRow row, List<DebugLogFilter> filters)
+        private bool CheckDebugLogRowFilters(DebugLogRowBase row, List<DebugLogFilter> filters)
         {
             bool conditionsMet = false;
 
@@ -153,7 +153,7 @@ namespace DebugLogReader
             return conditionsMet;
         }
 
-        private void AddRow(DebugLogRow newRow, List<DebugLogFilter> filters)
+        private void AddRow(DebugLogRowBase newRow, List<DebugLogFilter> filters)
         {
             if (CheckDebugLogRowFilters(newRow, filters))
             {
@@ -161,14 +161,14 @@ namespace DebugLogReader
             }
         }
 
-        public void AddLog(DebugLog newLog)
+        public void AddLog(DebugLogBase newLog)
         {
             m_rows.AddRange(newLog.m_rows);
         }
 
         public void Sort()
         {
-            m_rows.Sort(delegate (DebugLogRow row1, DebugLogRow row2)
+            m_rows.Sort(delegate (DebugLogRowBase row1, DebugLogRowBase row2)
             {
                 int timestampComp = row1.Timestamp.CompareTo(row2.Timestamp);
 
@@ -183,7 +183,7 @@ namespace DebugLogReader
 
         public DateTime GetStartTime()
         {
-            foreach (DebugLogRow row in m_rows)
+            foreach (DebugLogRowBase row in m_rows)
             {
                 if (row.Timestamp > DateTime.MinValue)
                 {
@@ -230,10 +230,10 @@ namespace DebugLogReader
         public void Filter(DebugLogFilter filter)
         {
             // Store old, create new log
-            List<DebugLogRow> oldRows = m_rows;
-            m_rows = new List<DebugLogRow>();
+            List<DebugLogRowBase> oldRows = m_rows;
+            m_rows = new List<DebugLogRowBase>();
 
-            foreach (DebugLogRow row in oldRows)
+            foreach (DebugLogRowBase row in oldRows)
             {
                 AddRow(row, new List<DebugLogFilter>() { filter });
             }
@@ -288,7 +288,7 @@ namespace DebugLogReader
         protected int m_cameraNumber;
         protected List<DebugLogFilter> m_filters;
         protected String m_filterMessage;
-        protected List<DebugLogRow> m_rows;
+        protected List<DebugLogRowBase> m_rows;
 
         IFileWrapper m_fileWrapper;
 

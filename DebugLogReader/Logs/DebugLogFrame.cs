@@ -3,23 +3,23 @@ using System.Collections.Generic;
 
 namespace DebugLogReader
 {
-    public class FrameDebugLog : DebugLog
+    public class DebugLogFrame : DebugLogBase
     {
-        public FrameDebugLog(IFileWrapper fileWrapper, int cameraNumber, List<DebugLogFilter> filters) : base(fileWrapper, cameraNumber, filters)
+        public DebugLogFrame(IFileWrapper fileWrapper, int cameraNumber, List<DebugLogFilter> filters) : base(fileWrapper, cameraNumber, filters)
         {
             m_summaryHeader = "frame log";
         }
 
-        protected override DebugLogRow ParseLine(int cameraNumber, String line, DateTime previousTimestamp)
+        protected override DebugLogRowBase ParseLine(int cameraNumber, String line, DateTime previousTimestamp)
         {
-            DebugLogRow newRow = new DebugLogFrameRow(cameraNumber, line, previousTimestamp);
+            DebugLogRowBase newRow = new DebugLogRowFrame(cameraNumber, line, previousTimestamp);
             return newRow;
         }
 
-        protected override void SetRTSPErrorCountInfo(DebugLogRow baseRow, DebugLogRow baseOldRow)
+        protected override void SetRTSPErrorCountInfo(DebugLogRowBase baseRow, DebugLogRowBase baseOldRow)
         {
-            DebugLogFrameRow newRow = (DebugLogFrameRow)baseRow;
-            DebugLogFrameRow oldRow = (DebugLogFrameRow)baseOldRow;
+            DebugLogRowFrame newRow = (DebugLogRowFrame)baseRow;
+            DebugLogRowFrame oldRow = (DebugLogRowFrame)baseOldRow;
 
             if (oldRow != null)
             {

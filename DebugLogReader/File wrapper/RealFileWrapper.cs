@@ -14,10 +14,10 @@ namespace DebugLogReader
             return File.ReadAllLines(filename);
         }
 
-        public void Save(List<DebugLogRow> rows, String filename)
+        public void Save(List<DebugLogRowBase> rows, String filename)
         {
             StreamWriter sw = new StreamWriter(filename);
-            foreach (DebugLogRow row in rows)
+            foreach (DebugLogRowBase row in rows)
             {
                 sw.WriteLine(row.ToString());
             }

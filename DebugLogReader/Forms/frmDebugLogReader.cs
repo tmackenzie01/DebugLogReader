@@ -160,7 +160,7 @@ namespace DebugLogReader
 
             if (cameraNumbers.Count > 0)
             {
-                m_logs = new List<DebugLog>();
+                m_logs = new List<DebugLogBase>();
 
                 foreach (int cameraNumber in cameraNumbers)
                 {
@@ -348,8 +348,8 @@ namespace DebugLogReader
             DebugLogReaderArgs args = (DebugLogReaderArgs)e.Argument;
 
             String[] logFiles = Directory.GetFiles(args.LogDirectory());
-            List<DebugLog> logs = new List<DebugLog>();
-            DebugLog newLog = null;
+            List<DebugLogBase> logs = new List<DebugLogBase>();
+            DebugLogBase newLog = null;
             foreach (String logFile in logFiles)
             {
                 newLog = null;
@@ -362,34 +362,34 @@ namespace DebugLogReader
             e.Result = new DebugLogReaderResult(args.CameraNumber, logs);
         }
 
-        private bool CreateDebugLog(String filename, int cameraNumber, List<DebugLogFilter> filters, ref DebugLog log)
+        private bool CreateDebugLog(String filename, int cameraNumber, List<DebugLogFilter> filters, ref DebugLogBase log)
         {
             // Try to parse the CSWrite file
             if (!String.IsNullOrEmpty(filename))
             {
                 if (filename.EndsWith("_Push.txt"))
                 {
-                    log = new PushDebugLog(m_fileWrapper, cameraNumber, filters);
+                    log = new DebugLogPush(m_fileWrapper, cameraNumber, filters);
                     log.Load(filename);
                 }
                 else if (filename.EndsWith("_Pop.txt"))
                 {
-                    log = new PopDebugLog(m_fileWrapper, cameraNumber, filters);
+                    log = new DebugLogPop(m_fileWrapper, cameraNumber, filters);
                     log.Load(filename);
                 }
                 else if (filename.EndsWith("_CSWrite.txt"))
                 {
-                    log = new CSDebugLog(m_fileWrapper, cameraNumber, filters);
+                    log = new DebugLogCS(m_fileWrapper, cameraNumber, filters);
                     log.Load(filename);
                 }
                 else if (filename.EndsWith("_FrameWrite.txt"))
                 {
-                    log = new FrameDebugLog(m_fileWrapper, cameraNumber, filters);
+                    log = new DebugLogFrame(m_fileWrapper, cameraNumber, filters);
                     log.Load(filename);
                 }
                 else if (filename.EndsWith("_AviFile.txt"))
                 {
-                    log = new AviDebugLog(m_fileWrapper, cameraNumber, filters);
+                    log = new DebugLogAvi(m_fileWrapper, cameraNumber, filters);
                     log.Load(filename);
                 }
             }
@@ -437,11 +437,11 @@ namespace DebugLogReader
         {
             Dictionary<int, List<int>> coldstoreIdLogs = new Dictionary<int, List<int>>();
 
-            foreach (DebugLog log in m_logs)
+            foreach (DebugLogBase log in m_logs)
             {
-                if (log is PopDebugLog)
+                if (log is DebugLogPop)
                 {
-                    PopDebugLog popLog = (PopDebugLog)log;
+                    DebugLogPop popLog = (DebugLogPop)log;
 
                     foreach (int coldstoreId in popLog.ColdstoreIds)
                     {
@@ -508,21 +508,21 @@ namespace DebugLogReader
         private void CombineLogs_DoWork(object sender, DoWorkEventArgs e)
         {
             BackgroundWorker worker = sender as BackgroundWorker;
-            List<DebugLog> logs = (List<DebugLog>)e.Argument;
-            DebugLog giantLog = new DebugLog(m_fileWrapper);
+            List<DebugLogBase> logs = (List<DebugLogBase>)e.Argument;
+            DebugLogBase giantLog = new DebugLogBase(m_fileWrapper);
             int progressCount = 0;
             int progressFinish = logs.Count + 2; // One for the sort and one for the saving (done in another background worker)
             DateTime latestStartTime = DateTime.MinValue;
 
             // Sort the logs before we combine them as they will be in a different order each time
             // This may affect the results of rows with the same time (easier to compare correct results after changes)
-            m_logs.Sort(delegate (DebugLog log1, DebugLog log2)
+            m_logs.Sort(delegate (DebugLogBase log1, DebugLogBase log2)
             {
                 return log1.CameraNumber.CompareTo(log2.CameraNumber);
             });
 
 
-            foreach (DebugLog log in logs)
+            foreach (DebugLogBase log in logs)
             {
                 if (latestStartTime < log.GetStartTime())
                 {
@@ -547,7 +547,7 @@ namespace DebugLogReader
 
         private void CombineLogs_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-            DebugLog debugLog = (DebugLog)e.UserState;
+            DebugLogBase debugLog = (DebugLogBase)e.UserState;
             if (debugLog != null)
             {
                 AddMessage($"{debugLog} log combined");
@@ -558,7 +558,7 @@ namespace DebugLogReader
         private void CombineLogs_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             AddMessage("Logs combined");
-            DebugLog giantLog = (DebugLog)e.Result;
+            DebugLogBase giantLog = (DebugLogBase)e.Result;
             bool saveFile = true;
             String errorMessage = "";
             String giantLogFilename = Path.Combine(txtLogDirectory.Text, $"giantLog{m_filterDescription}.txt");
@@ -586,7 +586,7 @@ namespace DebugLogReader
 
             if (saveFile)
             {
-                Tuple<DebugLog, String> writeLogArgs = new Tuple<DebugLog, String>(giantLog, giantLogFilename);
+                Tuple<DebugLogBase, String> writeLogArgs = new Tuple<DebugLogBase, String>(giantLog, giantLogFilename);
 
                 BackgroundWorker bgWriteLog = new BackgroundWorker();
                 bgWriteLog.WorkerReportsProgress = true;
@@ -605,8 +605,8 @@ namespace DebugLogReader
         {
             BackgroundWorker worker = sender as BackgroundWorker;
 
-            Tuple<DebugLog, String> args = (Tuple<DebugLog, String>)e.Argument;
-            DebugLog debugLog = args.Item1;
+            Tuple<DebugLogBase, String> args = (Tuple<DebugLogBase, String>)e.Argument;
+            DebugLogBase debugLog = args.Item1;
             String logFilename = args.Item2;
             bool fileWritten = false;
             try
@@ -692,7 +692,7 @@ namespace DebugLogReader
         }
 
         int m_readLogsInProgress;
-        List<DebugLog> m_logs;
+        List<DebugLogBase> m_logs;
         String m_filterDescription;
         Stopwatch m_stpLogsProcessing;
 

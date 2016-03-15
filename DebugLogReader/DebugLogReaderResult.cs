@@ -13,7 +13,7 @@ namespace DebugLogReader
             m_success = false;
         }
 
-        public DebugLogReaderResult(int cameraNumber, List<DebugLog> logs)
+        public DebugLogReaderResult(int cameraNumber, List<DebugLogBase> logs)
         {
             m_success = true;
             m_cameraNumber = cameraNumber;
@@ -43,7 +43,7 @@ namespace DebugLogReader
             }
         }    
         
-        public List<DebugLog> Logs
+        public List<DebugLogBase> Logs
         {
             get
             {
@@ -53,7 +53,7 @@ namespace DebugLogReader
 
         bool m_success;
         int m_cameraNumber;
-        List<DebugLog> m_logs;
+        List<DebugLogBase> m_logs;
 
     }
 }

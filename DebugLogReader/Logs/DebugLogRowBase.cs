@@ -2,18 +2,18 @@
 
 namespace DebugLogReader
 {
-    public class DebugLogRow
+    public class DebugLogRowBase
     {
-        public DebugLogRow()
+        public DebugLogRowBase()
         {
         }
 
-        public DebugLogRow(int cameraNumber, String text)
+        public DebugLogRowBase(int cameraNumber, String text)
         {
             Initialise(cameraNumber, text, DateTime.MaxValue);
         }
 
-        public DebugLogRow(int cameraNumber, String text, DateTime previousTimestamp)
+        public DebugLogRowBase(int cameraNumber, String text, DateTime previousTimestamp)
         {
             Initialise(cameraNumber, text, previousTimestamp);
         }

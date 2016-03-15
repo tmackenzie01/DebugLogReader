@@ -5,18 +5,18 @@ using System.Text.RegularExpressions;
 
 namespace DebugLogReader
 {
-    public class DebugLogFrameRow : DebugLogRow
+    public class DebugLogRowFrame : DebugLogRowBase
     {
-        public DebugLogFrameRow()
+        public DebugLogRowFrame()
         {
         }
 
-        public DebugLogFrameRow(int cameraNumber, String text) : base(cameraNumber, text)
+        public DebugLogRowFrame(int cameraNumber, String text) : base(cameraNumber, text)
         {
             Initialise(cameraNumber, text, DateTime.MaxValue);
         }
 
-        public DebugLogFrameRow(int cameraNumber, String text, DateTime previousTimestamp) : base(cameraNumber, text, previousTimestamp)
+        public DebugLogRowFrame(int cameraNumber, String text, DateTime previousTimestamp) : base(cameraNumber, text, previousTimestamp)
         {
             Initialise(cameraNumber, text, previousTimestamp);
         }

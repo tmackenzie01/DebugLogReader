@@ -9,6 +9,6 @@ namespace DebugLogReader
     public interface IFileWrapper
     {
         String[] LoadFromFile(String filename);
-        void Save(List<DebugLogRow> rows, String filename);
+        void Save(List<DebugLogRowBase> rows, String filename);
     }
 }

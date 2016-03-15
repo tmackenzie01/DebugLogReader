@@ -17,7 +17,7 @@ namespace DebugLogReader
             m_filterData = filterData;
         }
 
-        public bool MeetsConditions(DebugLog log)
+        public bool MeetsConditions(DebugLogBase log)
         {
             // Default is true as most conditions we can't check at the debug log stage only at the row stage
             bool conditionsMet = true;
@@ -40,7 +40,7 @@ namespace DebugLogReader
             return conditionsMet;
         }
 
-        public bool MeetsConditions(DebugLogRow row)
+        public bool MeetsConditions(DebugLogRowBase row)
         {
             bool conditionsMet = false;
 

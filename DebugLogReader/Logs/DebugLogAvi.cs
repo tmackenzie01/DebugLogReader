@@ -3,16 +3,16 @@ using System.Collections.Generic;
 
 namespace DebugLogReader
 {
-    public class AviDebugLog : DebugLog
+    public class DebugLogAvi : DebugLogBase
     {
-        public AviDebugLog(IFileWrapper fileWrapper, int cameraNumber, List<DebugLogFilter> filters) : base(fileWrapper, cameraNumber, filters)
+        public DebugLogAvi(IFileWrapper fileWrapper, int cameraNumber, List<DebugLogFilter> filters) : base(fileWrapper, cameraNumber, filters)
         {
             m_summaryHeader = "Avi log";
         }
 
-        protected override DebugLogRow ParseLine(int cameraNumber, String line, DateTime previousTimestamp)
+        protected override DebugLogRowBase ParseLine(int cameraNumber, String line, DateTime previousTimestamp)
         {
-            DebugLogRow newRow = new DebugLogAviRow(cameraNumber, line, previousTimestamp);
+            DebugLogRowBase newRow = new DebugLogRowAvi(cameraNumber, line, previousTimestamp);
             return newRow;
         }
     }

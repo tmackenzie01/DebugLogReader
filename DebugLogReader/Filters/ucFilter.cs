@@ -22,12 +22,12 @@ namespace DebugLogReader
             // List the properties of the DebugLogRow class using reflection
             List<RowProperty> baseClassProperties = new List<RowProperty>();
             List<RowProperty> subClassProperties = new List<RowProperty>();
-            DebugLogRow row = new DebugLogRow();
+            DebugLogRowBase row = new DebugLogRowBase();
             m_rowTypeObject = row.GetType();
 
             // Get all the subclasses of DebugLogRow
-            Type baseType = typeof(DebugLogRow);
-            Assembly thisAssembly = typeof(DebugLogRow).Assembly;
+            Type baseType = typeof(DebugLogRowBase);
+            Assembly thisAssembly = typeof(DebugLogRowBase).Assembly;
             var types = thisAssembly.GetTypes().Where(t => t.BaseType == baseType);
 
             // Get the properties from each subclass (no inherited properties)
