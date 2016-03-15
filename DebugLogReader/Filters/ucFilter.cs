@@ -18,17 +18,45 @@ namespace DebugLogReader
         public ucFilter()
         {
             InitializeComponent();
-            
-            
+
             // List the properties of the DebugLogRow class using reflection
+            List<RowProperty> baseClassProperties = new List<RowProperty>();
+            List<RowProperty> subClassProperties = new List<RowProperty>();
             DebugLogRow row = new DebugLogRow();
             m_rowTypeObject = row.GetType();
 
-            m_properties = row.GetType().GetProperties();
+            // Get all the subclasses of DebugLogRow
+            Type baseType = typeof(DebugLogRow);
+            Assembly thisAssembly = typeof(DebugLogRow).Assembly;
+            var types = thisAssembly.GetTypes().Where(t => t.BaseType == baseType);
+
+            // Get the properties from each subclass (no inherited properties)
+            foreach (Type subClassType in types)
+            {
+                m_properties = subClassType.GetProperties(BindingFlags.DeclaredOnly | BindingFlags.Instance | BindingFlags.Public);
+                foreach (PropertyInfo prop in m_properties)
+                {
+                    subClassProperties.Add(new RowProperty(subClassType, prop.Name, prop.PropertyType));
+                    Debug.WriteLine($"{subClassType.Name} {prop.Name} {prop.PropertyType}");
+                }
+            }
+
+            // Get the base class properties
+            m_properties = m_rowTypeObject.GetProperties();
             foreach (PropertyInfo prop in m_properties)
             {
+                subClassProperties.Add(new RowProperty(m_rowTypeObject, prop.Name, prop.PropertyType));
                 Debug.WriteLine($"{prop.Name} {prop.PropertyType}");
-                cbxProperty.Items.Add(prop.Name);
+            }
+
+            foreach (RowProperty rowProp in subClassProperties)
+            {
+                cbxProperty.Items.Add(rowProp);
+            }
+
+            foreach (RowProperty rowProp in baseClassProperties)
+            {
+                cbxProperty.Items.Add(rowProp);
             }
 
             // We will use these properties to create automatic filters
