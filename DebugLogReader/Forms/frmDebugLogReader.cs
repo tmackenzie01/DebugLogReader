@@ -568,6 +568,9 @@ namespace DebugLogReader
             String errorMessage = "";
             String giantLogFilename = Path.Combine(txtLogDirectory.Text, $"giantLog{m_filterDescription}.txt");
 
+            // Don't count the saving as part of the processing time
+            m_stpLogsProcessing.Stop();
+
             if (giantLog.Count == 0)
             {
                 saveFile = false;
@@ -649,7 +652,6 @@ namespace DebugLogReader
             {
                 AddMessage($"Failed to create log {errorMessage}");
             }
-            m_stpLogsProcessing.Stop();
             AddMessage($"Total time: {m_stpLogsProcessing.Elapsed.TotalSeconds.ToString("f3")} seconds");
 
             txtCombinedLog.Text = logFilename;
