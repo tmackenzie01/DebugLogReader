@@ -564,7 +564,7 @@ namespace DebugLogReader
             AddMessage("Logs combined");
             DebugLogBase giantLog = (DebugLogBase)e.Result;
             bool saveFile = true;
-            String errorMessage = "";
+            String saveInformation = "";
             String giantLogFilename = Path.Combine(txtLogDirectory.Text, $"giantLog{m_filterDescription}.txt");
 
             // Don't count the saving as part of the processing time
@@ -573,7 +573,7 @@ namespace DebugLogReader
             if (giantLog.Count == 0)
             {
                 saveFile = false;
-                errorMessage = "Empty file";
+                saveInformation = "Empty file";
             }
             else
             {
@@ -586,7 +586,7 @@ namespace DebugLogReader
                     else
                     {
                         saveFile = false;
-                        errorMessage = "existing file not overwritten";
+                        saveInformation = "existing file not overwritten";
                     }
                 }
             }
@@ -595,31 +595,34 @@ namespace DebugLogReader
             {
                 try
                 {
+                    Stopwatch saveStopwatch = new Stopwatch();
+                    saveStopwatch.Start();
                     await giantLog.SaveAsync(giantLogFilename);
-                    LogsComplete(true, giantLogFilename, "");
+                    saveStopwatch.Start();
+                    LogsComplete(true, giantLogFilename, $" {saveStopwatch.Elapsed.TotalSeconds.ToString("f3")} seconds");
                 }
                 catch (Exception ex)
                 {
                     saveFile = false;
-                    errorMessage = $"error saving {ex.Message}";
+                    saveInformation = $"error saving {ex.Message}";
                 }
             }
             else
             {
-                LogsComplete(false, "", errorMessage);
+                LogsComplete(false, "", saveInformation);
             }
         }
 
-        private void LogsComplete(bool fileWritten, String logFilename, String errorMessage)
+        private void LogsComplete(bool fileWritten, String logFilename, String saveInformation)
         {
             prgFiles.Value = 100;
             if (fileWritten)
             {
-                AddMessage($"File created {logFilename}");
+                AddMessage($"File created {logFilename} {saveInformation}");
             }
             else
             {
-                AddMessage($"Failed to create log {errorMessage}");
+                AddMessage($"Failed to create log {saveInformation}");
             }
             AddMessage($"Total time: {m_stpLogsProcessing.Elapsed.TotalSeconds.ToString("f3")} seconds");
 
