@@ -612,17 +612,21 @@ namespace DebugLogReader
             DebugLogBase debugLog = args.Item1;
             String logFilename = args.Item2;
             bool fileWritten = false;
+            Stopwatch saveStopwatch = new Stopwatch();
             try
             {
+                saveStopwatch.Start();
                 debugLog.Save(logFilename);
+                saveStopwatch.Stop();
                 fileWritten = true;
             }
             catch
             {
+                saveStopwatch.Stop();
             }
             worker.ReportProgress(100);
 
-            e.Result = new Tuple<bool, String>(fileWritten, logFilename);
+            e.Result = new Tuple<bool, String, TimeSpan>(fileWritten, logFilename, saveStopwatch.Elapsed);
         }
 
         private void WriteLogs_ProgressChanged(object sender, ProgressChangedEventArgs e)
@@ -632,20 +636,20 @@ namespace DebugLogReader
 
         private void WriteLogs_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            Tuple<bool, String> args = (Tuple<bool, String>)e.Result;
-            LogsComplete(args.Item1, args.Item2, "");
+            Tuple<bool, String, TimeSpan> args = (Tuple<bool, String, TimeSpan>)e.Result;
+            LogsComplete(args.Item1, args.Item2, $" {args.Item3.TotalSeconds.ToString("f3")} seconds");
         }
 
-        private void LogsComplete(bool fileWritten, String logFilename, String errorMessage)
+        private void LogsComplete(bool fileWritten, String logFilename, String saveInformation)
         {
             prgFiles.Value = 100;
             if (fileWritten)
             {
-                AddMessage($"File created {logFilename}");
+                AddMessage($"File created {logFilename} {saveInformation}");
             }
             else
             {
-                AddMessage($"Failed to create log {errorMessage}");
+                AddMessage($"Failed to create log {saveInformation}");
             }
             AddMessage($"Total time: {m_stpLogsProcessing.Elapsed.TotalSeconds.ToString("f3")} seconds");
 
