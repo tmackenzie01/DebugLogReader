@@ -16,6 +16,8 @@ namespace DebugLogReader
 
         public void Save(List<DebugLogRowBase> rows, String filename)
         {
+            System.Diagnostics.Stopwatch stp = new System.Diagnostics.Stopwatch();
+            stp.Start();
             StreamWriter sw = new StreamWriter(filename);
             foreach (DebugLogRowBase row in rows)
             {
@@ -23,17 +25,32 @@ namespace DebugLogReader
             }
 
             sw.Close();
+            stp.Stop();
+            System.Diagnostics.Debug.WriteLine($"Save: {stp.Elapsed.TotalSeconds.ToString("f3")} seconds");
         }
 
-        public async Task SaveAsync(List<DebugLogRowBase> rows, String filename)
+        public Task SaveAsync(List<DebugLogRowBase> rows, String filename)
         {
-            StreamWriter sw = new StreamWriter(filename);
-            foreach (DebugLogRowBase row in rows)
+            return Task.Run(() =>
             {
-                await sw.WriteLineAsync(row.ToString());
-            }
+                Save(rows, filename);
+            });
 
-            sw.Close();
+            // Tried doing it like below but it was slower
+            // Because it is a tight loop or was StreamWriter doing something funny?
+            //System.Diagnostics.Stopwatch stp = new System.Diagnostics.Stopwatch();
+            //stp.Start();
+            //FileStream fsAsync = new FileStream(filename, FileMode.Append, FileAccess.Write, FileShare.None, 4096, true);
+
+            //StreamWriter sw = new StreamWriter(fsAsync);
+            //foreach (DebugLogRowBase row in rows)
+            //{
+            //    await sw.WriteLineAsync(row.ToString());
+            //}
+            //stp.Stop();
+            //System.Diagnostics.Debug.WriteLine($"SaveAsync {stp.Elapsed.TotalSeconds.ToString("f3")} seconds");
+
+            //sw.Close();
         }
     }
 }
