@@ -593,16 +593,17 @@ namespace DebugLogReader
 
             if (saveFile)
             {
+                Stopwatch saveStopwatch = new Stopwatch();
+                saveStopwatch.Start();
                 try
                 {
-                    Stopwatch saveStopwatch = new Stopwatch();
-                    saveStopwatch.Start();
                     await giantLog.SaveAsync(giantLogFilename);
-                    saveStopwatch.Start();
+                    saveStopwatch.Stop();
                     LogsComplete(true, giantLogFilename, $" {saveStopwatch.Elapsed.TotalSeconds.ToString("f3")} seconds");
                 }
                 catch (Exception ex)
                 {
+                    saveStopwatch.Stop();
                     saveFile = false;
                     saveInformation = $"error saving {ex.Message}";
                 }
