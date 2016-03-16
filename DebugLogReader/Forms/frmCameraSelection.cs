@@ -15,25 +15,18 @@ namespace DebugLogReader
         public frmCameraSelection(String parentLogDirectory, String selectedCamerasCSV)
         {
             InitializeComponent();
-
+            m_parentLogDirectory = parentLogDirectory;
             m_selectedCameras = CameraCSVToList(selectedCamerasCSV);
-            BackgroundWorker bgGetCameras = new BackgroundWorker();
-            bgGetCameras.DoWork += GetCameras_DoWork;
-            bgGetCameras.RunWorkerCompleted += GetCameras_RunWorkerCompleted;
-
-            bgGetCameras.RunWorkerAsync(parentLogDirectory);
         }
 
-        private void GetCameras_DoWork(object sender, DoWorkEventArgs e)
+        private async void frmCameraSelection_Load(object sender, EventArgs e)
         {
-            String parentLogDirectory = (String)e.Argument;
-            List<int> cameras = frmDebugLogReader.GetCameraNumbers(parentLogDirectory);
-            e.Result = cameras;
+            await LoadCameraControls();
         }
 
-        private void GetCameras_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        private async Task LoadCameraControls()
         {
-            List<int> cameras = (List<int>)e.Result;
+            List<int> cameras = await frmDebugLogReader.GetCameraNumbersAsync(m_parentLogDirectory);
 
             CheckBox chkCam = null;
             int camCount = 0;
@@ -137,5 +130,6 @@ namespace DebugLogReader
 
 
         List<int> m_selectedCameras;
+        String m_parentLogDirectory;
     }
 }

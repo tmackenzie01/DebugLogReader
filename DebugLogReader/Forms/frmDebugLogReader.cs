@@ -9,6 +9,8 @@ using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace DebugLogReader
 {
@@ -206,6 +208,12 @@ namespace DebugLogReader
             cameraNumbers.Sort();
 
             return cameraNumbers;
+        }
+
+        public static Task<List<int>> GetCameraNumbersAsync(String parentLogDirectory)
+        {
+            return Task.Run(() =>
+            { return GetCameraNumbers(parentLogDirectory); });
         }
 
         List<DebugLogFilter> GetFilters()

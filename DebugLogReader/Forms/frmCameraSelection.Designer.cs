@@ -78,6 +78,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Name = "frmCameraSelection";
             this.Text = "Camera selection";
+            this.Load += new System.EventHandler(this.frmCameraSelection_Load);
             this.ResumeLayout(false);
 
         }
