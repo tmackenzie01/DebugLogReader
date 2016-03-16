@@ -10,5 +10,6 @@ namespace DebugLogReader
     {
         String[] LoadFromFile(String filename);
         void Save(List<DebugLogRowBase> rows, String filename);
+        Task SaveAsync(List<DebugLogRowBase> rows, String filename);
     }
 }

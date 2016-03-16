@@ -24,5 +24,16 @@ namespace DebugLogReader
 
             sw.Close();
         }
+
+        public async Task SaveAsync(List<DebugLogRowBase> rows, String filename)
+        {
+            StreamWriter sw = new StreamWriter(filename);
+            foreach (DebugLogRowBase row in rows)
+            {
+                await sw.WriteLineAsync(row.ToString());
+            }
+
+            sw.Close();
+        }
     }
 }

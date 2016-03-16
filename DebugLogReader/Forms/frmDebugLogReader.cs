@@ -559,7 +559,7 @@ namespace DebugLogReader
             prgFiles.Value = e.ProgressPercentage;
         }
 
-        private void CombineLogs_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        private async void CombineLogs_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             AddMessage("Logs combined");
             DebugLogBase giantLog = (DebugLogBase)e.Result;
@@ -593,51 +593,21 @@ namespace DebugLogReader
 
             if (saveFile)
             {
-                Tuple<DebugLogBase, String> writeLogArgs = new Tuple<DebugLogBase, String>(giantLog, giantLogFilename);
-
-                BackgroundWorker bgWriteLog = new BackgroundWorker();
-                bgWriteLog.WorkerReportsProgress = true;
-                bgWriteLog.DoWork += WriteLogs_DoWork;
-                bgWriteLog.ProgressChanged += WriteLogs_ProgressChanged;
-                bgWriteLog.RunWorkerCompleted += WriteLogs_RunWorkerCompleted;
-                bgWriteLog.RunWorkerAsync(writeLogArgs);
+                try
+                {
+                    await giantLog.SaveAsync(giantLogFilename);
+                    LogsComplete(true, giantLogFilename, "");
+                }
+                catch (Exception ex)
+                {
+                    saveFile = false;
+                    errorMessage = $"error saving {ex.Message}";
+                }
             }
             else
             {
                 LogsComplete(false, "", errorMessage);
             }
-        }
-
-        private void WriteLogs_DoWork(object sender, DoWorkEventArgs e)
-        {
-            BackgroundWorker worker = sender as BackgroundWorker;
-
-            Tuple<DebugLogBase, String> args = (Tuple<DebugLogBase, String>)e.Argument;
-            DebugLogBase debugLog = args.Item1;
-            String logFilename = args.Item2;
-            bool fileWritten = false;
-            try
-            {
-                debugLog.Save(logFilename);
-                fileWritten = true;
-            }
-            catch
-            {
-            }
-            worker.ReportProgress(100);
-
-            e.Result = new Tuple<bool, String>(fileWritten, logFilename);
-        }
-
-        private void WriteLogs_ProgressChanged(object sender, ProgressChangedEventArgs e)
-        {
-            prgFiles.Value = e.ProgressPercentage;
-        }
-
-        private void WriteLogs_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-            Tuple<bool, String> args = (Tuple<bool, String>)e.Result;
-            LogsComplete(args.Item1, args.Item2, "");
         }
 
         private void LogsComplete(bool fileWritten, String logFilename, String errorMessage)

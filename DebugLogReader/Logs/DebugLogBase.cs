@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace DebugLogReader
 {
@@ -242,6 +243,11 @@ namespace DebugLogReader
         public void Save(String filename)
         {
             m_fileWrapper.Save(m_rows, filename);
+        }
+
+        public async Task SaveAsync(String filename)
+        {
+            await m_fileWrapper.SaveAsync(m_rows, filename);
         }
 
         public String SummaryText()
