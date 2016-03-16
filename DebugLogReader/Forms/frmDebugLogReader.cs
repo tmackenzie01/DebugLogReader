@@ -205,6 +205,7 @@ namespace DebugLogReader
                 }
             }
 
+            Thread.Sleep(1000);
             cameraNumbers.Sort();
 
             return cameraNumbers;
