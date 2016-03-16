@@ -613,9 +613,9 @@ namespace DebugLogReader
             String logFilename = args.Item2;
             bool fileWritten = false;
             Stopwatch saveStopwatch = new Stopwatch();
+            saveStopwatch.Start();
             try
             {
-                saveStopwatch.Start();
                 debugLog.Save(logFilename);
                 saveStopwatch.Stop();
                 fileWritten = true;
