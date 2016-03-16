@@ -33,10 +33,6 @@ namespace DebugLogReader
 
             String logsDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), m_settings.LogDirectory);
             txtLogDirectory.Text = logsDir;
-
-            frmFilters filters = new frmFilters();
-            filters.Show();
-            filters.BringToFront();
         }
 
         private String GetSettingsFolder()
