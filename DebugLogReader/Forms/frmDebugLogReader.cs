@@ -303,7 +303,7 @@ namespace DebugLogReader
                     if (Int32.TryParse(txtColdstoreId.Text, out coldstoreId))
                     {
                         DebugLogFilter filter = new DebugLogFilter("ColdstoreId", eFilterComparision.EqualTo, coldstoreId);
-                        filterDescription.Append(filter.ToString());
+                        filterDescription.Append($"ColdstoreId{eFilterComparision.EqualTo}{coldstoreId}");
                         filters.Add(filter);
                     }
                 }
@@ -319,7 +319,7 @@ namespace DebugLogReader
                     {
                         TimeSpan totalFrameProcessingElapsed = new TimeSpan(0, 0, totalFrameProcessing);
                         DebugLogFilter filter = new DebugLogFilter("TotalFrameProcessing", eFilterComparision.GreaterThan, totalFrameProcessingElapsed);
-                        filterDescription.Append(filter.ToString());
+                        filterDescription.Append($"TotalFrameProcessing{eFilterComparision.GreaterThan}{totalFrameProcessingElapsed.TotalSeconds}");
                         filters.Add(filter);
                     }
                 }
@@ -329,7 +329,7 @@ namespace DebugLogReader
             if (chkRTSPErrorCountChanged.Checked)
             {
                 DebugLogFilter filter = new DebugLogFilter("RTSPErrorCountChanged", eFilterComparision.EqualTo, true);
-                filterDescription.Append(filter.ToString());
+                filterDescription.Append($"RTSPErrorCountChanged{eFilterComparision.EqualTo}true");
                 filters.Add(filter);
             }
 
@@ -682,14 +682,39 @@ namespace DebugLogReader
 
         private void CheckTimeFormat(TextBox txt, CheckBox chk)
         {
+            bool formatOk = false;
+
             try
             {
                 DateTime startTime = DateTime.ParseExact(txt.Text, @"dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture);
+                formatOk = true;
+            }
+            catch
+            {
+                formatOk = false;
+            }
+
+            // If we want to support just the time use this
+            //if (!formatOk)
+            //{
+            //    try
+            //    {
+            //        DateTime startTime = DateTime.ParseExact(txt.Text, @"HH:mm:ss", CultureInfo.InvariantCulture);
+            //        formatOk = true;
+            //    }
+            //    catch
+            //    {
+            //        formatOk = false;
+            //    }
+            //}
+
+            if (formatOk)
+            {
                 txt.Tag = true;
                 txt.ForeColor = Color.Black;
                 chk.Enabled = true;
             }
-            catch
+            else
             {
                 txt.ForeColor = Color.Red;
                 chk.Checked = false;
