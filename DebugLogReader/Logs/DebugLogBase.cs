@@ -30,7 +30,7 @@ namespace DebugLogReader
         // Only frame data rows hold RTSP error count info
         protected virtual void SetRTSPErrorCountInfo(DebugLogRowBase newRow, DebugLogRowBase oldRow)
         {
-                }
+        }
 
         public void Load(String filename)
         {
@@ -59,15 +59,18 @@ namespace DebugLogReader
                                 dataWritten = 0;
                             }
                             else
-                        {
-                            dataWritten = dataWritten + newRow.DataPopped;
+                            {
+                                dataWritten = dataWritten + newRow.DataPopped;
                             }
                             nullFrameDetectedPreviously = newRow.NullFrameDetected || nullFrameDetectedPreviously;
 
                             SetWroteDataInfo(newRow, ref dataWritten, ref lastWroteDataTimestamp, ref nullFrameDetectedPreviously);
-                            SetColdstoreInfo(newRow, previousRow);
                             SetRTSPErrorCountInfo(newRow, previousRow);
-                            AddRow(newRow, m_filters);
+                            if (AddRow(newRow, m_filters))
+                            {
+                                // We only care about the coldstore ids for the rows we've added
+                                SetColdstoreInfo(newRow, previousRow);
+                            }
 
                             if (newRow != null)
                             {
@@ -153,12 +156,15 @@ namespace DebugLogReader
             return conditionsMet;
         }
 
-        private void AddRow(DebugLogRowBase newRow, List<DebugLogFilter> filters)
+        private bool AddRow(DebugLogRowBase newRow, List<DebugLogFilter> filters)
         {
             if (CheckDebugLogRowFilters(newRow, filters))
             {
                 m_rows.Add(newRow);
+                return true;
             }
+
+            return false;
         }
 
         public void AddLog(DebugLogBase newLog)
@@ -256,8 +262,8 @@ namespace DebugLogReader
                     lineSummary = $"{m_rows.Count} lines";
                     if (m_rows.Count > 0)
                     {
-                DateTime startTime = GetStartTime();
-                TimeSpan duration = GetEndime() - startTime;
+                        DateTime startTime = GetStartTime();
+                        TimeSpan duration = GetEndime() - startTime;
                         if (duration.TotalSeconds > 1.0f)
                         {
                             durationSummary = $", {(int)duration.TotalSeconds} secs";
