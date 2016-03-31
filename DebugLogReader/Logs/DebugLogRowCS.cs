@@ -29,7 +29,10 @@ namespace DebugLogReader
             if (match.Success)
             {
                 String timestamp = match.Groups["timestamp"].Value;
-                m_timestamp = DateTime.ParseExact(timestamp, @"HH:mm:ss.fff", CultureInfo.InvariantCulture);
+                if (!String.IsNullOrEmpty(timestamp))
+                {
+                    m_timestamp = DateTime.ParseExact(timestamp, @"HH:mm:ss.fff", CultureInfo.InvariantCulture);
+                }
 
                 m_text = text;
             }
