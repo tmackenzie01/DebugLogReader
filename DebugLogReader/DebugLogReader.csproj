@@ -50,6 +50,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CameraDirectory.cs" />
     <Compile Include="DebugLogReaderSettings.cs" />
     <Compile Include="Filters\RowProperty.cs" />
     <Compile Include="File wrapper\RealFileWrapper.cs" />

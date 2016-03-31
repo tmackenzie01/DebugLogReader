@@ -153,18 +153,18 @@ namespace DebugLogReader
             btnReadLogs.Enabled = false;
             prgFiles.Value = 0;
 
-            List<int> cameraNumbers = GetCameraNumbers(txtLogDirectory.Text);
+            List<CameraDirectory> cameraNumbers = GetCameras(txtLogDirectory.Text);
             List<DebugLogFilter> filters = GetFilters();
 
-            cameraNumbers.Sort();
+            //cameraNumbers.Sort();
 
             if (cameraNumbers.Count > 0)
             {
                 m_logs = new List<DebugLogBase>();
 
-                foreach (int cameraNumber in cameraNumbers)
+                foreach (CameraDirectory camera in cameraNumbers)
                 {
-                    DebugLogReaderArgs args = new DebugLogReaderArgs(txtLogDirectory.Text, cameraNumber);
+                    DebugLogReaderArgs args = new DebugLogReaderArgs(txtLogDirectory.Text, camera);
                     args.AddFilters(filters);
                     BackgroundWorker bgReadLog = new BackgroundWorker();
                     bgReadLog.DoWork += ReadLogs_DoWork;
@@ -177,35 +177,34 @@ namespace DebugLogReader
             prgFiles.Maximum = cameraNumbers.Count;
         }
 
-        public static List<int> GetCameraNumbers(String parentLogDirectory)
+        public static List<CameraDirectory> GetCameras(String parentLogDirectory)
         {
             String[] logDirectories = Directory.GetDirectories(parentLogDirectory);
-            List<int> cameraNumbers = new List<int>();
+            List<CameraDirectory> cameras = new List<CameraDirectory>();
             int cameraNumber = -1;
 
             foreach (String logDirectory in logDirectories)
             {
-                Regex r = new Regex("Cam.(?<cameraName>[0-9]+)_(?<cameraNumber>[0-9]+)$", RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.Multiline);
+                String directoryOnly = Path.GetFileName(logDirectory);
 
-                if (r.IsMatch(logDirectory))
+                Regex r = new Regex("(?<cameraName>.+)_(?<cameraNumber>[0-9]+)$", RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.Multiline);
+
+                if (r.IsMatch(directoryOnly))
                 {
-                    Match match = r.Match(logDirectory);
+                    Match match = r.Match(directoryOnly);
                     String strCamName = match.Groups["cameraName"].Value;
                     String strCamNumber = match.Groups["cameraNumber"].Value;
 
-                    if (strCamName.Equals(strCamNumber))
+                    if (Int32.TryParse(strCamNumber, out cameraNumber))
                     {
-                        if (Int32.TryParse(strCamNumber, out cameraNumber))
-                        {
-                            cameraNumbers.Add(cameraNumber);
-                        }
+                        cameras.Add(new CameraDirectory(cameraNumber, strCamName));
                     }
                 }
             }
 
-            cameraNumbers.Sort();
+            //cameras.Sort();
 
-            return cameraNumbers;
+            return cameras;
         }
 
         List<DebugLogFilter> GetFilters()
@@ -353,13 +352,13 @@ namespace DebugLogReader
             foreach (String logFile in logFiles)
             {
                 newLog = null;
-                if (CreateDebugLog(logFile, args.CameraNumber, args.Filters, ref newLog))
+                if (CreateDebugLog(logFile, args.Camera.CameraNumber, args.Filters, ref newLog))
                 {
                     logs.Add(newLog);
                 }
             }
 
-            e.Result = new DebugLogReaderResult(args.CameraNumber, logs);
+            e.Result = new DebugLogReaderResult(args.Camera.CameraNumber, logs);
         }
 
         private bool CreateDebugLog(String filename, int cameraNumber, List<DebugLogFilter> filters, ref DebugLogBase log)

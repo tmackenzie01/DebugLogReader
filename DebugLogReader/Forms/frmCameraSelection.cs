@@ -27,24 +27,24 @@ namespace DebugLogReader
         private void GetCameras_DoWork(object sender, DoWorkEventArgs e)
         {
             String parentLogDirectory = (String)e.Argument;
-            List<int> cameras = frmDebugLogReader.GetCameraNumbers(parentLogDirectory);
+            List<CameraDirectory> cameras = frmDebugLogReader.GetCameras(parentLogDirectory);
             e.Result = cameras;
         }
 
         private void GetCameras_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            List<int> cameras = (List<int>)e.Result;
+            List<CameraDirectory> cameras = (List<CameraDirectory>)e.Result;
 
             CheckBox chkCam = null;
             int camCount = 0;
-            foreach (int camera in cameras)
+            foreach (CameraDirectory camera in cameras)
             {
                 chkCam = new CheckBox();
-                chkCam.Text = $"Cam {camera}";
+                chkCam.Text = $"Cam {camera.CameraNumber}";
                 chkCam.CheckedChanged += chkCam_CheckedChanged;
                 chkCam.Tag = camera;
 
-                chkCam.Checked = m_selectedCameras.Contains(camera);
+                chkCam.Checked = m_selectedCameras.Contains(camera.CameraNumber);
 
                 PositionCheckBox(chkCam, camCount);
                 grpCameras.Controls.Add(chkCam);

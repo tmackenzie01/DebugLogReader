@@ -8,10 +8,10 @@ namespace DebugLogReader
 {
     public class DebugLogReaderArgs
     {
-        public DebugLogReaderArgs(String directory, int cameraNumber)
+        public DebugLogReaderArgs(String directory, CameraDirectory camera)
         {
             m_directory = directory;
-            m_cameraNumber = cameraNumber;
+            m_camera = camera;
             m_filters = null;
         }
 
@@ -30,14 +30,14 @@ namespace DebugLogReader
 
         public String LogDirectory()
         {
-            return $"{m_directory}\\Cam {m_cameraNumber.ToString()}_{m_cameraNumber.ToString()}";
+            return $"{m_directory}\\{m_camera.CameraName.ToString()}_{m_camera.CameraNumber.ToString()}";
         }
 
-        public int CameraNumber
+        public CameraDirectory Camera
         {
             get
             {
-                return m_cameraNumber;
+                return m_camera;
             }
         }
 
@@ -57,7 +57,7 @@ namespace DebugLogReader
             }
         }
 
-        int m_cameraNumber;
+        CameraDirectory m_camera;
         String m_directory;
         List<DebugLogFilter> m_filters;
     }
