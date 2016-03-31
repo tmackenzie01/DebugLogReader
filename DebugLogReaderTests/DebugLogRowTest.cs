@@ -175,10 +175,10 @@ namespace DebugLogReaderTests
             Assert.AreEqual("13:04:15.059", frameRowHH2.Timestamp.ToString("HH:mm:ss.fff"));
             Assert.AreEqual(true, frameRowHH2.RVException);
 
-            DebugLogRowFrame frameRow8 = new DebugLogRowFrame(2, "Record 13:05:44.719 " +
+            DebugLogRowFrame frameRow8Mpeg4 = new DebugLogRowFrame(2, "Record 13:05:44.719 " +
                 "(C:0.000 O:0.007 MPEG4-AA:0.000 BB:0.000 CR:0.000 RV:0.000 ) TOT:0.007", DateTime.MinValue);
-            Assert.AreEqual("13:05:44.719", frameRow8.Timestamp.ToString("HH:mm:ss.fff"));
-            Assert.AreEqual(false, frameRow8.RVException);
+            Assert.AreEqual("13:05:44.719", frameRow8Mpeg4.Timestamp.ToString("HH:mm:ss.fff"));
+            Assert.AreEqual(false, frameRow8Mpeg4.RVException);
 
             DebugLogRowFrame frameRowWithRTSPErrorCount = new DebugLogRowFrame(2, "Record 09:52:05.767 " +
                 "RT:0 (MPEG4-AA:0.000 BB:0.000 CC:0.000 DD:0.000 EE:0.000 FF:0.000 RV:0.000 ) TOT:0.000 ", DateTime.MinValue);
@@ -190,12 +190,15 @@ namespace DebugLogReaderTests
             Assert.AreEqual("09:52:05.767", frameRowWithRTSPErrorCount2.Timestamp.ToString("HH:mm:ss.fff"));
             Assert.AreEqual(4, frameRowWithRTSPErrorCount2.RTSPErrorCount);
 
+            DebugLogRowFrame frameRowH264 = new DebugLogRowFrame(2, "Record 10:34:15.236 " + 
+                "RT:0 (C:0.002 O:0.103 H264-AA:0.000 BB:0.000 CC:0.000 DD:0.000 EE:0.000 FF:0.000 RV:0.002 ) TOT:0.107 ", DateTime.MinValue);
+            Assert.AreEqual("10:34:15.236", frameRowH264.Timestamp.ToString("HH:mm:ss.fff"));
+
         }
 
         [TestMethod]
         public void AviTests()
         {
-
             DebugLogRowAvi aviRow1 = new DebugLogRowAvi(1, "Create 12:21:23.578 CR1:0.000 CR2:0.000 CR3:0.008 CR4:0.000 CR5:0.000 CR7:0.000 ", DateTime.MinValue);
             Assert.AreEqual(false, aviRow1.CRException);
             Assert.AreEqual(false, aviRow1.CRError);
@@ -207,6 +210,11 @@ namespace DebugLogReaderTests
             Assert.AreEqual(true, aviRow2.CRError);
             Assert.AreEqual("13:48:24.660", aviRow2.Timestamp.ToString("HH:mm:ss.fff"));
 
+            DebugLogRowAvi aviRow3 = new DebugLogRowAvi(1, "Create 10:34:15.248" +
+                " CR1:0.000 CR2:0.000 CR3:0.021 Open max, T:0.022 W:0.000 A:0.013 CR4:0.005 CR5:0.064 CR7:0.000 ", DateTime.MinValue);
+            Assert.AreEqual(false, aviRow3.CRException);
+            Assert.AreEqual(false, aviRow3.CRError);
+            Assert.AreEqual("10:34:15.248", aviRow3.Timestamp.ToString("HH:mm:ss.fff"));
         }
 
     }

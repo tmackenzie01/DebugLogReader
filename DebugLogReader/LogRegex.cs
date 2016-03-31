@@ -25,7 +25,7 @@ namespace DebugLogReader
         public static Regex m_frameRegex = new Regex("Record.(?<timestamp>[0-9]+.[0-9]+.[0-9]+.[0-9]+)." +
                 "(RT:(?<rtspErrorCount>[0-9]+).)*" + "\\(" +
                 "(C:(?<cTimestamp1>[0-9]+.[0-9]+).O:(?<oTimestamp>[0-9]+.[0-9]+).)*" +
-                "(MPEG4-AA:(?<aaTimestamp>[0-9]+.[0-9]+).)*" + "(.BB:(?<bbTimestamp>[0-9]+.[0-9]+).)*" +
+                "((MPEG4|H264)-AA:(?<aaTimestamp>[0-9]+.[0-9]+).)*" + "(.BB:(?<bbTimestamp>[0-9]+.[0-9]+).)*" +
                 "(.(CC|CR):(?<ccTimestamp>[0-9]+.[0-9]+).)*" + "(.DD:(?<ddTimestamp>[0-9]+.[0-9]+).)*" +
                 "(.EE:(?<eeTimestamp>[0-9]+.[0-9]+).)*" + "(.FF:(?<ffTimestamp>[0-9]+.[0-9]+).)*" +
                 "(.GG:(?<ggTimestamp>[0-9]+.[0-9]+).)*" + "(.HH:(?<hhTimestamp>([0-9]+.[0-9]+.)*[0-9]+.[0-9]+).)*" +
@@ -34,7 +34,9 @@ namespace DebugLogReader
 
         public static Regex m_aviRegex = new Regex("Create.(?<timestamp>[0-9]+.[0-9]+.[0-9]+.[0-9]+)" +
                 "(.CR1:(?<cr1Timestamp>[0-9]+.[0-9]+).)*" + "(.CR2:(?<cr2Timestamp>[0-9]+.[0-9]+).)*" +
-                "(.CR3:(?<cr3Timestamp>[0-9]+.[0-9]+).)*" + "(.CR4:(?<cr4Timestamp>[0-9]+.[0-9]+).)*" +
+                "(.CR3:(?<cr3Timestamp>[0-9]+.[0-9]+).)*" +
+                "(.Open max,.T:(?<maxTotalTimestampe>[0-9]+.[0-9]+).W:(?<maxTotalTimestampe>[0-9]+.[0-9]+).A:(?<maxTotalTimestampe>[0-9]+.[0-9]+).)*" +
+                "(.CR4:(?<cr4Timestamp>[0-9]+.[0-9]+).)*" +
                 "(.CR5:(?<cr5Timestamp>[0-9]+.[0-9]+).)*" + "(.CR6:(?<cr6Timestamp>[0-9]+.[0-9]+).)*" +
                 "(.CR7:(?<cr7Timestamp>[0-9]+.[0-9]+).)*" + "(.CR8:(?<cr8Timestamp>[0-9]+.[0-9]+).)*" +
                 "(.CRE:(?<creTimestamp>[0-9]+.[0-9]+).)*" + "(.CRX:(?<crxException>(.)+))*$",
