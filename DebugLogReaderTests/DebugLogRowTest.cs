@@ -132,12 +132,16 @@ namespace DebugLogReaderTests
         [TestMethod]
         public void CSTests()
         {
-
             DebugLogRowCS csBasicRow1 = new DebugLogRowCS(1, "12:23:01.374 2 157906 bytes:con-STC 0.005--ws-Above 0.565", DateTime.MinValue);
             Assert.AreEqual("12:23:01.374", csBasicRow1.Timestamp.ToString("HH:mm:ss.fff"));
 
             DebugLogRowCS csBasicRow2 = new DebugLogRowCS(1, "12:32:55.017 40 128702 bytes:con-STC 0.003--ws-Above 0.644 ", DateTime.MinValue);
             Assert.AreEqual("12:32:55.017", csBasicRow2.Timestamp.ToString("HH:mm:ss.fff"));
+
+            DebugLogRowCS csBasicRow3 = new DebugLogRowCS(1, "13:36:04.434 Write max, WT:0.012 WW:0.000 WA:0.007 ", DateTime.MinValue);
+            Assert.AreEqual("13:36:04.434", csBasicRow3.Timestamp.ToString("HH:mm:ss.fff"));            
+
+            DebugLogRowCS csWriteMax = new DebugLogRowCS(1, "Write max, WT:0.013 WW:0.000 WA:0.007 ", DateTime.MinValue);
         }
 
         [TestMethod]

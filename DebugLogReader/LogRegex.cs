@@ -16,7 +16,9 @@ namespace DebugLogReader
             "(.T:A.(?<timeA>[0-9]+.[0-9]+.[0-9]+.[0-9]+).(B.(?<timeB>[0-9]+.[0-9]+.[0-9]+.[0-9]+).)*" +
             "C.(?<timeC>[0-9]+.[0-9]+.[0-9]+.[0-9]+).D.(?<timeD>[0-9]+.[0-9]+.[0-9]+.[0-9]+).)*$");
 
-        public static Regex m_csRegex = new Regex("(?<timestamp>[0-9]+.[0-9]+.[0-9]+.[0-9]+).*[0-9]+.[0-9]+.(.)*[0-9]+.[0-9]+(.)*$",
+        public static Regex m_csRegex = new Regex("((?<timestamp>[0-9]+.[0-9]+.[0-9]+.[0-9]+).*[0-9]+.[0-9]+.(.)*[0-9]+.[0-9]+(.)*)*" +
+            "(Write max,.WT:(?<maxTotalTimestamp>[0-9]+.[0-9]+).WW:(?<maxTotalTimestamp>[0-9]+.[0-9]+).WA:(?<maxTotalTimestamp>[0-9]+.[0-9]+).)*" +
+            "$",
             RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.Multiline);
 
         public static Regex m_wroteDataRegex = new Regex("Wrote data( C.(?<coldstoreId>[0-9]+) P.(?<coldstorePort>[0-9]+))*$",
@@ -35,7 +37,7 @@ namespace DebugLogReader
         public static Regex m_aviRegex = new Regex("Create.(?<timestamp>[0-9]+.[0-9]+.[0-9]+.[0-9]+)" +
                 "(.CR1:(?<cr1Timestamp>[0-9]+.[0-9]+).)*" + "(.CR2:(?<cr2Timestamp>[0-9]+.[0-9]+).)*" +
                 "(.CR3:(?<cr3Timestamp>[0-9]+.[0-9]+).)*" +
-                "(.Open max,.T:(?<maxTotalTimestampe>[0-9]+.[0-9]+).W:(?<maxTotalTimestampe>[0-9]+.[0-9]+).A:(?<maxTotalTimestampe>[0-9]+.[0-9]+).)*" +
+                "(.Open max,.T:(?<maxTotalTimestamp>[0-9]+.[0-9]+).W:(?<maxTotalTimestamp>[0-9]+.[0-9]+).A:(?<maxTotalTimestamp>[0-9]+.[0-9]+).)*" +
                 "(.CR4:(?<cr4Timestamp>[0-9]+.[0-9]+).)*" +
                 "(.CR5:(?<cr5Timestamp>[0-9]+.[0-9]+).)*" + "(.CR6:(?<cr6Timestamp>[0-9]+.[0-9]+).)*" +
                 "(.CR7:(?<cr7Timestamp>[0-9]+.[0-9]+).)*" + "(.CR8:(?<cr8Timestamp>[0-9]+.[0-9]+).)*" +
