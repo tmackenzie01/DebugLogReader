@@ -219,6 +219,14 @@ namespace DebugLogReaderTests
             Assert.AreEqual(false, aviRow3.CRException);
             Assert.AreEqual(false, aviRow3.CRError);
             Assert.AreEqual("10:34:15.248", aviRow3.Timestamp.ToString("HH:mm:ss.fff"));
+
+            DebugLogRowAvi aviRowOpenAndClose = new DebugLogRowAvi(1, "Create 18:00:25.750" +
+                " CR1:0.000 CR2:0.000 CR3:0.012 Open max, T:0.012 W:0.000 A:0.000 Close max, T:0.012 W:0.478 A:0.001 CR4:0.000 CR5:0.000 CR7:0.000 ", DateTime.MinValue);
+            Assert.AreEqual("18:00:25.750", aviRowOpenAndClose.Timestamp.ToString("HH:mm:ss.fff"));
+
+            DebugLogRowAvi aviRowOpenAndNegativeClose = new DebugLogRowAvi(1, "Create 18:00:25.750" +
+                " CR1:0.000 CR2:0.000 CR3:0.012 Open max, T:0.012 W:0.000 A:0.000 Close max, T:0.012 W:-922337203685.478 A:0.001 CR4:0.000 CR5:0.000 CR7:0.000 ", DateTime.MinValue);
+            Assert.AreEqual("18:00:25.750", aviRowOpenAndNegativeClose.Timestamp.ToString("HH:mm:ss.fff"));
         }
 
     }
