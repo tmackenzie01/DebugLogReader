@@ -179,10 +179,14 @@ namespace DebugLogReaderTests
             Assert.AreEqual("13:04:15.059", frameRowHH2.Timestamp.ToString("HH:mm:ss.fff"));
             Assert.AreEqual(true, frameRowHH2.RVException);
 
-            DebugLogRowFrame frameRow8Mpeg4 = new DebugLogRowFrame(2, "Record 13:05:44.719 " +
+            DebugLogRowFrame frameRowMpeg4_1 = new DebugLogRowFrame(2, "Record 13:05:44.719 " +
                 "(C:0.000 O:0.007 MPEG4-AA:0.000 BB:0.000 CR:0.000 RV:0.000 ) TOT:0.007", DateTime.MinValue);
-            Assert.AreEqual("13:05:44.719", frameRow8Mpeg4.Timestamp.ToString("HH:mm:ss.fff"));
-            Assert.AreEqual(false, frameRow8Mpeg4.RVException);
+            Assert.AreEqual("13:05:44.719", frameRowMpeg4_1.Timestamp.ToString("HH:mm:ss.fff"));
+            Assert.AreEqual(false, frameRowMpeg4_1.RVException);
+
+            DebugLogRowFrame frameRowMpeg4_2 = new DebugLogRowFrame(2, "Record 09:27:39.400 " +
+                "RT:0 (MPEG4-AA:0.010 BB:0.000 CC:0.000 DD:0.000 EE:0.000 FF:0.000 RV:0.010 ) TOT:0.010 ", DateTime.MinValue);
+            Assert.AreEqual("09:27:39.400", frameRowMpeg4_2.Timestamp.ToString("HH:mm:ss.fff"));
 
             DebugLogRowFrame frameRowWithRTSPErrorCount = new DebugLogRowFrame(2, "Record 09:52:05.767 " +
                 "RT:0 (MPEG4-AA:0.000 BB:0.000 CC:0.000 DD:0.000 EE:0.000 FF:0.000 RV:0.000 ) TOT:0.000 ", DateTime.MinValue);
@@ -198,6 +202,9 @@ namespace DebugLogReaderTests
                 "RT:0 (C:0.002 O:0.103 H264-AA:0.000 BB:0.000 CC:0.000 DD:0.000 EE:0.000 FF:0.000 RV:0.002 ) TOT:0.107 ", DateTime.MinValue);
             Assert.AreEqual("10:34:15.236", frameRowH264.Timestamp.ToString("HH:mm:ss.fff"));
 
+            DebugLogRowFrame frameRowMpegWriteMax = new DebugLogRowFrame(2, "Record 09:27:39.400 " +
+                "RT:0 (MPEG4-Write max, WT:0.010 WW:0.000 WA:0.005 AA:0.010 BB:0.000 CC:0.000 DD:0.000 EE:0.000 FF:0.000 RV:0.010 ) TOT:0.010 ", DateTime.MinValue);
+            Assert.AreEqual("09:27:39.400", frameRowMpegWriteMax.Timestamp.ToString("HH:mm:ss.fff"));
         }
 
         [TestMethod]
