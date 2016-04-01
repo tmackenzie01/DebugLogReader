@@ -24,8 +24,8 @@ namespace DebugLogReader
         public static Regex m_wroteDataRegex = new Regex("Wrote data( C.(?<coldstoreId>[0-9]+) P.(?<coldstorePort>[0-9]+))*$",
             RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.Multiline);
 
-        public static Regex m_frameRegex = new Regex("Record.(?<timestamp>[0-9]+.[0-9]+.[0-9]+.[0-9]+)." +
-                "(RT:(?<rtspErrorCount>[0-9]+).)*" + "\\(" +
+        public static Regex m_frameRegex = new Regex("(Record.(?<timestamp>[0-9]+.[0-9]+.[0-9]+.[0-9]+).)*" +
+                "(RT:(?<rtspErrorCount>[0-9]+).)*" + "(\\()*" +
                 "(C:(?<cTimestamp1>[0-9]+.[0-9]+).O:(?<oTimestamp>[0-9]+.[0-9]+).)*" +
                 "(MPEG4-|H264-)*" +
                 "(Write max,.WT:(?<writeMaxTotalTimestamp>[0-9]+.[0-9]+).WW:(?<writeMaxTotalTimestamp>[0-9]+.[0-9]+).WA:(?<writeMaxTotalTimestamp>[0-9]+.[0-9]+).)*" +
@@ -33,7 +33,8 @@ namespace DebugLogReader
                 "(.(CC|CR):(?<ccTimestamp>[0-9]+.[0-9]+).)*" + "(.DD:(?<ddTimestamp>[0-9]+.[0-9]+).)*" +
                 "(.EE:(?<eeTimestamp>[0-9]+.[0-9]+).)*" + "(.FF:(?<ffTimestamp>[0-9]+.[0-9]+).)*" +
                 "(.GG:(?<ggTimestamp>[0-9]+.[0-9]+).)*" + "(.HH:(?<hhTimestamp>([0-9]+.[0-9]+.)*[0-9]+.[0-9]+).)*" +
-                "(RV|C|(?<rvException>RVE)).(?<rvORcTimestamp>[0-9]+.[0-9]+)." + "\\)" + ".TOT.(?<totTimestamp>[0-9]+.[0-9]+).$",
+                "((RV|C|(?<rvException>RVE)).(?<rvORcTimestamp>[0-9]+.[0-9]+)." + "\\)" + ".TOT.(?<totTimestamp>[0-9]+.[0-9]+).)*" + 
+            "$",
                 RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.Multiline);
 
         public static Regex m_aviRegex = new Regex("Create.(?<timestamp>[0-9]+.[0-9]+.[0-9]+.[0-9]+)" +
