@@ -39,9 +39,9 @@ namespace DebugLogReader
         public static Regex m_aviRegex = new Regex("Create.(?<timestamp>[0-9]+.[0-9]+.[0-9]+.[0-9]+)" +
                 "(.CR1:(?<cr1Timestamp>[0-9]+.[0-9]+).)*" + "(.CR2:(?<cr2Timestamp>[0-9]+.[0-9]+).)*" +
                 "(.CR3:(?<cr3Timestamp>[0-9]+.[0-9]+).)*" +
-                "(.Open max,.T:(?<maxTotalTimestamp>[0-9]+.[0-9]+).W:(?<maxTotalTimestamp>[0-9]+.[0-9]+).A:(?<maxTotalTimestamp>[0-9]+.[0-9]+).)*" +
+                "(.Open max,.T:(?<openMaxTotalTimestamp>[0-9]+.[0-9]+).W:(?<openMaxTotalTimestamp>[0-9]+.[0-9]+).A:(?<openMaxTotalTimestamp>[0-9]+.[0-9]+).)*" +
                 // Some logs has close max wait time (W:) displaying a minus number?  So we handle that here
-                "(.Close max,.T:(?<maxTotalTimestamp>[0-9]+.[0-9]+).W:(?<maxTotalTimestamp>-?[0-9]+.[0-9]+).A:(?<maxTotalTimestamp>[0-9]+.[0-9]+).)*" +
+                "(.Close max,.T:(?<closeMaxTotalTimestamp>[0-9]+.[0-9]+).W:(?<closeMaxTotalTimestamp>-?[0-9]+.[0-9]+).A:(?<closeMaxTotalTimestamp>[0-9]+.[0-9]+).)*" +
                 "(.CR4:(?<cr4Timestamp>[0-9]+.[0-9]+).)*" +
                 "(.CR5:(?<cr5Timestamp>[0-9]+.[0-9]+).)*" + "(.CR6:(?<cr6Timestamp>[0-9]+.[0-9]+).)*" +
                 "(.CR7:(?<cr7Timestamp>[0-9]+.[0-9]+).)*" + "(.CR8:(?<cr8Timestamp>[0-9]+.[0-9]+).)*" +
