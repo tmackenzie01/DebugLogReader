@@ -7,7 +7,9 @@ namespace DebugLogReader
         // Declare and intialise these Regex here as it's costly to keep creating them
         public static Regex m_pushedRegex = new Regex("Pushed..." +
                 "[0-9]+.[0-9]+.[0-9]+.(?<timestamp>[0-9]+.[0-9]+.[0-9]+.[0-9]+).(\\-\\-\\-...[0-9]+.[0-9]+.seconds..)*" +
-                "Q.(?<queueCount>[0-9]+).F..?([0-9]+|ull)(,.(?<pushedPopped>[0-9]+),.[0-9]+)*$",
+                "Q.(?<queueCount>[0-9]+).F..?([0-9]+|ull)(,.(?<pushedPopped>[0-9]+),.[0-9]+)*" +
+                "(.\\*\\*(.)*\\*\\*)*" +
+                "$",
         RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.Multiline);
 
         public static Regex m_poppedRegex = new Regex("Popped..." +

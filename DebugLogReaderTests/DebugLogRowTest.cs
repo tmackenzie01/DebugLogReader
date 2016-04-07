@@ -66,6 +66,12 @@ namespace DebugLogReaderTests
 
             DebugLogRowPush pushRowZeroes = new DebugLogRowPush(1, "Pushed - 02/03/2016 17:09:37.973 Q:0 F: 0, 0, 0");
             Assert.AreEqual("17:09:37.973", pushRowZeroes.Timestamp.ToString("HH:mm:ss.fff"));
+
+            DebugLogRowPush pushRowSpecialDiag = new DebugLogRowPush(1, "Pushed - 01/04/2016 14:32:54.270 Q:0 F:18, 82762, 24 **asd**");
+            Assert.AreEqual("14:32:54.270", pushRowSpecialDiag.Timestamp.ToString("HH:mm:ss.fff"));
+
+            DebugLogRowPush pushRowSpecialDiag2 = new DebugLogRowPush(1, "Pushed - 01/04/2016 14:32:54.270 Q:0 F:18, 82762, 24 **SendReceiverReportGF:8/1**");
+            Assert.AreEqual("14:32:54.270", pushRowSpecialDiag2.Timestamp.ToString("HH:mm:ss.fff"));
         }
 
         [TestMethod]
@@ -238,6 +244,10 @@ namespace DebugLogReaderTests
             DebugLogRowAvi aviRowOpenAndNegativeClose = new DebugLogRowAvi(1, "Create 18:00:25.750" +
                 " CR1:0.000 CR2:0.000 CR3:0.012 Open max, T:0.012 W:0.000 A:0.000 Close max, T:0.012 W:-922337203685.478 A:0.001 CR4:0.000 CR5:0.000 CR7:0.000 ", DateTime.MinValue);
             Assert.AreEqual("18:00:25.750", aviRowOpenAndNegativeClose.Timestamp.ToString("HH:mm:ss.fff"));
+
+            // Sometimes we flag up strange times, I don't know if want this to be handled in the regex or get an exception os it gets flagged up
+            // anyway it looks like this
+            String minusCreateWaitTime = "Create 12:01:42.230 CR1:0.000 CR2:0.001 CR3:0.004 Open max, T:0.005 W:0.000 A:0.000 Close max, T:0.005 W:-922337203685.478 A:0.000 CLOSEMAXMINUS:[CreateAVI1]CR4:0.000 CR5:0.000 CR7:0.000 ";
         }
 
     }
