@@ -214,7 +214,11 @@ namespace DebugLogReaderTests
 
             DebugLogRowFrame frameWriteMax = new DebugLogRowFrame(1, "Write max, WT:0.013 WW:0.000 WA:0.007 ", DateTime.MinValue);
 
+            DebugLogRowFrame frameWriteMax1 = new DebugLogRowFrame(1, "11:29:50.078 Close max, T:0.009 W: 0.000 A: 0.000 ", DateTime.MinValue);
+            Assert.AreEqual("11:29:50.078", frameWriteMax1.Timestamp.ToString("HH:mm:ss.fff"));
+
             DebugLogRowFrame frameWriteMax2 = new DebugLogRowFrame(1, "11:29:50.078 Close max, T:0.009 W: 0.000 A: 0.000 ", DateTime.MinValue);
+            Assert.AreEqual("11:29:50.078", frameWriteMax2.Timestamp.ToString("HH:mm:ss.fff"));
 
             DebugLogRowFrame frameCloseMaxStage1 = new DebugLogRowFrame(1, "Record 21:12:04.628 " +
                 "RT:26 (MPEG4-Write max, WT:0.561 WW:0.000 WA:0.556 " +
@@ -230,6 +234,9 @@ namespace DebugLogReaderTests
                 "RT:26 (MPEG4-Write max, WT:0.561 WW:0.000 WA:0.556 Close max, T:0.561 W:-922337203685.478 A:0.001 " +
                 "CLOSEMAXMINUS:[WriteBufferedData]AA:0.561 BB:0.000 CC:0.000 DD:0.000 EE:0.000 FF:0.000 RV:0.561 ) TOT:0.561", DateTime.MinValue);
             Assert.AreEqual("21:12:04.628", frameCloseMaxStage3.Timestamp.ToString("HH:mm:ss.fff"));
+
+            DebugLogRowFrame frameWriteMax4 = new DebugLogRowFrame(1, "09:42:25.186 Write max, WT:4.218 WW:4.208 WA:0.005 ", DateTime.MinValue);
+            Assert.AreEqual("09:42:25.186", frameWriteMax4.Timestamp.ToString("HH:mm:ss.fff"));
         }
 
         [TestMethod]
