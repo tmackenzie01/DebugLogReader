@@ -31,12 +31,15 @@ namespace DebugLogReader
                 "(C:(?<cTimestamp1>[0-9]+.[0-9]+).O:(?<oTimestamp>[0-9]+.[0-9]+).)*" +
                 "(MPEG4-|H264-)*" +
                 "(Write max,.WT:(?<writeMaxTotalTimestamp>[0-9]+.[0-9]+).WW:(?<writeMaxTotalTimestamp>[0-9]+.[0-9]+).WA:(?<writeMaxTotalTimestamp>[0-9]+.[0-9]+).)*" +
+                // Some logs has close max wait time (W:) displaying a minus number?  So we handle that here
+                "(Close max,.T:(?<closeMaxTotalTimestamp>[0-9]+.[0-9]+).W:(?<closeMaxTotalTimestamp>-?[0-9]+.[0-9]+).A:(?<closeMaxTotalTimestamp>[0-9]+.[0-9]+).)*" +
+                "(CLOSEMAXMINUS:\\[([A-Za-z])*\\])*" + 
                 "(AA:(?<aaTimestamp>[0-9]+.[0-9]+).)*" + "(.BB:(?<bbTimestamp>[0-9]+.[0-9]+).)*" +
                 "(.(CC|CR):(?<ccTimestamp>[0-9]+.[0-9]+).)*" + "(.DD:(?<ddTimestamp>[0-9]+.[0-9]+).)*" +
                 "(.EE:(?<eeTimestamp>[0-9]+.[0-9]+).)*" + "(.FF:(?<ffTimestamp>[0-9]+.[0-9]+).)*" +
                 "(.GG:(?<ggTimestamp>[0-9]+.[0-9]+).)*" + "(.HH:(?<hhTimestamp>([0-9]+.[0-9]+.)*[0-9]+.[0-9]+).)*" +
-                "((RV|C|(?<rvException>RVE)).(?<rvORcTimestamp>[0-9]+.[0-9]+)." + "\\)" + ".TOT.(?<totTimestamp>[0-9]+.[0-9]+).)*" + 
-            "$",
+                "((RV|C|(?<rvException>RVE)).(?<rvORcTimestamp>[0-9]+.[0-9]+)." + "\\)" + ".TOT.(?<totTimestamp>[0-9]+.[0-9]+).)*" +
+                "$",
                 RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.Multiline);
 
         public static Regex m_aviRegex = new Regex("Create.(?<timestamp>[0-9]+.[0-9]+.[0-9]+.[0-9]+)" +

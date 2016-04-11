@@ -215,6 +215,21 @@ namespace DebugLogReaderTests
             DebugLogRowFrame frameWriteMax = new DebugLogRowFrame(1, "Write max, WT:0.013 WW:0.000 WA:0.007 ", DateTime.MinValue);
 
             DebugLogRowFrame frameWriteMax2 = new DebugLogRowFrame(1, "11:29:50.078 Close max, T:0.009 W: 0.000 A: 0.000 ", DateTime.MinValue);
+
+            DebugLogRowFrame frameCloseMaxStage1 = new DebugLogRowFrame(1, "Record 21:12:04.628 " +
+                "RT:26 (MPEG4-Write max, WT:0.561 WW:0.000 WA:0.556 " +
+                "AA:0.561 BB:0.000 CC:0.000 DD:0.000 EE:0.000 FF:0.000 RV:0.561 ) TOT:0.561", DateTime.MinValue);
+            Assert.AreEqual("21:12:04.628", frameCloseMaxStage1.Timestamp.ToString("HH:mm:ss.fff"));
+
+            DebugLogRowFrame frameCloseMaxStage2 = new DebugLogRowFrame(1, "Record 21:12:04.628 " +
+                "RT:26 (MPEG4-Write max, WT:0.561 WW:0.000 WA:0.556 Close max, T:0.561 W:-922337203685.478 A:0.001 " +
+                "AA:0.561 BB:0.000 CC:0.000 DD:0.000 EE:0.000 FF:0.000 RV:0.561 ) TOT:0.561", DateTime.MinValue);
+            Assert.AreEqual("21:12:04.628", frameCloseMaxStage2.Timestamp.ToString("HH:mm:ss.fff"));
+
+            DebugLogRowFrame frameCloseMaxStage3 = new DebugLogRowFrame(1, "Record 21:12:04.628 " +
+                "RT:26 (MPEG4-Write max, WT:0.561 WW:0.000 WA:0.556 Close max, T:0.561 W:-922337203685.478 A:0.001 " +
+                "CLOSEMAXMINUS:[WriteBufferedData]AA:0.561 BB:0.000 CC:0.000 DD:0.000 EE:0.000 FF:0.000 RV:0.561 ) TOT:0.561", DateTime.MinValue);
+            Assert.AreEqual("21:12:04.628", frameCloseMaxStage3.Timestamp.ToString("HH:mm:ss.fff"));
         }
 
         [TestMethod]
@@ -247,7 +262,7 @@ namespace DebugLogReaderTests
 
             // Sometimes we flag up strange times, I don't know if want this to be handled in the regex or get an exception os it gets flagged up
             // anyway it looks like this
-            String minusCreateWaitTime = "Create 12:01:42.230 CR1:0.000 CR2:0.001 CR3:0.004 Open max, T:0.005 W:0.000 A:0.000 Close max, T:0.005 W:-922337203685.478 A:0.000 CLOSEMAXMINUS:[CreateAVI1]CR4:0.000 CR5:0.000 CR7:0.000 ";
+            //String minusCreateWaitTime = "Create 12:01:42.230 CR1:0.000 CR2:0.001 CR3:0.004 Open max, T:0.005 W:0.000 A:0.000 Close max, T:0.005 W:-922337203685.478 A:0.000 CLOSEMAXMINUS:[CreateAVI1]CR4:0.000 CR5:0.000 CR7:0.000 ";
         }
 
     }
