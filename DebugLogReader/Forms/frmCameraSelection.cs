@@ -72,7 +72,8 @@ namespace DebugLogReader
         private void chkCam_CheckedChanged(object sender, EventArgs e)
         {
             CheckBox chk = (CheckBox)sender;
-            int camera = (int)chk.Tag;
+            CameraDirectory cameraDir = (CameraDirectory)chk.Tag;
+            int camera = cameraDir.CameraNumber;
             if (chk.Checked)
             {
                 if (!m_selectedCameras.Contains(camera))
