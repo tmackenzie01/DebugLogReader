@@ -35,6 +35,8 @@ namespace DebugLogReader
         {
             List<CameraDirectory> cameras = (List<CameraDirectory>)e.Result;
 
+            cameras = cameras.OrderBy(c => c.CameraNumber).ToList<CameraDirectory>();
+
             CheckBox chkCam = null;
             int camCount = 0;
             foreach (CameraDirectory camera in cameras)
