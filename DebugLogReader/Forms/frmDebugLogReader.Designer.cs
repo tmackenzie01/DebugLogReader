@@ -62,7 +62,7 @@
             this.btnReadLogs.Location = new System.Drawing.Point(560, 39);
             this.btnReadLogs.Name = "btnReadLogs";
             this.btnReadLogs.Size = new System.Drawing.Size(75, 23);
-            this.btnReadLogs.TabIndex = 0;
+            this.btnReadLogs.TabIndex = 17;
             this.btnReadLogs.Text = "Read logs";
             this.btnReadLogs.UseVisualStyleBackColor = true;
             this.btnReadLogs.Click += new System.EventHandler(this.btnReadLogs_Click);
@@ -77,7 +77,7 @@
             this.lstProgress.Location = new System.Drawing.Point(3, 159);
             this.lstProgress.Name = "lstProgress";
             this.lstProgress.Size = new System.Drawing.Size(885, 315);
-            this.lstProgress.TabIndex = 1;
+            this.lstProgress.TabIndex = 18;
             this.lstProgress.UseCompatibleStateImageBehavior = false;
             this.lstProgress.View = System.Windows.Forms.View.Details;
             // 
@@ -93,7 +93,7 @@
             this.txtLogDirectory.Location = new System.Drawing.Point(84, 7);
             this.txtLogDirectory.Name = "txtLogDirectory";
             this.txtLogDirectory.Size = new System.Drawing.Size(804, 20);
-            this.txtLogDirectory.TabIndex = 2;
+            this.txtLogDirectory.TabIndex = 0;
             // 
             // prgFiles
             // 
@@ -111,7 +111,7 @@
             this.chkQueueFilter.Location = new System.Drawing.Point(9, 19);
             this.chkQueueFilter.Name = "chkQueueFilter";
             this.chkQueueFilter.Size = new System.Drawing.Size(91, 17);
-            this.chkQueueFilter.TabIndex = 4;
+            this.chkQueueFilter.TabIndex = 1;
             this.chkQueueFilter.Text = "Queue above";
             this.chkQueueFilter.UseVisualStyleBackColor = true;
             // 
@@ -146,7 +146,7 @@
             this.chkStartAtSameTime.Location = new System.Drawing.Point(9, 42);
             this.chkStartAtSameTime.Name = "chkStartAtSameTime";
             this.chkStartAtSameTime.Size = new System.Drawing.Size(110, 17);
-            this.chkStartAtSameTime.TabIndex = 6;
+            this.chkStartAtSameTime.TabIndex = 5;
             this.chkStartAtSameTime.Text = "Start at same time";
             this.chkStartAtSameTime.UseVisualStyleBackColor = true;
             // 
@@ -155,7 +155,7 @@
             this.txtEndTime.Location = new System.Drawing.Point(392, 40);
             this.txtEndTime.Name = "txtEndTime";
             this.txtEndTime.Size = new System.Drawing.Size(148, 20);
-            this.txtEndTime.TabIndex = 5;
+            this.txtEndTime.TabIndex = 9;
             this.txtEndTime.TextChanged += new System.EventHandler(this.txtEndTime_TextChanged);
             // 
             // txtStartTime
@@ -163,7 +163,7 @@
             this.txtStartTime.Location = new System.Drawing.Point(192, 40);
             this.txtStartTime.Name = "txtStartTime";
             this.txtStartTime.Size = new System.Drawing.Size(129, 20);
-            this.txtStartTime.TabIndex = 5;
+            this.txtStartTime.TabIndex = 7;
             this.txtStartTime.TextChanged += new System.EventHandler(this.txtStartTime_TextChanged);
             // 
             // txtCameras
@@ -171,7 +171,7 @@
             this.txtCameras.Location = new System.Drawing.Point(306, 16);
             this.txtCameras.Name = "txtCameras";
             this.txtCameras.Size = new System.Drawing.Size(100, 20);
-            this.txtCameras.TabIndex = 5;
+            this.txtCameras.TabIndex = 4;
             this.txtCameras.MouseClick += new System.Windows.Forms.MouseEventHandler(this.txtCameras_MouseClick);
             // 
             // txtTotalFrameProcessing
@@ -179,28 +179,28 @@
             this.txtTotalFrameProcessing.Location = new System.Drawing.Point(182, 88);
             this.txtTotalFrameProcessing.Name = "txtTotalFrameProcessing";
             this.txtTotalFrameProcessing.Size = new System.Drawing.Size(100, 20);
-            this.txtTotalFrameProcessing.TabIndex = 5;
+            this.txtTotalFrameProcessing.TabIndex = 15;
             // 
             // txtLastWroteElapsedAbove
             // 
             this.txtLastWroteElapsedAbove.Location = new System.Drawing.Point(163, 65);
             this.txtLastWroteElapsedAbove.Name = "txtLastWroteElapsedAbove";
             this.txtLastWroteElapsedAbove.Size = new System.Drawing.Size(100, 20);
-            this.txtLastWroteElapsedAbove.TabIndex = 5;
+            this.txtLastWroteElapsedAbove.TabIndex = 11;
             // 
             // txtColdstoreId
             // 
             this.txtColdstoreId.Location = new System.Drawing.Point(440, 65);
             this.txtColdstoreId.Name = "txtColdstoreId";
             this.txtColdstoreId.Size = new System.Drawing.Size(100, 20);
-            this.txtColdstoreId.TabIndex = 5;
+            this.txtColdstoreId.TabIndex = 13;
             // 
             // txtQueueAbove
             // 
             this.txtQueueAbove.Location = new System.Drawing.Point(96, 17);
             this.txtQueueAbove.Name = "txtQueueAbove";
             this.txtQueueAbove.Size = new System.Drawing.Size(100, 20);
-            this.txtQueueAbove.TabIndex = 5;
+            this.txtQueueAbove.TabIndex = 2;
             // 
             // chkEndTime
             // 
@@ -208,7 +208,7 @@
             this.chkEndTime.Location = new System.Drawing.Point(327, 42);
             this.chkEndTime.Name = "chkEndTime";
             this.chkEndTime.Size = new System.Drawing.Size(67, 17);
-            this.chkEndTime.TabIndex = 4;
+            this.chkEndTime.TabIndex = 8;
             this.chkEndTime.Text = "End time";
             this.chkEndTime.UseVisualStyleBackColor = true;
             // 
@@ -218,7 +218,7 @@
             this.chkStartTime.Location = new System.Drawing.Point(126, 43);
             this.chkStartTime.Name = "chkStartTime";
             this.chkStartTime.Size = new System.Drawing.Size(70, 17);
-            this.chkStartTime.TabIndex = 4;
+            this.chkStartTime.TabIndex = 6;
             this.chkStartTime.Text = "Start time";
             this.chkStartTime.UseVisualStyleBackColor = true;
             // 
@@ -228,7 +228,7 @@
             this.chkCamerSelect.Location = new System.Drawing.Point(239, 19);
             this.chkCamerSelect.Name = "chkCamerSelect";
             this.chkCamerSelect.Size = new System.Drawing.Size(67, 17);
-            this.chkCamerSelect.TabIndex = 4;
+            this.chkCamerSelect.TabIndex = 3;
             this.chkCamerSelect.Text = "Cameras";
             this.chkCamerSelect.UseVisualStyleBackColor = true;
             // 
@@ -238,7 +238,7 @@
             this.chkRTSPErrorCountChanged.Location = new System.Drawing.Point(353, 91);
             this.chkRTSPErrorCountChanged.Name = "chkRTSPErrorCountChanged";
             this.chkRTSPErrorCountChanged.Size = new System.Drawing.Size(154, 17);
-            this.chkRTSPErrorCountChanged.TabIndex = 4;
+            this.chkRTSPErrorCountChanged.TabIndex = 16;
             this.chkRTSPErrorCountChanged.Text = "RTSP error count changed";
             this.chkRTSPErrorCountChanged.UseVisualStyleBackColor = true;
             // 
@@ -248,7 +248,7 @@
             this.chkTotalFrameProcessing.Location = new System.Drawing.Point(9, 91);
             this.chkTotalFrameProcessing.Name = "chkTotalFrameProcessing";
             this.chkTotalFrameProcessing.Size = new System.Drawing.Size(166, 17);
-            this.chkTotalFrameProcessing.TabIndex = 4;
+            this.chkTotalFrameProcessing.TabIndex = 14;
             this.chkTotalFrameProcessing.Text = "Total frame processing above";
             this.chkTotalFrameProcessing.UseVisualStyleBackColor = true;
             // 
@@ -258,7 +258,7 @@
             this.chkLastWroteElapsedAbove.Location = new System.Drawing.Point(9, 68);
             this.chkLastWroteElapsedAbove.Name = "chkLastWroteElapsedAbove";
             this.chkLastWroteElapsedAbove.Size = new System.Drawing.Size(148, 17);
-            this.chkLastWroteElapsedAbove.TabIndex = 4;
+            this.chkLastWroteElapsedAbove.TabIndex = 10;
             this.chkLastWroteElapsedAbove.Text = "Last wrote elapsed above";
             this.chkLastWroteElapsedAbove.UseVisualStyleBackColor = true;
             // 
@@ -268,7 +268,7 @@
             this.chkColdstoreId.Location = new System.Drawing.Point(353, 67);
             this.chkColdstoreId.Name = "chkColdstoreId";
             this.chkColdstoreId.Size = new System.Drawing.Size(82, 17);
-            this.chkColdstoreId.TabIndex = 4;
+            this.chkColdstoreId.TabIndex = 12;
             this.chkColdstoreId.Text = "Coldstore Id";
             this.chkColdstoreId.UseVisualStyleBackColor = true;
             // 
@@ -288,7 +288,7 @@
             this.btnOpenCombinedLog.Location = new System.Drawing.Point(813, 480);
             this.btnOpenCombinedLog.Name = "btnOpenCombinedLog";
             this.btnOpenCombinedLog.Size = new System.Drawing.Size(75, 23);
-            this.btnOpenCombinedLog.TabIndex = 0;
+            this.btnOpenCombinedLog.TabIndex = 20;
             this.btnOpenCombinedLog.Text = "Open";
             this.btnOpenCombinedLog.UseVisualStyleBackColor = true;
             this.btnOpenCombinedLog.Click += new System.EventHandler(this.btnCombinedLog_Click);
@@ -309,7 +309,7 @@
             this.txtCombinedLog.Location = new System.Drawing.Point(84, 480);
             this.txtCombinedLog.Name = "txtCombinedLog";
             this.txtCombinedLog.Size = new System.Drawing.Size(723, 20);
-            this.txtCombinedLog.TabIndex = 2;
+            this.txtCombinedLog.TabIndex = 19;
             // 
             // frmDebugLogReader
             // 
