@@ -72,6 +72,9 @@ namespace DebugLogReaderTests
 
             DebugLogRowPush pushRowSpecialDiag2 = new DebugLogRowPush(1, "Pushed - 01/04/2016 14:32:54.270 Q:0 F:18, 82762, 24 **SendReceiverReportGF:8/1**");
             Assert.AreEqual("14:32:54.270", pushRowSpecialDiag2.Timestamp.ToString("HH:mm:ss.fff"));
+
+            DebugLogRowPush pushRowNegativeDuration = new DebugLogRowPush(1, "Pushed - 02/04/2017 01:59:48.189 ---  (-11.981 seconds) Q:0 F:1953, 5192, 0");
+            Assert.AreEqual("01:59:48.189", pushRowNegativeDuration.Timestamp.ToString("HH:mm:ss.fff"));
         }
 
         [TestMethod]
@@ -132,7 +135,10 @@ namespace DebugLogReaderTests
 
             DebugLogRowPop popRowNullFrame = new DebugLogRowPop(1, "Popped - 08/03/2016 13:50:44.814 --- (0.030 seconds) Q:1 F:Null T:A 13:50:44.814 C 13:50:44.814 D 13:50:44.814 ");
             Assert.AreEqual("13:50:44.814", popRowNullFrame.Timestamp.ToString("HH:mm:ss.fff"));
-
+            
+            // We don't read the seconds duration but we need to be able to parse negative values
+            DebugLogRowPop popRowWithNegativeSecondsDuration = new DebugLogRowPop(1, "Popped - 19/03/2017 00:58:25.659 --- (-94.274 seconds) Q:1 F:52, 649, 0 T:A 00:59:59.933 B 00:59:59.933 C 00:58:25.659 D 00:58:25.659 ");
+            Assert.AreEqual("00:58:25.659", popRowWithNegativeSecondsDuration.Timestamp.ToString("HH:mm:ss.fff"));
         }
 
         [TestMethod]
